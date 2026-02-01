@@ -1,0 +1,206 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: |
+  OpsAgent AgentCore Infrastructure
+  - IAM Role for AgentCore Runtime (Trust: bedrock-agentcore.amazonaws.com)
+  - SSM Parameters for configuration storage
+
+  Usage:
+    aws cloudformation deploy \
+      --stack-name OpsAgentInfraStack \
+      --template-file infrastructure.yaml \
+      --capabilities CAPABILITY_NAMED_IAM
+
+Resources:
+  # ==========================================================================
+  # IAM Role for AgentCore Runtime
+  # ==========================================================================
+  # Reference: https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/runtime-permissions.html
+
+  RuntimeAgentCoreRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub 'OpsAgentBedrockAgentCoreRole-${AWS::Region}'
+      Description: 'Execution role for OpsAgent on Bedrock AgentCore Runtime'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AssumeRolePolicy
+            Effect: Allow
+            Principal:
+              Service: bedrock-agentcore.amazonaws.com
+            Action: sts:AssumeRole
+            Condition:
+              StringEquals:
+                aws:SourceAccount: !Ref AWS::AccountId
+              ArnLike:
+                aws:SourceArn: !Sub 'arn:aws:bedrock-agentcore:${AWS::Region}:${AWS::AccountId}:*'
+      Policies:
+        - PolicyName: OpsAgentRuntimePolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              # ----------------------------------------------------------
+              # ECR Access (Container Image)
+              # ----------------------------------------------------------
+              - Sid: ECRImageAccess
+                Effect: Allow
+                Action:
+                  - ecr:BatchGetImage
+                  - ecr:GetDownloadUrlForLayer
+                Resource:
+                  - !Sub 'arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/bedrock-agentcore-*'
+                  - !Sub 'arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/ops-agent-*'
+
+              - Sid: ECRTokenAccess
+                Effect: Allow
+                Action:
+                  - ecr:GetAuthorizationToken
+                Resource: '*'
+
+              # ----------------------------------------------------------
+              # CloudWatch Logs (Runtime Logs)
+              # ----------------------------------------------------------
+              - Sid: CloudWatchLogsCreate
+                Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:DescribeLogStreams
+                Resource:
+                  - !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/bedrock-agentcore/runtimes/*'
+
+              - Sid: CloudWatchLogsWrite
+                Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource:
+                  - !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/bedrock-agentcore/runtimes/*:log-stream:*'
+
+              - Sid: CloudWatchLogsDescribe
+                Effect: Allow
+                Action:
+                  - logs:DescribeLogGroups
+                Resource:
+                  - !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*'
+
+              # ----------------------------------------------------------
+              # X-Ray Tracing (Observability)
+              # ----------------------------------------------------------
+              - Sid: XRayTracing
+                Effect: Allow
+                Action:
+                  - xray:PutTraceSegments
+                  - xray:PutTelemetryRecords
+                  - xray:GetSamplingRules
+                  - xray:GetSamplingTargets
+                Resource: '*'
+
+              # ----------------------------------------------------------
+              # CloudWatch Metrics
+              # ----------------------------------------------------------
+              - Sid: CloudWatchMetrics
+                Effect: Allow
+                Action:
+                  - cloudwatch:PutMetricData
+                Resource: '*'
+                Condition:
+                  StringEquals:
+                    cloudwatch:namespace: bedrock-agentcore
+
+              # ----------------------------------------------------------
+              # Bedrock Model Invocation
+              # ----------------------------------------------------------
+              - Sid: BedrockModelInvocation
+                Effect: Allow
+                Action:
+                  - bedrock:InvokeModel
+                  - bedrock:InvokeModelWithResponseStream
+                  - bedrock:ApplyGuardrail
+                Resource:
+                  - 'arn:aws:bedrock:*::foundation-model/*'
+                  - !Sub 'arn:aws:bedrock:${AWS::Region}:${AWS::AccountId}:inference-profile/*'
+
+              # ----------------------------------------------------------
+              # AgentCore Workload Identity
+              # ----------------------------------------------------------
+              - Sid: GetAgentAccessToken
+                Effect: Allow
+                Action:
+                  - bedrock-agentcore:GetWorkloadAccessToken
+                  - bedrock-agentcore:GetWorkloadAccessTokenForJWT
+                  - bedrock-agentcore:GetWorkloadAccessTokenForUserId
+                Resource:
+                  - !Sub 'arn:aws:bedrock-agentcore:${AWS::Region}:${AWS::AccountId}:workload-identity-directory/default'
+                  - !Sub 'arn:aws:bedrock-agentcore:${AWS::Region}:${AWS::AccountId}:workload-identity-directory/default/workload-identity/*'
+
+              # ----------------------------------------------------------
+              # SSM Parameter Access (Configuration)
+              # ----------------------------------------------------------
+              - Sid: SSMParameterAccess
+                Effect: Allow
+                Action:
+                  - ssm:GetParameter
+                  - ssm:GetParameters
+                Resource:
+                  - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/app/opsagent/*'
+
+              # ----------------------------------------------------------
+              # CloudWatch Logs Query (Agent Tool: cloudwatch_filter_log_events)
+              # ----------------------------------------------------------
+              - Sid: CloudWatchLogsQuery
+                Effect: Allow
+                Action:
+                  - logs:FilterLogEvents
+                  - logs:GetLogEvents
+                  - logs:DescribeLogGroups
+                  - logs:DescribeLogStreams
+                  - logs:StartQuery
+                  - logs:GetQueryResults
+                  - logs:StopQuery
+                Resource: '*'
+
+              # ----------------------------------------------------------
+              # CloudWatch Metrics Query (Future: Datadog-like metrics)
+              # ----------------------------------------------------------
+              - Sid: CloudWatchMetricsQuery
+                Effect: Allow
+                Action:
+                  - cloudwatch:GetMetricData
+                  - cloudwatch:GetMetricStatistics
+                  - cloudwatch:ListMetrics
+                Resource: '*'
+
+  # ==========================================================================
+  # SSM Parameters
+  # ==========================================================================
+
+  RuntimeIAMRoleParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: /app/opsagent/agentcore/runtime_iam_role
+      Type: String
+      Value: !GetAtt RuntimeAgentCoreRole.Arn
+      Description: OpsAgent AgentCore Runtime IAM Role ARN
+      Tags:
+        Application: OpsAgent
+        Component: AgentCore
+
+# ==========================================================================
+# Outputs
+# ==========================================================================
+Outputs:
+  RuntimeRoleArn:
+    Description: AgentCore Runtime Execution Role ARN
+    Value: !GetAtt RuntimeAgentCoreRole.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-RuntimeRoleArn'
+
+  RuntimeRoleName:
+    Description: AgentCore Runtime Execution Role Name
+    Value: !Ref RuntimeAgentCoreRole
+    Export:
+      Name: !Sub '${AWS::StackName}-RuntimeRoleName'
+
+  SSMRuntimeRoleParameter:
+    Description: SSM Parameter path for Runtime IAM Role ARN
+    Value: /app/opsagent/agentcore/runtime_iam_role

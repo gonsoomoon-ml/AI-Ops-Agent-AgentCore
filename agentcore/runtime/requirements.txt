@@ -1,0 +1,21 @@
+# OpsAgent AgentCore Runtime Dependencies
+# Docker 컨테이너에 설치되는 의존성
+
+# AgentCore Runtime SDK
+bedrock-agentcore>=0.1.0
+
+# Strands Agent SDK
+strands-agents>=0.1.22
+strands-agents-tools>=0.1.7
+
+# AWS SDK
+boto3>=1.35.0
+
+# Pydantic for settings
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+
+# Utilities
+python-dotenv>=1.0.0
+structlog>=24.0.0
+tenacity>=8.0.0
