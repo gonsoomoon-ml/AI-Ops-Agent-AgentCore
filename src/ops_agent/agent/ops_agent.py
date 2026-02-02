@@ -22,16 +22,18 @@ Reference:
 """
 
 import logging
+import uuid
 
 from strands import Agent
 from strands.models import BedrockModel
 
 from ops_agent.config import get_settings
 from ops_agent.graph.runner import OpsAgentGraph
+from ops_agent.telemetry import get_trace_attributes, setup_strands_observability
 from ops_agent.graph.state import WorkflowStatus
 from ops_agent.graph.util import Colors
 from ops_agent.prompts import get_system_prompt
-from ops_agent.tools.cloudwatch import cloudwatch_filter_log_events
+from ops_agent.tools.cloudwatch import get_cloudwatch_tools
 
 # ========== 로깅 설정 ==========
 logger = logging.getLogger(__name__)
@@ -66,6 +68,8 @@ class OpsAgent:
         enable_evaluation: bool = True,
         max_attempts: int = 2,
         verbose: bool = True,
+        session_id: str | None = None,
+        user_id: str | None = None,
     ) -> None:
         """OpsAgent 초기화.
 
@@ -73,11 +77,21 @@ class OpsAgent:
             enable_evaluation: 응답 평가 활성화 여부 (기본: True)
             max_attempts: 최대 시도 횟수 (기본: 2)
             verbose: 상세 로깅 여부 (기본: True)
+            session_id: 세션 ID (Langfuse 트레이스 그룹화용, 미지정 시 자동 생성)
+            user_id: 사용자 ID (Langfuse 사용자별 분석용)
         """
         self.settings = get_settings()
         self.enable_evaluation = enable_evaluation
         self.max_attempts = max_attempts
         self.verbose = verbose
+
+        # 세션 및 사용자 ID (Langfuse 트레이스용)
+        self.session_id = session_id or str(uuid.uuid4())
+        self.user_id = user_id
+
+        # Strands 관측성 설정 (Langfuse 연동)
+        # STRANDS_OBSERVABILITY_MODE 환경 변수에 따라 설정됨
+        self._observability_enabled = setup_strands_observability()
 
         # Graph 워크플로우 초기화 (평가 활성화 시)
         self._graph: OpsAgentGraph | None = None
@@ -91,19 +105,26 @@ class OpsAgent:
             f"{Colors.GREEN}[OpsAgent] 초기화 "
             f"(model={self.settings.bedrock_model_id}, "
             f"evaluation={enable_evaluation}, "
-            f"mode={'graph' if enable_evaluation else 'simple'}){Colors.END}"
+            f"mode={'graph' if enable_evaluation else 'simple'}, "
+            f"observability={self._observability_enabled}){Colors.END}"
         )
 
     @property
     def tools(self) -> list:
-        """사용 가능한 도구 목록."""
-        return [
-            cloudwatch_filter_log_events,
-            # TODO: Phase 2
-            # datadog_get_metrics,
-            # datadog_list_incidents,
-            # kb_retrieve,
-        ]
+        """사용 가능한 도구 목록.
+
+        CLOUDWATCH_MODE 설정에 따라 mock 또는 mcp 도구를 반환합니다.
+        """
+        tools = []
+
+        # CloudWatch 도구 (mock 또는 mcp)
+        tools.extend(get_cloudwatch_tools())
+
+        # TODO: Phase 2 - Datadog, Knowledge Base
+        # tools.extend(get_datadog_tools())
+        # tools.extend(get_kb_tools())
+
+        return tools
 
     def invoke(self, prompt: str) -> str:
         """에이전트 호출.
@@ -235,19 +256,29 @@ class OpsAgent:
 
         system_prompt = get_system_prompt()
 
-        if messages:
-            return Agent(
-                model=model,
-                tools=self.tools,
-                system_prompt=system_prompt,
-                messages=messages,
-            )
-
-        return Agent(
-            model=model,
-            tools=self.tools,
-            system_prompt=system_prompt,
+        # Langfuse 트레이스 속성 생성 (관측성 활성화 시)
+        # 세션별, 사용자별로 트레이스를 그룹화하기 위한 속성
+        trace_attributes = get_trace_attributes(
+            session_id=self.session_id,
+            user_id=self.user_id,
         )
+
+        # Agent 공통 파라미터
+        agent_kwargs = {
+            "model": model,
+            "tools": self.tools,
+            "system_prompt": system_prompt,
+        }
+
+        # 트레이스 속성이 있으면 추가
+        if trace_attributes:
+            agent_kwargs["trace_attributes"] = trace_attributes
+
+        # Message Injection 모드
+        if messages:
+            agent_kwargs["messages"] = messages
+
+        return Agent(**agent_kwargs)
 
     def invoke_with_mock_history(
         self,

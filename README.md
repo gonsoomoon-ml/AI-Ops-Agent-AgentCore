@@ -87,7 +87,7 @@
 | LLM | AWS Bedrock Claude Sonnet 4 |
 | Agent Framework | Strands Agents SDK |
 | Deployment | AWS Bedrock AgentCore Runtime |
-| Observability | CloudWatch, X-Ray |
+| Observability | Langfuse, CloudWatch, X-Ray |
 
 ## 프로젝트 구조
 
@@ -116,6 +116,9 @@ AI-Ops-Agent-AgentCore/
 │   │   └── models.py             # 평가 모델
 │   ├── tools/                    # 도구
 │   │   └── cloudwatch/           # CloudWatch 도구
+│   ├── telemetry/                # 관측성 (Langfuse/OTEL)
+│   │   ├── __init__.py
+│   │   └── setup.py              # 관측성 설정
 │   ├── prompts/                  # 시스템 프롬프트
 │   └── config/                   # 설정
 │
@@ -219,6 +222,7 @@ uv run python scripts/invoke.py --interactive
 | 문서 | 설명 |
 |------|------|
 | [환경 설정 가이드](docs/environment-configuration.md) | 환경 변수 및 .env 설정 |
+| [Observability & Langfuse](docs/observability-langfuse.md) | Langfuse 통합 및 관측성 설정 |
 | [스트리밍 구현](docs/streaming-implementation.md) | 실시간 스트리밍 아키텍처 |
 | [Graph 워크플로우](docs/graph-workflow.md) | 평가 그래프 설계 및 구현 |
 | [평가 시스템 설계](docs/evaluation-design.md) | 응답 품질 평가 시스템 |

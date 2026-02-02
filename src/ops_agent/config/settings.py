@@ -70,25 +70,133 @@ class Settings(BaseSettings):
     agent_language: Literal["ko", "en"] = Field(default="ko", alias="AGENT_LANGUAGE")
     agent_log_level: str = Field(default="INFO", alias="AGENT_LOG_LEVEL")
 
-    # ========== 개별 도구 Mock 모드 설정 ==========
-    # 각 도구별로 Mock/Live 모드를 독립적으로 설정 가능
-    cloudwatch_mock_mode: bool = Field(default=True, alias="CLOUDWATCH_MOCK_MODE")
-    datadog_mock_mode: bool = Field(default=True, alias="DATADOG_MOCK_MODE")
-    kb_mock_mode: bool = Field(default=True, alias="KB_MOCK_MODE")
+    # ========== 도구 모드 설정 ==========
+    # mock: 테스트용 모의 데이터 사용
+    # mcp: MCP 서버를 통한 실제 API 호출
+    cloudwatch_mode: Literal["mock", "mcp"] = Field(default="mock", alias="CLOUDWATCH_MODE")
+    datadog_mode: Literal["mock", "mcp"] = Field(default="mock", alias="DATADOG_MODE")
+    kb_mode: Literal["mock", "mcp"] = Field(default="mock", alias="KB_MODE")
 
     # ========== AgentCore Memory 설정 ==========
     agentcore_memory_enabled: bool = Field(default=False, alias="AGENTCORE_MEMORY_ENABLED")
     agentcore_memory_id: str | None = Field(default=None, alias="AGENTCORE_MEMORY_ID")
     agentcore_session_ttl: int = Field(default=3600, alias="AGENTCORE_SESSION_TTL")
 
-    # ========== OpenTelemetry 설정 ==========
-    # strands-agents[otel] 패키지의 트레이싱/모니터링 설정
-    otel_enabled: bool = Field(default=False, alias="OTEL_ENABLED")
+    # ========== Observability 설정 (관측성/모니터링) ==========
+    # Strands (로컬 개발)와 AgentCore (프로덕션 배포) 각각 별도 설정
+    #
+    # [Strands 모드]
+    #   - disabled: 관측성 비활성화
+    #   - langfuse-public: Langfuse Cloud 사용
+    #   - langfuse-selfhosted: 자체 호스팅 Langfuse 사용
+    #
+    # [AgentCore 모드]
+    #   - disabled: 관측성 비활성화
+    #   - langfuse-public: Langfuse Cloud 사용
+    #   - langfuse-selfhosted: 자체 호스팅 Langfuse 사용
+    #   - native: AWS 기본 관측성 (ADOT → CloudWatch/X-Ray)
+
+    # Strands (로컬) Observability 모드
+    strands_observability_mode: Literal[
+        "disabled", "langfuse-public", "langfuse-selfhosted"
+    ] = Field(default="disabled", alias="STRANDS_OBSERVABILITY_MODE")
+
+    # AgentCore Observability 모드
+    agentcore_observability_mode: Literal[
+        "disabled", "langfuse-public", "langfuse-selfhosted", "native"
+    ] = Field(default="disabled", alias="AGENTCORE_OBSERVABILITY_MODE")
+
+    # 공통: 서비스 이름 (트레이스에 표시)
     otel_service_name: str = Field(default="ops-ai-agent", alias="OTEL_SERVICE_NAME")
-    otel_exporter_endpoint: str | None = Field(
+
+    # ========== Langfuse Public Cloud 설정 ==========
+    # langfuse-public 모드 사용 시 필요
+    # API 키 발급: https://us.cloud.langfuse.com (US) 또는 https://cloud.langfuse.com (EU)
+    langfuse_public_key: str | None = Field(
         default=None,
-        alias="OTEL_EXPORTER_OTLP_ENDPOINT",
+        alias="LANGFUSE_PUBLIC_KEY",
     )
+    langfuse_secret_key: str | None = Field(
+        default=None,
+        alias="LANGFUSE_SECRET_KEY",
+    )
+    langfuse_public_endpoint: str = Field(
+        default="https://us.cloud.langfuse.com",
+        alias="LANGFUSE_PUBLIC_ENDPOINT",
+    )
+
+    # ========== Langfuse Self-hosted 설정 ==========
+    # langfuse-selfhosted 모드 사용 시 필요
+    # 자체 호스팅 Langfuse 서버의 엔드포인트와 API 키
+    langfuse_selfhosted_public_key: str | None = Field(
+        default=None,
+        alias="LANGFUSE_SELFHOSTED_PUBLIC_KEY",
+    )
+    langfuse_selfhosted_secret_key: str | None = Field(
+        default=None,
+        alias="LANGFUSE_SELFHOSTED_SECRET_KEY",
+    )
+    langfuse_selfhosted_endpoint: str | None = Field(
+        default=None,
+        alias="LANGFUSE_SELFHOSTED_ENDPOINT",
+    )
+
+    # ========== Observability Helper Properties ==========
+
+    @property
+    def langfuse_public_auth_header(self) -> str | None:
+        """Langfuse Public Cloud용 Basic Auth 헤더 생성.
+
+        Returns:
+            str | None: 'Basic {base64(public_key:secret_key)}' 형식의 인증 헤더.
+                        키가 설정되지 않은 경우 None 반환.
+        """
+        if self.langfuse_public_key and self.langfuse_secret_key:
+            import base64
+
+            credentials = f"{self.langfuse_public_key}:{self.langfuse_secret_key}"
+            encoded = base64.b64encode(credentials.encode()).decode()
+            return f"Basic {encoded}"
+        return None
+
+    @property
+    def langfuse_selfhosted_auth_header(self) -> str | None:
+        """Langfuse Self-hosted용 Basic Auth 헤더 생성.
+
+        Returns:
+            str | None: 'Basic {base64(public_key:secret_key)}' 형식의 인증 헤더.
+                        키가 설정되지 않은 경우 None 반환.
+        """
+        if self.langfuse_selfhosted_public_key and self.langfuse_selfhosted_secret_key:
+            import base64
+
+            credentials = (
+                f"{self.langfuse_selfhosted_public_key}:{self.langfuse_selfhosted_secret_key}"
+            )
+            encoded = base64.b64encode(credentials.encode()).decode()
+            return f"Basic {encoded}"
+        return None
+
+    @property
+    def langfuse_public_otel_endpoint(self) -> str:
+        """Langfuse Public Cloud OTEL 엔드포인트 반환.
+
+        Returns:
+            str: '{base_url}/api/public/otel' 형식의 OTEL 엔드포인트.
+        """
+        return f"{self.langfuse_public_endpoint}/api/public/otel"
+
+    @property
+    def langfuse_selfhosted_otel_endpoint(self) -> str | None:
+        """Langfuse Self-hosted OTEL 엔드포인트 반환.
+
+        Returns:
+            str | None: '{base_url}/api/public/otel' 형식의 OTEL 엔드포인트.
+                        엔드포인트가 설정되지 않은 경우 None 반환.
+        """
+        if self.langfuse_selfhosted_endpoint:
+            return f"{self.langfuse_selfhosted_endpoint}/api/public/otel"
+        return None
 
     @property
     def is_korean(self) -> bool:
@@ -98,17 +206,17 @@ class Settings(BaseSettings):
     @property
     def is_cloudwatch_mock(self) -> bool:
         """CloudWatch Mock 모드 여부 확인."""
-        return self.cloudwatch_mock_mode
+        return self.cloudwatch_mode == "mock"
 
     @property
     def is_datadog_mock(self) -> bool:
         """Datadog Mock 모드 여부 확인."""
-        return self.datadog_mock_mode
+        return self.datadog_mode == "mock"
 
     @property
     def is_kb_mock(self) -> bool:
         """Knowledge Base Mock 모드 여부 확인."""
-        return self.kb_mock_mode
+        return self.kb_mode == "mock"
 
 
 @lru_cache
