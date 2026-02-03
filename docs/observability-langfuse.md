@@ -6,13 +6,14 @@ OpsAgent의 관측성(Observability) 설정 가이드입니다. Strands (로컬 
 
 - [개요](#개요)
 - [지원하는 5가지 모드](#지원하는-5가지-모드)
-- [Langfuse 소개](#langfuse-소개)
+- [빠른 시작](#빠른-시작)
 - [설정 방법](#설정-방법)
   - [Strands (로컬 개발)](#strands-로컬-개발)
   - [AgentCore (프로덕션 배포)](#agentcore-프로덕션-배포)
 - [환경 변수 참조](#환경-변수-참조)
-- [사용 예시](#사용-예시)
+- [트레이스 식별](#트레이스-식별)
 - [트러블슈팅](#트러블슈팅)
+- [기술적 세부사항](#기술적-세부사항)
 
 ## 개요
 
@@ -40,35 +41,43 @@ OpsAgent는 두 가지 환경에서 실행됩니다:
 
 ## 지원하는 5가지 모드
 
-| # | 환경 | 모드 | 백엔드 | 사용 사례 |
-|---|------|------|--------|----------|
-| 1 | Strands | `langfuse-public` | Langfuse Cloud | 로컬 개발 + 클라우드 관측성 |
-| 2 | Strands | `langfuse-selfhosted` | Self-hosted Langfuse | 로컬 개발 + VPC 내 관측성 |
-| 3 | AgentCore | `langfuse-public` | Langfuse Cloud | 프로덕션 + 클라우드 관측성 |
-| 4 | AgentCore | `langfuse-selfhosted` | Self-hosted Langfuse | 프로덕션 + VPC 내 관측성 |
-| 5 | AgentCore | `native` | AWS ADOT | 프로덕션 + AWS 네이티브 관측성 |
+| # | 환경 | 모드 | 백엔드 | 트레이스 이름 |
+|---|------|------|--------|--------------|
+| 1 | Strands | `langfuse-public` | Langfuse Cloud | `invoke_agent OpsAgent (Local)` |
+| 2 | Strands | `langfuse-selfhosted` | Self-hosted Langfuse | `invoke_agent OpsAgent (Local)` |
+| 3 | AgentCore | `langfuse-public` | Langfuse Cloud | `invoke_agent OpsAgent (AgentCore)` |
+| 4 | AgentCore | `langfuse-selfhosted` | Self-hosted Langfuse | `invoke_agent OpsAgent (AgentCore)` |
+| 5 | AgentCore | `native` | AWS ADOT | AWS X-Ray/CloudWatch |
 
-## Langfuse 소개
+## 빠른 시작
 
-[Langfuse](https://langfuse.com/)는 오픈소스 LLM 관측성 플랫폼입니다.
+### 1. Langfuse Cloud 사용 (가장 쉬운 방법)
 
-### 주요 기능
+```bash
+# .env 파일 설정
+STRANDS_OBSERVABILITY_MODE=langfuse-public
+AGENTCORE_OBSERVABILITY_MODE=langfuse-public
 
-| 기능 | 설명 |
-|------|------|
-| **트레이스 시각화** | 에이전트 실행 흐름을 계층적으로 시각화 |
-| **비용 추적** | 모델별 토큰 사용량 및 비용 분석 |
-| **LLM Playground** | 프롬프트 재실행 및 테스트 |
-| **평가 (Evaluations)** | LLM-as-a-judge 자동 평가 |
-| **프롬프트 관리** | 버전 관리 및 A/B 테스트 |
-| **세션 분석** | 멀티턴 대화 그룹화 및 분석 |
+LANGFUSE_PUBLIC_KEY=pk-lf-xxxxxxxx
+LANGFUSE_SECRET_KEY=sk-lf-xxxxxxxx
+LANGFUSE_PUBLIC_ENDPOINT=https://us.cloud.langfuse.com
+```
 
-### 호스팅 옵션
+### 2. 로컬 테스트
 
-| 옵션 | 장점 | 단점 |
-|------|------|------|
-| **Langfuse Cloud** | 즉시 사용 가능, 무료 티어 제공 | 데이터가 외부 클라우드에 저장 |
-| **Self-hosted** | 완전한 데이터 제어, VPC 내 운영 | 인프라 관리 필요 |
+```bash
+uv run ops-agent
+# Langfuse Cloud에서 "invoke_agent OpsAgent (Local)" 트레이스 확인
+```
+
+### 3. AgentCore 배포
+
+```bash
+cd agentcore
+uv run python scripts/deploy.py --auto-update
+uv run python scripts/invoke.py --prompt "test"
+# Langfuse Cloud에서 "invoke_agent OpsAgent (AgentCore)" 트레이스 확인
+```
 
 ## 설정 방법
 
@@ -81,10 +90,8 @@ OpsAgent는 두 가지 환경에서 실행됩니다:
 3. `.env` 파일 설정:
 
 ```bash
-# Strands 관측성 모드 설정
 STRANDS_OBSERVABILITY_MODE=langfuse-public
 
-# Langfuse Public Cloud API 키
 LANGFUSE_PUBLIC_KEY=pk-lf-xxxxxxxx
 LANGFUSE_SECRET_KEY=sk-lf-xxxxxxxx
 LANGFUSE_PUBLIC_ENDPOINT=https://us.cloud.langfuse.com
@@ -92,20 +99,21 @@ LANGFUSE_PUBLIC_ENDPOINT=https://us.cloud.langfuse.com
 
 4. 에이전트 실행:
 
-```bash
-uv run ops-agent
+```python
+from ops_agent.agent import OpsAgent
+
+agent = OpsAgent(
+    session_id="my-session-001",
+    user_id="user@example.com",
+)
+response = agent.invoke("payment-service 에러 로그 보여줘")
 ```
 
 #### 모드 2: Langfuse Self-hosted
 
-1. Self-hosted Langfuse 배포 (ECS Fargate 권장)
-2. `.env` 파일 설정:
-
 ```bash
-# Strands 관측성 모드 설정
 STRANDS_OBSERVABILITY_MODE=langfuse-selfhosted
 
-# Langfuse Self-hosted API 키
 LANGFUSE_SELFHOSTED_PUBLIC_KEY=pk-lf-xxxxxxxx
 LANGFUSE_SELFHOSTED_SECRET_KEY=sk-lf-xxxxxxxx
 LANGFUSE_SELFHOSTED_ENDPOINT=http://your-alb.region.elb.amazonaws.com
@@ -113,27 +121,28 @@ LANGFUSE_SELFHOSTED_ENDPOINT=http://your-alb.region.elb.amazonaws.com
 
 ### AgentCore (프로덕션 배포)
 
-AgentCore 런타임 배포 시 `get_agentcore_observability_env_vars()` 함수를 사용하여 환경 변수를 전달합니다.
+#### 모드 3 & 4: Langfuse (Public 또는 Self-hosted)
 
-#### 모드 3: Langfuse Public Cloud
+`.env` 설정:
 
 ```bash
-# .env 설정
+# Public Cloud
 AGENTCORE_OBSERVABILITY_MODE=langfuse-public
-LANGFUSE_PUBLIC_KEY=pk-lf-xxxxxxxx
-LANGFUSE_SECRET_KEY=sk-lf-xxxxxxxx
+
+# 또는 Self-hosted
+AGENTCORE_OBSERVABILITY_MODE=langfuse-selfhosted
 ```
 
+배포 코드 (`scripts/deploy.py`가 자동 처리):
+
 ```python
-# 배포 코드
 from ops_agent.telemetry import get_agentcore_observability_env_vars
 from bedrock_agentcore_starter_toolkit import Runtime
 
 runtime = Runtime()
 runtime.configure(
     entrypoint="entrypoint.py",
-    disable_otel=True,  # AWS ADOT 비활성화
-    # ... 기타 설정
+    disable_otel=True,  # 중요: AWS ADOT 비활성화
 )
 
 # Langfuse 환경 변수 전달
@@ -141,25 +150,13 @@ env_vars = get_agentcore_observability_env_vars()
 runtime.launch(env_vars=env_vars)
 ```
 
-#### 모드 4: Langfuse Self-hosted
-
-```bash
-# .env 설정
-AGENTCORE_OBSERVABILITY_MODE=langfuse-selfhosted
-LANGFUSE_SELFHOSTED_PUBLIC_KEY=pk-lf-xxxxxxxx
-LANGFUSE_SELFHOSTED_SECRET_KEY=sk-lf-xxxxxxxx
-LANGFUSE_SELFHOSTED_ENDPOINT=http://your-alb.region.elb.amazonaws.com
-```
-
 #### 모드 5: AWS Native (ADOT)
 
 ```bash
-# .env 설정
 AGENTCORE_OBSERVABILITY_MODE=native
 ```
 
 ```python
-# 배포 코드 - ADOT는 기본 활성화
 runtime.configure(
     entrypoint="entrypoint.py",
     # disable_otel=False (기본값)
@@ -193,89 +190,127 @@ runtime.launch()  # env_vars 불필요
 | `LANGFUSE_SELFHOSTED_SECRET_KEY` | Secret API 키 | `sk-lf-xxxxxxxx` |
 | `LANGFUSE_SELFHOSTED_ENDPOINT` | Self-hosted URL | `http://your-alb.region.elb.amazonaws.com` |
 
-## 사용 예시
+## 트레이스 식별
 
-### OpsAgent 초기화 (세션/사용자 추적)
+Langfuse에서 트레이스를 쉽게 구분할 수 있습니다:
 
-```python
-from ops_agent.agent import OpsAgent
+| 환경 | 트레이스 이름 | 태그 |
+|------|-------------|------|
+| 로컬 Strands | `invoke_agent OpsAgent (Local)` | `langfuse-public` 또는 `langfuse-selfhosted` |
+| AgentCore 배포 | `invoke_agent OpsAgent (AgentCore)` | `agentcore` |
 
-# 세션 및 사용자 ID를 지정하여 Langfuse에서 그룹화
-agent = OpsAgent(
-    session_id="session-123",      # 세션별 트레이스 그룹화
-    user_id="user@example.com",    # 사용자별 분석
-)
+### Langfuse에서 확인되는 정보
 
-response = agent.invoke("payment-service 에러 로그 보여줘")
-```
+- **Input**: 사용자 프롬프트
+- **Output**: 에이전트 응답
+- **Session ID**: 세션별 그룹화
+- **User ID**: 사용자별 분석
+- **Tags**: 환경 및 서비스 식별
 
-### Telemetry 모듈 직접 사용
+### 스크린샷
 
-```python
-from ops_agent.telemetry import (
-    setup_strands_observability,
-    get_agentcore_observability_env_vars,
-    get_trace_attributes,
-)
+**Langfuse Public Cloud (AgentCore)**
 
-# Strands 로컬 관측성 설정
-if setup_strands_observability():
-    print("Langfuse 관측성 활성화됨")
+![Langfuse Public Cloud](img/public_langfuse.png)
 
-# AgentCore 환경 변수 조회
-env_vars = get_agentcore_observability_env_vars()
-print(env_vars)
-# {'DISABLE_ADOT_OBSERVABILITY': 'true',
-#  'OTEL_EXPORTER_OTLP_ENDPOINT': 'https://...',
-#  'OTEL_EXPORTER_OTLP_HEADERS': 'Authorization=Basic ...'}
+**Langfuse Self-hosted (AgentCore)**
 
-# Agent 트레이스 속성 생성
-attrs = get_trace_attributes(session_id="session-123", user_id="user@example.com")
-print(attrs)
-# {'langfuse.tags': ['langfuse-public', 'ops-ai-agent'],
-#  'session.id': 'session-123',
-#  'user.id': 'user@example.com'}
-```
+![Langfuse Self-hosted](img/self-hostd-langfuse.png)
 
 ## 트러블슈팅
 
-### 트레이스가 Langfuse에 표시되지 않음
+### 1. 트레이스가 Langfuse에 표시되지 않음
 
-1. **API 키 확인**: `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_SECRET_KEY`가 올바르게 설정되었는지 확인
-2. **엔드포인트 확인**: `LANGFUSE_PUBLIC_ENDPOINT` URL이 올바른지 확인
-3. **네트워크 확인**: Langfuse 서버에 접근 가능한지 확인
-
+**API 키 확인:**
 ```bash
-# 연결 테스트
+# .env 파일에서 키가 올바르게 설정되었는지 확인
+grep LANGFUSE .env
+```
+
+**네트워크 연결 확인:**
+```bash
+# Langfuse Cloud
 curl -v https://us.cloud.langfuse.com/api/public/health
+
+# Self-hosted
+curl -v http://your-alb.region.elb.amazonaws.com/api/public/health
 ```
 
-### strands-agents[otel] 패키지 오류
+### 2. AgentCore에서 "Overriding of current TracerProvider is not allowed" 오류
 
-```bash
-# OTEL 패키지 설치
-pip install strands-agents[otel]
-# 또는
-uv add strands-agents[otel]
+**원인**: AWS ADOT가 TracerProvider를 먼저 설정하여 StrandsTelemetry와 충돌
+
+**해결 방법**:
+1. `runtime.configure(disable_otel=True)` 설정
+2. Dockerfile에서 `opentelemetry-instrument` 제거 (이미 적용됨)
+
+```dockerfile
+# 올바른 설정 (현재 적용됨)
+CMD ["python", "-m", "entrypoint"]
+
+# 잘못된 설정 (TracerProvider 충돌 발생)
+# CMD ["opentelemetry-instrument", "python", "-m", "entrypoint"]
 ```
 
-### AgentCore에서 ADOT와 Langfuse 충돌
+### 3. Input/Output이 null로 표시됨
 
-AgentCore 런타임에서 Langfuse를 사용할 때는 반드시 AWS ADOT를 비활성화해야 합니다:
+커스텀 OTEL 스팬에 input/output 속성이 설정되어 있는지 확인. OpsAgent는 이미 자동으로 처리합니다:
 
 ```python
-runtime.configure(
-    disable_otel=True,  # AWS ADOT 비활성화
-)
+# ops_agent/agent/ops_agent.py에서 자동 처리
+span.set_attribute("input", prompt)
+span.set_attribute("output", response)
+```
 
-env_vars = get_agentcore_observability_env_vars()  # Langfuse 환경 변수
-runtime.launch(env_vars=env_vars)
+### 4. strands-agents[otel] 패키지 오류
+
+```bash
+uv add "strands-agents[otel]"
+```
+
+## 기술적 세부사항
+
+### AgentCore Langfuse 통합 원리
+
+1. **AWS ADOT 비활성화**: `disable_otel=True`로 AWS 자동 계측 비활성화
+2. **StrandsTelemetry 사용**: `StrandsTelemetry().setup_otlp_exporter()`로 Langfuse OTEL 엔드포인트 설정
+3. **환경 변수 전달**: 배포 시 OTEL 환경 변수를 컨테이너에 전달
+
+```
+AgentCore Container
+├── OTEL_EXPORTER_OTLP_ENDPOINT → Langfuse OTEL 엔드포인트
+├── OTEL_EXPORTER_OTLP_HEADERS → Authorization 헤더
+└── DISABLE_ADOT_OBSERVABILITY=true → AWS ADOT 비활성화
+```
+
+### 핵심 환경 변수 (AgentCore Langfuse 연동)
+
+```bash
+DISABLE_ADOT_OBSERVABILITY=true
+OTEL_EXPORTER_OTLP_ENDPOINT=https://us.cloud.langfuse.com/api/public/otel
+OTEL_EXPORTER_OTLP_HEADERS=Authorization=Basic {base64(pk:sk)}
+```
+
+### 코드 구조
+
+```
+src/ops_agent/
+├── telemetry/
+│   ├── __init__.py          # Public exports
+│   └── setup.py             # 관측성 설정 함수들
+│       ├── setup_strands_observability()      # 로컬 Strands 설정
+│       ├── get_agentcore_observability_env_vars()  # AgentCore 환경 변수
+│       └── get_trace_attributes()             # 트레이스 속성 생성
+├── agent/
+│   └── ops_agent.py         # OTEL 스팬 래핑 (트레이스 이름/input/output)
+└── config/
+    └── settings.py          # 환경 변수 로딩
 ```
 
 ## 참고 자료
 
 - [Langfuse Documentation](https://langfuse.com/docs)
-- [Langfuse GitHub](https://github.com/langfuse/langfuse)
+- [Langfuse OTEL Integration](https://langfuse.com/docs/integrations/opentelemetry)
 - [Strands Agents Telemetry](https://strandsagents.com/latest/user-guide/observability/)
-- [AWS Bedrock AgentCore Observability](https://docs.aws.amazon.com/bedrock/latest/userguide/agentcore-observability.html)
+- [AWS Bedrock AgentCore](https://docs.aws.amazon.com/bedrock/latest/userguide/agentcore.html)
 - [OpenTelemetry Python](https://opentelemetry.io/docs/languages/python/)

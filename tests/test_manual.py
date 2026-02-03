@@ -356,28 +356,38 @@ payment-service에서 **10건의 에러**가 발생했습니다.
 
 
 def test_7_graph_workflow() -> None:
-    """테스트 7: Graph 기반 워크플로우 테스트.
+    """테스트 7: Graph 기반 워크플로우 테스트 (Langfuse 트레이스 포함).
 
-    Strands GraphBuilder 패턴을 사용한 워크플로우 실행.
+    OpsAgent를 사용하여 Graph 워크플로우 실행.
+    Langfuse에 "invoke_agent OpsAgent (Local)" 트레이스 기록.
 
     흐름:
         ANALYZE → EVALUATE → DECIDE → FINALIZE
                                ↓
                           REGENERATE → ANALYZE (loop)
     """
-    from ops_agent.graph import OpsAgentGraph
+    from ops_agent.agent import OpsAgent
 
-    print_header("테스트 7: Graph 기반 워크플로우")
-    print("Strands GraphBuilder 패턴을 사용한 평가 워크플로우")
+    print_header("테스트 7: Graph 기반 워크플로우 (Langfuse 트레이스)")
+    print("OpsAgent를 사용한 평가 워크플로우 + Langfuse 관측성")
     print()
 
-    # [1] 그래프 구조 출력
+    # [1] OpsAgent 초기화
     print("-" * 60)
-    print("[1] 그래프 구조")
+    print("[1] OpsAgent 초기화")
     print("-" * 60)
 
-    graph = OpsAgentGraph(max_attempts=2, verbose=True)
-    graph.print_graph_structure()
+    agent = OpsAgent(
+        enable_evaluation=True,
+        max_attempts=2,
+        verbose=True,
+        session_id="test-manual-session",
+        user_id="test-user",
+    )
+    print(f"  - Session ID: {agent.session_id}")
+    print(f"  - User ID: {agent.user_id}")
+    print(f"  - Evaluation: {agent.enable_evaluation}")
+    print()
 
     # [2] 워크플로우 실행
     print("-" * 60)
@@ -388,32 +398,28 @@ def test_7_graph_workflow() -> None:
     print(f"  질문: {prompt}")
     print()
 
-    result = graph.run(prompt)
+    response = agent.invoke(prompt)
 
     # [3] 최종 결과
     print("-" * 60)
-    print("[3] 최종 결과")
+    print("[3] 최종 응답")
     print("-" * 60)
 
-    print(f"  - 상태: {result.final_status.value}")
-    print(f"  - 시도 횟수: {result.attempt + 1}")
-    print(f"  - 판정: {result.verdict.value if result.verdict else 'N/A'}")
-    if result.eval_result:
-        print(f"  - 점수: {result.eval_result.overall_score:.2f}")
-    print(f"  - 응답 길이: {len(result.final_response or '')}자")
-    print()
-
-    # [4] 응답 내용
-    print("-" * 60)
-    print("[4] 최종 응답")
-    print("-" * 60)
-
-    if result.final_response:
-        # 처음 500자만 출력
-        if len(result.final_response) > 500:
-            print(result.final_response[:500] + "\n...")
+    if response:
+        if len(response) > 500:
+            print(response[:500] + "\n...")
         else:
-            print(result.final_response)
+            print(response)
+    print("-" * 60)
+
+    # [4] Langfuse 안내
+    print()
+    print("-" * 60)
+    print("[4] Langfuse 트레이스 확인")
+    print("-" * 60)
+    print("  트레이스 이름: invoke_agent OpsAgent (Local)")
+    print(f"  Session ID: {agent.session_id}")
+    print(f"  User ID: {agent.user_id}")
     print("-" * 60)
 
 

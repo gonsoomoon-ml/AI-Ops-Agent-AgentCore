@@ -6,6 +6,7 @@ OpsAgent를 BedrockAgentCoreApp으로 래핑하고 실시간 토큰 스트리밍
 Reference:
     - docs/research-guide-results.md - Section 7.2 (4-Line Pattern)
     - amazon-bedrock-agentcore-samples/03-integrations/observability/
+    - lab-06-agentcore-observability-langfuse.ipynb
 
 Usage:
     # Local testing
@@ -16,7 +17,36 @@ Usage:
     agentcore launch
 """
 
+# ==========================================================================
+# OTEL 초기화 (다른 모든 import 전에 수행해야 함!)
+# ==========================================================================
+import os
 import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
+
+# OTEL/Langfuse 설정 (StrandsTelemetry 사용)
+# 환경 변수 OTEL_EXPORTER_OTLP_ENDPOINT가 설정된 경우 Langfuse로 트레이스 전송
+otel_endpoint = os.environ.get("OTEL_EXPORTER_OTLP_ENDPOINT")
+otel_headers = os.environ.get("OTEL_EXPORTER_OTLP_HEADERS")
+logger.info(f"[AgentCore] OTEL_EXPORTER_OTLP_ENDPOINT: {otel_endpoint}")
+logger.info(f"[AgentCore] OTEL_EXPORTER_OTLP_HEADERS: {'set' if otel_headers else 'not set'}")
+
+if otel_endpoint:
+    try:
+        from strands.telemetry import StrandsTelemetry
+        StrandsTelemetry().setup_otlp_exporter()
+        logger.info(f"[AgentCore] StrandsTelemetry OTLP exporter configured: {otel_endpoint}")
+    except Exception as e:
+        logger.error(f"[AgentCore] OTEL setup failed: {e}", exc_info=True)
+
+# ==========================================================================
+# 나머지 imports (OTEL 초기화 이후)
+# ==========================================================================
 import sys
 from pathlib import Path
 
@@ -30,15 +60,6 @@ from bedrock_agentcore.runtime import BedrockAgentCoreApp
 
 from ops_agent.agent import OpsAgent
 from ops_agent.config import get_settings
-
-# ==========================================================================
-# 로깅 설정
-# ==========================================================================
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
-)
-logger = logging.getLogger(__name__)
 
 
 # ==========================================================================
@@ -144,7 +165,18 @@ logger.info("Initializing OpsAgent for AgentCore Runtime...")
 logger.info(f"  Model: {settings.bedrock_model_id}")
 logger.info(f"  Region: {settings.aws_region}")
 
-agent = OpsAgent(enable_evaluation=True, max_attempts=2, verbose=False)
+# AgentCore용 기본 세션 ID (Langfuse 트레이스 그룹화용)
+import uuid
+default_session_id = f"agentcore-{uuid.uuid4().hex[:8]}"
+
+agent = OpsAgent(
+    enable_evaluation=True,
+    max_attempts=2,
+    verbose=False,
+    session_id=default_session_id,
+    user_id="agentcore-runtime",
+)
+logger.info(f"  Session ID: {default_session_id}")
 
 # ==========================================================================
 # 런타임 앱 및 엔트리포인트

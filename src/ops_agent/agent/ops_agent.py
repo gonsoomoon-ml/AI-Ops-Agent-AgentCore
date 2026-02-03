@@ -22,10 +22,18 @@ Reference:
 """
 
 import logging
+import os
 import uuid
 
 from strands import Agent
 from strands.models import BedrockModel
+
+# OTEL 스팬 래핑용 (트레이스 이름 커스터마이징)
+try:
+    from opentelemetry import trace
+    _tracer = trace.get_tracer("ops-agent")
+except ImportError:
+    _tracer = None
 
 from ops_agent.config import get_settings
 from ops_agent.graph.runner import OpsAgentGraph
@@ -173,8 +181,41 @@ class OpsAgent:
         """
         logger.info(f"{Colors.BLUE}[OpsAgent] Graph 스트리밍 실행{Colors.END}")
 
-        async for event in self._graph.stream_async(prompt):
-            yield event
+        # OTEL 스팬으로 래핑하여 Langfuse에서 "invoke_agent Strands Agents"로 표시
+        if _tracer and os.environ.get("OTEL_EXPORTER_OTLP_ENDPOINT"):
+            with _tracer.start_as_current_span("invoke_agent OpsAgent (AgentCore)") as span:
+                span.set_attribute("session.id", self.session_id or "")
+                span.set_attribute("user.id", self.user_id or "")
+                # Langfuse input/output 속성 추가
+                span.set_attribute("gen_ai.prompt.0.content", prompt)
+                span.set_attribute("input", prompt)
+
+                output_text = ""
+                async for event in self._graph.stream_async(prompt):
+                    # 출력 텍스트 수집 (finalize 결과에서)
+                    if isinstance(event, dict):
+                        event_type = event.get("type", "")
+                        if event_type == "multiagent_node_stream":
+                            inner = event.get("event", {})
+                            if isinstance(inner, dict):
+                                result = inner.get("result")
+                                if result and hasattr(result, "results"):
+                                    finalize = result.results.get("finalize")
+                                    if finalize and hasattr(finalize, "result"):
+                                        msg = getattr(finalize.result, "message", None)
+                                        if isinstance(msg, dict):
+                                            for c in msg.get("content", []):
+                                                if isinstance(c, dict) and "text" in c:
+                                                    output_text = c["text"]
+                    yield event
+
+                # 출력 설정
+                if output_text:
+                    span.set_attribute("gen_ai.completion.0.content", output_text)
+                    span.set_attribute("output", output_text)
+        else:
+            async for event in self._graph.stream_async(prompt):
+                yield event
 
     async def _stream_simple(self, prompt: str):
         """단순 스트리밍 호출 (평가 없음).
@@ -188,8 +229,30 @@ class OpsAgent:
         logger.info(f"{Colors.BLUE}[OpsAgent] 단순 스트리밍: {prompt[:50]}...{Colors.END}")
 
         agent = self._create_agent()
-        async for event in agent.stream_async(prompt):
-            yield event
+
+        # OTEL 스팬으로 래핑 (Local 모드)
+        if _tracer and self._observability_enabled:
+            with _tracer.start_as_current_span("invoke_agent OpsAgent (Local)") as span:
+                span.set_attribute("session.id", self.session_id or "")
+                span.set_attribute("user.id", self.user_id or "")
+                span.set_attribute("gen_ai.prompt.0.content", prompt)
+                span.set_attribute("input", prompt)
+
+                output_text = ""
+                async for event in agent.stream_async(prompt):
+                    # 출력 텍스트 수집
+                    if isinstance(event, dict) and "data" in event:
+                        text = event.get("data", "")
+                        if isinstance(text, str):
+                            output_text += text
+                    yield event
+
+                if output_text:
+                    span.set_attribute("gen_ai.completion.0.content", output_text)
+                    span.set_attribute("output", output_text)
+        else:
+            async for event in agent.stream_async(prompt):
+                yield event
 
     def _invoke_with_graph(self, prompt: str) -> str:
         """Graph 기반 워크플로우로 호출.
@@ -204,13 +267,32 @@ class OpsAgent:
         """
         logger.info(f"{Colors.BLUE}[OpsAgent] Graph 워크플로우 실행{Colors.END}")
 
-        result = self._graph.run(prompt)
+        # OTEL 스팬으로 래핑 (Local 모드)
+        if _tracer and self._observability_enabled:
+            with _tracer.start_as_current_span("invoke_agent OpsAgent (Local)") as span:
+                span.set_attribute("session.id", self.session_id or "")
+                span.set_attribute("user.id", self.user_id or "")
+                span.set_attribute("gen_ai.prompt.0.content", prompt)
+                span.set_attribute("input", prompt)
 
-        if result.final_status == WorkflowStatus.ERROR:
-            logger.error(f"{Colors.RED}[OpsAgent] 워크플로우 오류: {result.error}{Colors.END}")
-            raise RuntimeError(f"Workflow error: {result.error}")
+                result = self._graph.run(prompt)
 
-        return result.final_response or ""
+                if result.final_status == WorkflowStatus.ERROR:
+                    logger.error(f"{Colors.RED}[OpsAgent] 워크플로우 오류: {result.error}{Colors.END}")
+                    raise RuntimeError(f"Workflow error: {result.error}")
+
+                response = result.final_response or ""
+                span.set_attribute("gen_ai.completion.0.content", response)
+                span.set_attribute("output", response)
+                return response
+        else:
+            result = self._graph.run(prompt)
+
+            if result.final_status == WorkflowStatus.ERROR:
+                logger.error(f"{Colors.RED}[OpsAgent] 워크플로우 오류: {result.error}{Colors.END}")
+                raise RuntimeError(f"Workflow error: {result.error}")
+
+            return result.final_response or ""
 
     def _invoke_simple(self, prompt: str) -> str:
         """단순 LLM 호출 (평가 없음).
@@ -225,9 +307,23 @@ class OpsAgent:
 
         try:
             agent = self._create_agent()
-            result = agent(prompt)
 
-            response = result.message["content"][0]["text"]
+            # OTEL 스팬으로 래핑 (Local 모드)
+            if _tracer and self._observability_enabled:
+                with _tracer.start_as_current_span("invoke_agent OpsAgent (Local)") as span:
+                    span.set_attribute("session.id", self.session_id or "")
+                    span.set_attribute("user.id", self.user_id or "")
+                    span.set_attribute("gen_ai.prompt.0.content", prompt)
+                    span.set_attribute("input", prompt)
+
+                    result = agent(prompt)
+                    response = result.message["content"][0]["text"]
+
+                    span.set_attribute("gen_ai.completion.0.content", response)
+                    span.set_attribute("output", response)
+            else:
+                result = agent(prompt)
+                response = result.message["content"][0]["text"]
 
             logger.info(f"{Colors.GREEN}[OpsAgent] 완료: {len(response)}자{Colors.END}")
             return response

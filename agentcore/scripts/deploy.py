@@ -21,6 +21,20 @@ import shutil
 import sys
 from pathlib import Path
 
+# 프로젝트 루트의 .env 파일 로드 (settings가 올바른 값을 읽을 수 있도록)
+from dotenv import load_dotenv
+
+project_root = Path(__file__).parent.parent.parent
+dotenv_path = project_root / ".env"
+if dotenv_path.exists():
+    load_dotenv(dotenv_path, override=True)
+
+# settings 캐시 초기화 후 telemetry 임포트
+from ops_agent.config.settings import get_settings
+get_settings.cache_clear()
+
+from ops_agent.telemetry import get_agentcore_observability_env_vars
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -197,8 +211,16 @@ def deploy_agent(
         # Runtime 초기화
         runtime = Runtime()
 
+        # Observability 환경 변수 설정 (configure 전에 필요)
+        env_vars = get_agentcore_observability_env_vars()
+        if env_vars:
+            logger.info(f"Observability 환경 변수: {list(env_vars.keys())}")
+
         # 배포 설정 (authorizer 없음 = IAM SigV4 인증 사용)
         logger.info("에이전트 배포 설정 중...")
+        # Langfuse 사용 시 AWS ADOT 비활성화 필요
+        disable_otel = bool(env_vars.get("DISABLE_ADOT_OBSERVABILITY"))
+
         runtime.configure(
             entrypoint="entrypoint.py",
             execution_role=execution_role_arn,
@@ -206,6 +228,7 @@ def deploy_agent(
             requirements_file="requirements.txt",
             region=region,
             agent_name=agent_name,
+            disable_otel=disable_otel,  # Langfuse 사용 시 AWS ADOT 비활성화
             # authorizer_configuration 없음 = IAM SigV4 기본 인증
         )
 
@@ -218,7 +241,7 @@ def deploy_agent(
         logger.info("약 5-10분 소요...")
         logger.info("")
 
-        launch_result = runtime.launch(auto_update_on_conflict=auto_update)
+        launch_result = runtime.launch(auto_update_on_conflict=auto_update, env_vars=env_vars)
 
         # 결과 추출
         deployment_info = {

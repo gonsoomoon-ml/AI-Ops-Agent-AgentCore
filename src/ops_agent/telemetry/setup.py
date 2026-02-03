@@ -130,6 +130,8 @@ def get_agentcore_observability_env_vars() -> dict[str, str]:
             return {}
 
         logger.info(f"[AgentCore] Langfuse Self-hosted 활성화됨: {endpoint}")
+        # 공식 AWS 샘플과 동일한 3개 env vars만 사용
+        # Reference: awslabs/amazon-bedrock-agentcore-samples/.../runtime_with_strands_and_langfuse.ipynb
         return {
             "DISABLE_ADOT_OBSERVABILITY": "true",
             "OTEL_EXPORTER_OTLP_ENDPOINT": endpoint,
@@ -173,15 +175,28 @@ def get_trace_attributes(
     """
     settings = get_settings()
 
-    # Strands 관측성이 비활성화된 경우 빈 딕셔너리 반환
-    if settings.strands_observability_mode == "disabled":
+    # 관측성 활성화 여부 확인:
+    # 1. Strands 모드가 활성화된 경우 (로컬 개발)
+    # 2. OTEL 환경 변수가 설정된 경우 (AgentCore 런타임)
+    otel_endpoint = os.environ.get("OTEL_EXPORTER_OTLP_ENDPOINT")
+    is_observability_enabled = (
+        settings.strands_observability_mode != "disabled" or otel_endpoint is not None
+    )
+
+    if not is_observability_enabled:
         return {}
 
     attrs: dict[str, str | list[str]] = {}
 
     # Langfuse 태그 추가 (모드 및 서비스 이름)
+    # AgentCore 런타임인 경우 "agentcore" 태그 사용
+    mode_tag = (
+        settings.strands_observability_mode
+        if settings.strands_observability_mode != "disabled"
+        else "agentcore"
+    )
     attrs["langfuse.tags"] = [
-        settings.strands_observability_mode,
+        mode_tag,
         settings.otel_service_name,
     ]
 

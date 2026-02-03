@@ -36,6 +36,6 @@ EXPOSE 8080
 # Copy entire project (respecting .dockerignore)
 COPY . .
 
-# Use the full module path
-
-CMD ["opentelemetry-instrument", "python", "-m", "entrypoint"]
+# Run entrypoint WITHOUT opentelemetry-instrument wrapper
+# StrandsTelemetry handles OTEL setup directly for Langfuse integration
+CMD ["python", "-m", "entrypoint"]
