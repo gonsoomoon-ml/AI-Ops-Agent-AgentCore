@@ -427,6 +427,7 @@ src/ops_agent/
 
 - [Langfuse Documentation](https://langfuse.com/docs)
 - [Langfuse OTEL Integration](https://langfuse.com/docs/integrations/opentelemetry)
+- [Deploy Langfuse on ECS with Fargate (Self-hosted)](https://github.com/gonsoomoon-ml/deploy-langfuse-on-ecs-with-fargate) - AWS ECS Fargate에 Langfuse 셀프 호스팅 배포 가이드
 - [Strands Agents Telemetry](https://strandsagents.com/latest/user-guide/observability/)
 - [AWS Bedrock AgentCore](https://docs.aws.amazon.com/bedrock/latest/userguide/agentcore.html)
 - [AWS AgentCore Observability](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/observability-configure.html)
