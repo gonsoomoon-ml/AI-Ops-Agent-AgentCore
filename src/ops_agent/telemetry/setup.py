@@ -94,8 +94,15 @@ def get_agentcore_observability_env_vars() -> dict[str, str]:
 
     if mode == "native":
         logger.info("[AgentCore] 네이티브 관측성 (AWS ADOT) 활성화됨")
-        # ADOT는 기본적으로 활성화되어 있으므로 빈 딕셔너리 반환
-        return {}
+        # ADOT 환경 변수 반환 (토큰 메트릭 캡처를 위해 필요)
+        # Reference: https://github.com/awslabs/amazon-bedrock-agentcore-samples/blob/main/01-tutorials/06-AgentCore-observability/
+        return {
+            "OTEL_PYTHON_DISTRO": "aws_distro",
+            "OTEL_PYTHON_CONFIGURATOR": "aws_configurator",
+            "AGENT_OBSERVABILITY_ENABLED": "true",
+            "OTEL_EXPORTER_OTLP_PROTOCOL": "http/protobuf",
+            "OTEL_TRACES_EXPORTER": "otlp",
+        }
 
     if mode == "langfuse-public":
         endpoint = settings.langfuse_public_otel_endpoint

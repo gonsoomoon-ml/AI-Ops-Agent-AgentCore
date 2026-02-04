@@ -19,8 +19,6 @@ RUN uv pip install -r requirements.txt
 
 
 
-RUN uv pip install aws-opentelemetry-distro==0.12.2
-
 
 # Signal that this is running in Docker for host binding logic
 ENV DOCKER_CONTAINER=1
@@ -36,6 +34,6 @@ EXPOSE 8080
 # Copy entire project (respecting .dockerignore)
 COPY . .
 
-# Run entrypoint WITHOUT opentelemetry-instrument wrapper
-# StrandsTelemetry handles OTEL setup directly for Langfuse integration
+# Use the full module path
+
 CMD ["python", "-m", "entrypoint"]
