@@ -1,0 +1,9 @@
+{
+  "metadataAttributes": {
+    "doc_id": "firmware_update-009",
+    "category": "firmware_update",
+    "document_type": "qa",
+    "has_error_codes": false,
+    "keywords_ko": "OFF, SmartThings, 냉동실, 냉장실, 모델에 따라 상이, 유지되는 것이 일반적이나 예외 가능, 전환실, 펌웨어 업데이트"
+  }
+}

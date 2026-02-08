@@ -1,0 +1,10 @@
+{
+  "metadataAttributes": {
+    "doc_id": "diagnostics-002",
+    "category": "diagnostics",
+    "document_type": "qa",
+    "has_error_codes": true,
+    "error_codes": "14E, 1E, 22C, 22E, 2E, 39C, 39E, 40E, 5E, 6E, 84C, 8E",
+    "keywords_ko": "냉동실, 냉장실, 문의하시기, 에러 코드, 온도센서, 제빙기, 증발기"
+  }
+}

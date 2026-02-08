@@ -1,0 +1,9 @@
+{
+  "metadataAttributes": {
+    "doc_id": "smart_feature-001",
+    "category": "smart_feature",
+    "document_type": "qa",
+    "has_error_codes": false,
+    "keywords_ko": "IoT, SmartThings, 자가진단, 펌웨어 업데이트"
+  }
+}

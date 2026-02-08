@@ -3,9 +3,16 @@
 데이터셋별 테스트 케이스로 HYBRID 검색 (vector + BM25) 정확도를 평가합니다.
 
 사용법:
+    # Retrieve 검색 정확도 평가
     uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator
     uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator --verbose
     uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator --filter
+
+    # RetrieveAndGenerate (RAG) — LLM 답변 포함 테스트
+    uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator --rag
+    uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator --rag --query "에러코드 22E가 뭐야?"
+    uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator --rag --category diagnostics
+    uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator --rag --limit 2
 """
 
 import argparse
@@ -17,7 +24,11 @@ import boto3
 import yaml
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.join(CURRENT_DIR, "..")
 DATASETS_CONFIG = os.path.join(CURRENT_DIR, "datasets.yaml")
+
+# Add project root to path for settings import
+sys.path.insert(0, os.path.join(PROJECT_ROOT, "src"))
 
 
 def load_dataset_config(dataset_name):
@@ -336,16 +347,211 @@ def evaluate_result(results, expected_ids):
     return top1, top3, top5
 
 
+# ─── RetrieveAndGenerate (RAG) ──────────────────────────────────────────────
+
+
+def _get_rag_model_arn():
+    """Settings에서 모델 ID를 읽어 RetrieveAndGenerate용 inference profile ARN 생성.
+
+    RetrieveAndGenerate는 inference profile ARN에 account ID가 필요합니다.
+    global.* 프로파일은 us.* 리전 프로파일로 변환합니다.
+    """
+    from ops_agent.config import get_settings
+    settings = get_settings()
+    model_id = settings.bedrock_model_id
+    region = settings.aws_region
+
+    # global.* → us.* 변환 (RetrieveAndGenerate는 global 미지원)
+    rag_model_id = model_id
+    if model_id.startswith("global."):
+        rag_model_id = model_id.replace("global.", "us.", 1)
+
+    # Account ID 조회 (inference profile ARN에 필요)
+    sts = boto3.client("sts")
+    account_id = sts.get_caller_identity()["Account"]
+
+    # inference profile (접두사 있음) vs foundation model (접두사 없음)
+    if "." in rag_model_id.split("anthropic")[0]:
+        arn = f"arn:aws:bedrock:{region}:{account_id}:inference-profile/{rag_model_id}"
+    else:
+        arn = f"arn:aws:bedrock:{region}::foundation-model/{rag_model_id}"
+
+    return arn, rag_model_id, region
+
+
+RAG_PROMPT_TEMPLATE = """\
+You are a Samsung refrigerator technical support assistant.
+Answer the user's question based on the search results below.
+
+Instructions:
+- Include ALL details from the search results. Do not summarize or omit information.
+- Use numbered lists for step-by-step procedures.
+- Include specific values (temperatures, times, error codes, model names).
+- If multiple methods exist, explain each one completely.
+- Answer in Korean.
+
+$search_results$
+"""
+
+
+def query_kb_rag(client, kb_id, query, model_arn, num_results=5,
+                 category_filter=None):
+    """RetrieveAndGenerate — KB 검색 + LLM 답변 생성."""
+    vector_config = {
+        "numberOfResults": num_results,
+        "overrideSearchType": "HYBRID",
+    }
+    if category_filter:
+        vector_config["filter"] = {
+            "equals": {"key": "category", "value": category_filter}
+        }
+
+    response = client.retrieve_and_generate(
+        input={"text": query},
+        retrieveAndGenerateConfiguration={
+            "type": "KNOWLEDGE_BASE",
+            "knowledgeBaseConfiguration": {
+                "knowledgeBaseId": kb_id,
+                "modelArn": model_arn,
+                "generationConfiguration": {
+                    "promptTemplate": {
+                        "textPromptTemplate": RAG_PROMPT_TEMPLATE,
+                    },
+                    "inferenceConfig": {
+                        "textInferenceConfig": {
+                            "temperature": 0.0,
+                            "maxTokens": 2048,
+                        },
+                    },
+                },
+                "retrievalConfiguration": {
+                    "vectorSearchConfiguration": vector_config,
+                },
+            },
+        },
+    )
+
+    # Extract answer
+    answer = response.get("output", {}).get("text", "")
+
+    # Extract citations
+    citations = []
+    for citation in response.get("citations", []):
+        for ref in citation.get("retrievedReferences", []):
+            source_uri = ref.get("location", {}).get("s3Location", {}).get("uri", "")
+            doc_id = source_uri.split("/")[-1].replace(".md", "") if source_uri else "unknown"
+            text_snippet = ref.get("content", {}).get("text", "")[:150]
+            citations.append({"doc_id": doc_id, "source_uri": source_uri, "snippet": text_snippet})
+
+    return {"answer": answer, "citations": citations}
+
+
+def run_rag_mode(args, ds_config, kb_id):
+    """RAG 모드 실행: RetrieveAndGenerate로 전체 답변 테스트."""
+    model_arn, model_id, region = _get_rag_model_arn()
+    client = boto3.client("bedrock-agent-runtime", region_name=region)
+
+    print("=" * 70)
+    print(f"RetrieveAndGenerate (RAG) 테스트 [{args.dataset}]")
+    print(f"KB ID: {kb_id}")
+    print(f"LLM Model: {model_id} (.env BEDROCK_MODEL_ID)")
+    print(f"Model ARN: {model_arn}")
+    print("=" * 70)
+
+    # Single query mode
+    if args.query:
+        print(f"\n질문: {args.query}")
+        print("─" * 70)
+        cat_filter = args.category if args.category and args.category != "cross" else None
+        result = query_kb_rag(client, kb_id, args.query, model_arn,
+                              category_filter=cat_filter)
+        print(f"\n답변:\n{result['answer']}")
+        if result["citations"]:
+            print(f"\n참조 문서 ({len(result['citations'])}개):")
+            for c in result["citations"]:
+                print(f"  - {c['doc_id']}")
+                if args.verbose:
+                    print(f"    {c['snippet']}...")
+        print("=" * 70)
+        return
+
+    # Batch mode: run test cases
+    cases = TEST_CASES
+    if args.category:
+        cases = [c for c in cases if c[2] == args.category]
+        print(f"카테고리 필터: {args.category} ({len(cases)}개)")
+
+    # Apply per-category limit
+    limit = args.limit
+    if limit:
+        limited_cases = []
+        cat_counts = {}
+        for case in cases:
+            cat = case[2]
+            cat_counts[cat] = cat_counts.get(cat, 0)
+            if cat_counts[cat] < limit:
+                limited_cases.append(case)
+                cat_counts[cat] += 1
+        cases = limited_cases
+        print(f"카테고리당 최대 {limit}개 → 총 {len(cases)}개 테스트")
+
+    print()
+
+    current_category = None
+    for i, (query, expected_ids, category, description) in enumerate(cases):
+        if category != current_category:
+            current_category = category
+            print(f"\n{'━' * 70}")
+            print(f"  [{category.upper()}]")
+            print(f"{'━' * 70}")
+
+        print(f"\n  [{i+1}/{len(cases)}] {description}")
+        print(f"  Q: {query}")
+
+        try:
+            cat_filter = category if args.filter and category != "cross" else None
+            result = query_kb_rag(client, kb_id, query, model_arn,
+                                  category_filter=cat_filter)
+        except Exception as e:
+            print(f"  ERROR: {e}")
+            continue
+
+        # Check if expected doc is in citations
+        cited_ids = [c["doc_id"] for c in result["citations"]]
+        if isinstance(expected_ids, str):
+            expected_ids = [expected_ids]
+        hit = any(eid in cited_ids for eid in expected_ids)
+        icon = "OK" if hit else "XX"
+
+        print(f"  A: {result['answer']}")
+        print(f"  [{icon}] 참조: {', '.join(cited_ids) if cited_ids else 'none'}"
+              f"  (expected: {expected_ids[0]})")
+
+    print(f"\n{'=' * 70}")
+    print(f"RAG 테스트 완료: {len(cases)}개 질문")
+    print(f"{'=' * 70}")
+
+
 def main():
     parser = argparse.ArgumentParser(description="KB 검색 정확도 평가")
     parser.add_argument("--dataset", default="refrigerator", help="데이터셋 이름")
     parser.add_argument("--verbose", action="store_true", help="상세 출력")
     parser.add_argument("--category", type=str, default=None, help="특정 카테고리만 테스트")
     parser.add_argument("--filter", action="store_true", help="카테고리 메타데이터 필터 적용")
+    # RAG mode (RetrieveAndGenerate)
+    parser.add_argument("--rag", action="store_true", help="RetrieveAndGenerate 모드 (LLM 답변 포함)")
+    parser.add_argument("--query", type=str, default=None, help="단일 질문 (--rag와 함께 사용)")
+    parser.add_argument("--limit", type=int, default=None, help="카테고리당 최대 테스트 수 (--rag와 함께 사용)")
     args = parser.parse_args()
 
     ds_config = load_dataset_config(args.dataset)
     kb_id = get_kb_id(ds_config)
+
+    # RAG mode: RetrieveAndGenerate
+    if args.rag:
+        run_rag_mode(args, ds_config, kb_id)
+        return
+
     client = boto3.client("bedrock-agent-runtime")
 
     print("=" * 70)

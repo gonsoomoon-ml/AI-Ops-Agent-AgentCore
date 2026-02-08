@@ -314,9 +314,7 @@ def entry_to_metadata(entry):
 
 def prepare_files(entries):
     """모든 엔트리를 .md + .metadata.json 파일로 변환."""
-    if os.path.exists(_output_dir):
-        shutil.rmtree(_output_dir)
-    os.makedirs(_output_dir)
+    os.makedirs(_output_dir, exist_ok=True)
 
     for entry in entries:
         entry_id = entry["id"]

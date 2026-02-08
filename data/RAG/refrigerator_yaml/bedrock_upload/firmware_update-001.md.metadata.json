@@ -1,0 +1,9 @@
+{
+  "metadataAttributes": {
+    "doc_id": "firmware_update-001",
+    "category": "firmware_update",
+    "document_type": "qa",
+    "has_error_codes": false,
+    "keywords_ko": "Air, IoT, OTA, Over, Over-The-Air, SmartThings, 메인보드, 에러 코드, 펌웨어 업데이트"
+  }
+}

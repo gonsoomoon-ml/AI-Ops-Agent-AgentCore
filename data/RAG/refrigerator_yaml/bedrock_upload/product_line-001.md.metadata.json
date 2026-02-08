@@ -1,0 +1,10 @@
+{
+  "metadataAttributes": {
+    "doc_id": "product_line-001",
+    "category": "product_line",
+    "document_type": "qa",
+    "has_error_codes": true,
+    "error_codes": "600L, 900L",
+    "keywords_ko": "Side, Side-by-Side, 냉동실, 냉장실, 보관하기, 정수기, 제빙기"
+  }
+}

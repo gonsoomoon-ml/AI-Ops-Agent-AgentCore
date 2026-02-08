@@ -1,0 +1,9 @@
+{
+  "metadataAttributes": {
+    "doc_id": "diagnostics-003",
+    "category": "diagnostics",
+    "document_type": "qa",
+    "has_error_codes": false,
+    "keywords_ko": "SmartThings, 모델에 따라 버튼 조합이 다름, 서비스 모드, 에러 코드, 온도센서, 자가진단"
+  }
+}

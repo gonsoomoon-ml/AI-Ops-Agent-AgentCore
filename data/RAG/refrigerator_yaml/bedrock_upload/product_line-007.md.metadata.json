@@ -1,0 +1,10 @@
+{
+  "metadataAttributes": {
+    "doc_id": "product_line-007",
+    "category": "product_line",
+    "document_type": "qa",
+    "has_error_codes": true,
+    "error_codes": "150L, 50L",
+    "keywords_ko": "Compact, Compact Refrigerator, Cube, Refrigerator"
+  }
+}

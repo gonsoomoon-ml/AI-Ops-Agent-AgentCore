@@ -1,0 +1,9 @@
+{
+  "metadataAttributes": {
+    "doc_id": "firmware_update-004",
+    "category": "firmware_update",
+    "document_type": "qa",
+    "has_error_codes": false,
+    "keywords_ko": "02:00~05:00, Auto Update, Manual Update, OFF, SmartThings, Update"
+  }
+}

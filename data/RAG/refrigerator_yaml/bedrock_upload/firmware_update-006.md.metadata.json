@@ -1,0 +1,9 @@
+{
+  "metadataAttributes": {
+    "doc_id": "firmware_update-006",
+    "category": "firmware_update",
+    "document_type": "qa",
+    "has_error_codes": false,
+    "keywords_ko": "Service, Service Portal, SmartThings, 모델에 따라 지원 여부 상이, 예: V.03.12.01, 펌웨어 업데이트"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "metadataAttributes": {
+    "doc_id": "product_line-012",
+    "category": "product_line",
+    "document_type": "qa",
+    "has_error_codes": true,
+    "error_codes": "150L, 500L, 700L, 800L",
+    "keywords_ko": "300~500L, 50~150L, 600~700L, 800L 이상"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "metadataAttributes": {
+    "doc_id": "firmware_update-008",
+    "category": "firmware_update",
+    "document_type": "qa",
+    "has_error_codes": false,
+    "keywords_ko": "SmartThings, 수동 업데이트 설정인 경우, 펌웨어 업데이트"
+  }
+}
