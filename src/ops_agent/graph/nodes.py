@@ -29,6 +29,7 @@ from ops_agent.graph.util import (
     step_printer,
 )
 from ops_agent.prompts import get_system_prompt
+from ops_agent.telemetry import get_trace_attributes
 from ops_agent.tools.cloudwatch import cloudwatch_filter_log_events
 
 logger = logging.getLogger(__name__)
@@ -73,6 +74,7 @@ def _create_agent() -> Agent:
         model=model,
         tools=tools,
         system_prompt=system_prompt,
+        trace_attributes=get_trace_attributes(),
     )
 
 

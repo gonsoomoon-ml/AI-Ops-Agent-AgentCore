@@ -30,8 +30,8 @@ agents:
         idle_runtime_session_timeout: null
         max_lifetime: null
     bedrock_agentcore:
-      agent_id: ops_ai_agent-EgxPs5Arss
-      agent_arn: arn:aws:bedrock-agentcore:us-east-1:057716757052:runtime/ops_ai_agent-EgxPs5Arss
+      agent_id: ops_ai_agent-r8uyo9AHs3
+      agent_arn: arn:aws:bedrock-agentcore:us-east-1:057716757052:runtime/ops_ai_agent-r8uyo9AHs3
       agent_session_id: null
     codebuild:
       project_name: bedrock-agentcore-ops_ai_agent-builder
