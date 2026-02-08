@@ -1,0 +1,35 @@
+{
+  "ko_core_term": "김치냉장고",
+  "en_core_term": "Kimchi Refrigerator",
+  "ko_nouns": [
+    "김치발효",
+    "직냉식냉각",
+    "밀폐보관구조",
+    "육류숙성모드",
+    "스탠드형",
+    "뚜껑형"
+  ],
+  "question_variants": [
+    "김치냉장고 알려줘",
+    "김치냉장고에 대해 설명해줘",
+    "김치냉장고가 뭐야?",
+    "김치냉장고 뭐야?",
+    "Kimchi Refrigerator이 뭐야?",
+    "Kimchi Refrigerator 설명해줘",
+    "김치냉장고(Kimchi Refrigerator) 설명해줘",
+    "김치냉장고(Kimchi Refrigerator)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Kimchi",
+    "Kimchi Refrigerator",
+    "Refrigerator",
+    "톱도어",
+    "김치발효",
+    "직냉식",
+    "밀폐보관",
+    "육류숙성",
+    "스탠드형",
+    "뚜껑형",
+    "아삭한식감"
+  ]
+}

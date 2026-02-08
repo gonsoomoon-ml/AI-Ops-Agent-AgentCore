@@ -1,0 +1,221 @@
+version: '1.0'
+dataset: refrigerator
+description: 삼성 냉장고 진단, 펌웨어, 용어, 서비스 포털 등 Q&A
+categories:
+- id: diagnostics
+  name: Diagnostics
+  entry_count: 5
+  top_keywords:
+  - Jig
+  - MAC
+  - Plate
+  - RPM
+  - Rating
+  - Rating Plate
+  - Service
+  - Service Jig
+  - SmartThings
+  - 냉동실
+  - 냉장실
+  - 냉장실, 냉동실, 제상, 외기 온도
+  - 메인보드
+  - 모델에 따라 버튼 조합이 다름
+  - 모델에 따라 상이
+  - 문의하시기
+  - 보시기
+  - 서비스 모드
+  - 서비스 모드 진입 방법은 별도 항목 참조
+  - 에러 코드
+- id: distribution_portal
+  name: Distribution Portal
+  entry_count: 8
+  top_keywords:
+  - Carrier
+  - Carrier Sample
+  - Carrier Sample Test
+  - Confirm
+  - Confirm or Reject
+  - Deploy
+  - Detail
+  - Developer
+  - Developer Test
+  - Device
+  - Device Info
+  - Distribution
+  - Distribution Portal
+  - Field
+  - Field Test
+  - Firmware
+  - Firmware Test
+  - Firmware Version
+  - Home
+  - Info
+- id: firmware_update
+  name: Firmware Update
+  entry_count: 10
+  top_keywords:
+  - 02:00~05:00
+  - 2.4GHz
+  - Air
+  - Auto Update
+  - Bixby
+  - Family
+  - Family Hub
+  - Hub
+  - IoT
+  - MAC
+  - Manual Update
+  - 'OFF'
+  - OTA
+  - Over
+  - Over-The-Air
+  - Polling
+  - Service
+  - Service Portal
+  - SmartThings
+  - Tizen
+- id: glossary
+  name: Glossary
+  entry_count: 23
+  top_keywords:
+  - -18°C
+  - -5°C
+  - 1588-3366
+  - 1°C
+  - 3°C
+  - Alarm
+  - BESPOKE
+  - Bixby
+  - Clean
+  - Clean Guardian
+  - Coefficient
+  - Compressor
+  - Control
+  - Convertible
+  - Convertible Room
+  - Cooling
+  - Cotta
+  - Defrost
+  - Deodorizer
+  - Deodorizer Filter
+- id: model_matching
+  name: Model Matching
+  entry_count: 7
+  top_keywords:
+  - 110V/220V
+  - 1~2자리
+  - 1~9=1~9월, A=10월, B=11월, C=12월
+  - 1자리
+  - 2~3자리
+  - 2자리
+  - 5자리
+  - B, C 등
+  - Beige
+  - Blue
+  - Bottom
+  - Bottom Mount Freezer
+  - Charcoal
+  - Cotta
+  - Cotta Charcoal
+  - Cotta Morning Blue
+  - Door
+  - Exploded
+  - Exploded View
+  - Freezer
+- id: product_line
+  name: Product Line
+  entry_count: 12
+  top_keywords:
+  - 300~500L
+  - 50~150L
+  - 600~700L
+  - 800L 이상
+  - BESPOKE
+  - BMF
+  - BMF, Bottom Mount Freezer
+  - Bottom
+  - Bottom Mount Freezer
+  - Built
+  - Built-in
+  - Cellar
+  - Compact
+  - Compact Refrigerator
+  - Convertible
+  - Convertible Room
+  - Cotta
+  - Cotta Metal
+  - Cube
+  - Door
+- id: service_portal
+  name: Service Portal
+  entry_count: 13
+  top_keywords:
+  - 1588-3366
+  - Alternative
+  - Alternative Part
+  - A→B→C 순
+  - Compressor
+  - Digital
+  - Digital Inverter Compressor
+  - Engineer
+  - Exploded
+  - Exploded View
+  - Exploded View 포함
+  - In Stock
+  - Inverter
+  - Low
+  - Low Stock
+  - Manager
+  - Out
+  - Out of Stock
+  - PDF
+  - Part
+- id: smart_feature
+  name: Smart Feature
+  entry_count: 10
+  top_keywords:
+  - AI Energy Mode
+  - Air
+  - Alert
+  - Bixby
+  - Camera
+  - Cool
+  - Door
+  - Door Open Alert
+  - Energy
+  - Energy Mode
+  - Energy Monitoring
+  - Family
+  - Family Hub
+  - Filter
+  - Filter Replacement Alert
+  - Food
+  - Food Camera
+  - Freeze
+  - Hub
+  - Hz Wi
+- id: smartthings_portal
+  name: SmartThings Portal
+  entry_count: 19
+  top_keywords:
+  - -23~-15°C
+  - 09:00~21:00
+  - 1~7°C
+  - 2018년 이후 Wi-Fi 내장 모델
+  - 21:00~09:00
+  - 5GHz에서는 검색 불가
+  - Android
+  - Automation
+  - Cool
+  - DHCP
+  - Device
+  - Devices
+  - Diagnosis
+  - Energy
+  - Freeze
+  - Home
+  - Hz Wi
+  - If
+  - Information
+  - Life
+total_entries: 107

@@ -1,0 +1,36 @@
+{
+  "ko_core_term": "인버터",
+  "en_core_term": "Inverter",
+  "ko_nouns": [
+    "회전속도",
+    "가변조절",
+    "정속형",
+    "컴프레서",
+    "에너지효율",
+    "5단계속도조절",
+    "부하조절"
+  ],
+  "question_variants": [
+    "인버터 알려줘",
+    "인버터에 대해 설명해줘",
+    "인버터가 뭐야?",
+    "인버터 뭐야?",
+    "Inverter이 뭐야?",
+    "Inverter 설명해줘",
+    "인버터(Inverter) 설명해줘",
+    "인버터(Inverter)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Digital",
+    "Digital Inverter",
+    "Inverter",
+    "OFF",
+    "회전속도",
+    "가변조절",
+    "정속형",
+    "에너지효율",
+    "5단계",
+    "부하",
+    "소음감소"
+  ]
+}

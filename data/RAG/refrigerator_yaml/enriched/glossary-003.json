@@ -1,0 +1,38 @@
+{
+  "ko_core_term": "냉매",
+  "en_core_term": "Refrigerant",
+  "ko_nouns": [
+    "R-600a",
+    "이소부탄",
+    "증발기",
+    "응축기",
+    "오존층파괴지수",
+    "지구온난화지수",
+    "냉매누출",
+    "화학물질"
+  ],
+  "question_variants": [
+    "냉매 알려줘",
+    "냉매에 대해 설명해줘",
+    "냉매가 뭐야?",
+    "냉매 뭐야?",
+    "Refrigerant이 뭐야?",
+    "Refrigerant 설명해줘",
+    "냉매(Refrigerant) 설명해줘",
+    "냉매(Refrigerant)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "GWP",
+    "ODP",
+    "Refrigerant",
+    "응축기",
+    "이소부탄",
+    "증발기",
+    "R-600a",
+    "냉매누출",
+    "오존층파괴지수",
+    "지구온난화지수",
+    "열흡수",
+    "열방출"
+  ]
+}

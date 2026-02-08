@@ -1,0 +1,43 @@
+{
+  "ko_core_term": "냉각 방식",
+  "en_core_term": "Direct Cooling, Fan Cooling",
+  "ko_nouns": [
+    "직냉식",
+    "간냉식",
+    "증발기",
+    "자연대류",
+    "제상",
+    "팬순환",
+    "성에",
+    "냉기전달"
+  ],
+  "question_variants": [
+    "냉각 방식 알려줘",
+    "냉각 방식에 대해 설명해줘",
+    "냉각 방식이 뭐야?",
+    "냉각 방식 뭐야?",
+    "Direct Cooling이 뭐야?",
+    "Fan Cooling 설명해줘",
+    "냉각 방식(직냉식/간냉식) 설명해줘",
+    "냉각 방식(Direct Cooling)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Cooling",
+    "Defrost",
+    "Direct",
+    "Direct Cooling",
+    "Fan",
+    "Fan Cooling",
+    "Fan Cooling / Frost Free",
+    "Free",
+    "Frost",
+    "Frost Free",
+    "냉각기",
+    "생기기",
+    "증발기",
+    "직냉식/간냉식",
+    "자연대류",
+    "제상",
+    "성에"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "ko_core_term": "기기 초기화",
+  "en_core_term": "Reset",
+  "ko_nouns": [
+    "기기 삭제",
+    "Remove Device",
+    "등록 해제",
+    "네트워크 초기화",
+    "Wi-Fi 버튼",
+    "재등록",
+    "제어 패널",
+    "스마트 기능 초기화"
+  ],
+  "question_variants": [
+    "기기 초기화 알려줘",
+    "기기 초기화에 대해 설명해줘",
+    "기기 초기화가 뭐야?",
+    "기기 초기화 뭐야?",
+    "Reset이 뭐야?",
+    "Reset 설명해줘",
+    "기기 초기화(Reset) 설명해줘",
+    "기기 초기화(Reset)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Device",
+    "Remove",
+    "Remove Device",
+    "Reset",
+    "SmartThings",
+    "Things Portal",
+    "톱니바퀴",
+    "기기 삭제",
+    "네트워크 초기화",
+    "등록 해제",
+    "재등록"
+  ]
+}

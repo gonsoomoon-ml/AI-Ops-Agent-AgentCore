@@ -1,0 +1,35 @@
+{
+  "ko_core_term": "기존 URL 접속 불가",
+  "en_core_term": "URL",
+  "ko_nouns": [
+    "서버 도메인 변경",
+    "신규 주소",
+    "자동 리다이렉트",
+    "브라우저 캐시 삭제",
+    "IT 인프라 팀",
+    "dist.samsung.com"
+  ],
+  "question_variants": [
+    "기존 URL 접속 불가 알려줘",
+    "기존 URL 접속 불가에 대해 설명해줘",
+    "기존 URL 접속 불가가 뭐야?",
+    "기존 URL 접속 불가 뭐야?",
+    "URL이 뭐야?",
+    "URL 설명해줘",
+    "기존 URL 접속 불가(URL) 설명해줘",
+    "기존 URL 접속 불가(URL)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Distribution",
+    "Distribution Portal",
+    "QnA",
+    "문의하시기",
+    "접속하시기",
+    "기존 URL",
+    "서버 도메인 변경",
+    "신규 주소",
+    "자동 리다이렉트",
+    "브라우저 캐시",
+    "dist.samsung.com"
+  ]
+}

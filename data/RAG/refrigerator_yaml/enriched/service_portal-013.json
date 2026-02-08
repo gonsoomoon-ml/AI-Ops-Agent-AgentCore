@@ -1,0 +1,36 @@
+{
+  "ko_core_term": "Engineer 권한 승인",
+  "en_core_term": "Engineer",
+  "ko_nouns": [
+    "삼성전자서비스",
+    "공식협력사",
+    "인증확인",
+    "소속등록",
+    "자동승인",
+    "비공식수리업체",
+    "소속기관관리자"
+  ],
+  "question_variants": [
+    "Engineer 권한 승인 알려줘",
+    "Engineer 권한 승인에 대해 설명해줘",
+    "Engineer 권한 승인이 뭐야?",
+    "Engineer 권한 승인 뭐야?",
+    "Engineer이 뭐야?",
+    "Engineer 설명해줘",
+    "Engineer 권한 승인(Engineer) 설명해줘",
+    "Engineer 권한 승인(Engineer)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Engineer",
+    "QnA",
+    "Service",
+    "Service Portal",
+    "Viewer",
+    "확인하시기",
+    "권한승인",
+    "삼성전자서비스",
+    "공식협력사",
+    "소속확인",
+    "자동승인"
+  ]
+}

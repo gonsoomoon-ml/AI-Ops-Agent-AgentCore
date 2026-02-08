@@ -1,0 +1,36 @@
+{
+  "ko_core_term": "기기 등록",
+  "en_core_term": "",
+  "ko_nouns": [
+    "기기 추가",
+    "Wi-Fi 연결",
+    "QR 코드 스캔",
+    "수동 검색",
+    "최초 기기 등록",
+    "등록된 기기 목록",
+    "my.smartthings.com"
+  ],
+  "question_variants": [
+    "기기 등록 알려줘",
+    "기기 등록에 대해 설명해줘",
+    "기기 등록이 뭐야?",
+    "기기 등록 뭐야?",
+    "기기 등록 어떻게 해?",
+    "기기 등록 알려주세요",
+    "기기 등록이 뭔가요?",
+    "기기 등록 무엇인가요?"
+  ],
+  "search_keywords": [
+    "SmartThings",
+    "Things Portal",
+    "Things Web Portal",
+    "Web",
+    "기기 등록",
+    "기기 추가",
+    "Wi-Fi 연결",
+    "QR 코드 스캔",
+    "my.smartthings.com",
+    "최초 등록",
+    "등록된 기기 목록"
+  ]
+}

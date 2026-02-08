@@ -1,0 +1,42 @@
+{
+  "ko_core_term": "온도센서",
+  "en_core_term": "Temperature Sensor",
+  "ko_nouns": [
+    "NTC",
+    "서미스터",
+    "Negative Temperature Coefficient",
+    "실시간 측정",
+    "컴프레서 제어",
+    "팬 작동",
+    "냉각 불량",
+    "과냉각"
+  ],
+  "question_variants": [
+    "온도센서 알려줘",
+    "온도센서에 대해 설명해줘",
+    "온도센서가 뭐야?",
+    "온도센서 뭐야?",
+    "Temperature Sensor이 뭐야?",
+    "Temperature Sensor 설명해줘",
+    "온도센서(Temperature Sensor) 설명해줘",
+    "온도센서(Temperature Sensor)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Coefficient",
+    "NTC",
+    "Negative",
+    "Negative Temperature Coefficient",
+    "Sensor",
+    "Temperature",
+    "Temperature Sensor",
+    "냉동실",
+    "냉장실",
+    "메인보드",
+    "보관실",
+    "에러 코드",
+    "온도센서",
+    "서미스터",
+    "실시간 측정",
+    "과냉각"
+  ]
+}

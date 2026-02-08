@@ -1,0 +1,106 @@
+**title**: 양문형(Side-by-Side) 냉장고에 대한 설명
+---
+- **contents**: 양문형(Side-by-Side) 냉장고는 좌우로 냉동실과 냉장실이 나란히 배치된 구조의 냉장고입니다. 왼쪽에 냉동실, 오른쪽에 냉장실이 위치하는 것이 일반적이며, 도어를 좌우로 여는 방식이라 설치 공간의 폭이 넓지 않아도 사용할 수 있습니다. 용량은 600L~900L 범위가 주력이며, 정수기와 제빙기가 도어에 내장된 모델도 있습니다. 다만, 각 칸의 폭이 좁아 대형 식품이나 큰 접시를 보관하기 어려울 수 있습니다.
+- **urls**: https://www.samsung.com/sec/refrigerators/side-by-side/
+- **sheet**: Product Line
+- **row**: 2
+- **generated_at**: 2026-02-08T10:00:00
+
+---
+**title**: 프렌치도어(French Door) 냉장고에 대한 설명
+---
+- **contents**: 프렌치도어(French Door) 냉장고는 상단에 양문형 냉장실, 하단에 서랍식 냉동실이 배치된 구조입니다. 냉장실의 양문을 열면 넓은 가로폭을 활용할 수 있어 대형 접시나 케이크 등을 보관하기에 적합합니다. 냉동실은 서랍식으로 설계되어 식품을 위에서 내려다보며 정리할 수 있습니다. 삼성 프렌치도어 냉장고는 800L 이상의 대용량 제품을 중심으로 라인업을 구성하고 있으며, Family Hub 디스플레이가 탑재된 프리미엄 모델도 제공합니다.
+- **urls**: https://www.samsung.com/sec/refrigerators/french-door/
+- **sheet**: Product Line
+- **row**: 3
+- **generated_at**: 2026-02-08T10:00:00
+
+---
+**title**: 4도어(T-Type) 냉장고에 대한 설명
+---
+- **contents**: 4도어(T-Type) 냉장고는 상단 냉장실 2도어와 하단 냉동실/특수실 2도어로 구성된 냉장고입니다. T-Type이라고도 불리며, 프렌치도어와 유사하지만 하단에 독립된 두 개의 공간을 제공합니다. 하단의 한쪽은 냉동실, 다른 한쪽은 전환실(Convertible Room)로 구성되어 사용자의 필요에 따라 냉장/냉동 모드를 전환할 수 있습니다. 삼성 비스포크 4도어 냉장고는 패널 교체가 가능하여 인테리어에 맞춘 커스터마이징이 가능합니다.
+- **urls**: https://www.samsung.com/sec/refrigerators/bespoke-refrigerator/
+- **sheet**: Product Line
+- **row**: 4
+- **generated_at**: 2026-02-08T10:00:00
+
+---
+**title**: 비스포크(BESPOKE) 냉장고에 대한 설명
+---
+- **contents**: 비스포크(BESPOKE) 냉장고는 삼성전자의 모듈형 맞춤 냉장고 라인업입니다. 1도어, 2도어, 4도어 등 다양한 조합으로 구성할 수 있으며, 패널 색상과 재질을 사용자가 선택할 수 있습니다. 제공되는 패널 재질은 글램 글라스(Glam Glass), 새틴 글라스(Satin Glass), 코타 메탈(Cotta Metal) 등이 있으며, 색상은 화이트, 네이비, 핑크, 베이지 등 20가지 이상을 제공합니다. 비스포크 냉장고는 키친핏(Kitchen Fit) 설계로 빌트인과 유사한 플러시 핏(Flush Fit) 설치가 가능합니다.
+- **urls**: https://www.samsung.com/sec/refrigerators/bespoke-refrigerator/
+- **sheet**: Product Line
+- **row**: 5
+- **generated_at**: 2026-02-08T10:00:00
+
+---
+**title**: 김치냉장고(Kimchi Refrigerator)에 대한 설명
+---
+- **contents**: 김치냉장고는 김치의 최적 발효 및 보관을 위해 설계된 한국 특화 냉장고입니다. 일반 냉장고와 달리 -1°C~5°C 범위의 정밀한 온도 제어가 가능하며, 직냉식 냉각과 밀폐 보관 구조를 통해 김치의 아삭한 식감을 오래 유지합니다. 삼성 김치냉장고는 김치, 육류숙성, 과일/채소, 와인 등 다양한 보관 모드를 제공합니다. 스탠드형과 뚜껑형(톱도어) 두 가지 형태로 제공되며, 비스포크 디자인도 적용 가능합니다.
+- **urls**: https://www.samsung.com/sec/kimchi-refrigerators/
+- **sheet**: Product Line
+- **row**: 6
+- **generated_at**: 2026-02-08T10:00:00
+
+---
+**title**: 빌트인(Built-in) 냉장고에 대한 설명
+---
+- **contents**: 빌트인(Built-in) 냉장고는 주방 가구 내부에 매입하여 설치하는 냉장고입니다. 냉장고 전면이 주방 가구 패널과 동일한 높이와 디자인으로 통일되어 깔끔한 주방 인테리어를 구현할 수 있습니다. 일반 냉장고 대비 깊이가 얕아(약 60cm) 가구 라인에 맞출 수 있으며, 별도의 환기 공간 설계가 필요합니다. 삼성 빌트인 냉장고는 냉장 전용, 냉동 전용, 양문형 등 다양한 조합으로 제공되며, 시스템 키친에 맞춘 설치 가이드를 제공합니다.
+- **urls**: https://www.samsung.com/sec/refrigerators/built-in/
+- **sheet**: Product Line
+- **row**: 7
+- **generated_at**: 2026-02-08T10:00:00
+
+---
+**title**: 미니냉장고(Compact Refrigerator)에 대한 설명
+---
+- **contents**: 미니냉장고(Compact Refrigerator)는 1도어 구조의 소형 냉장고로, 용량이 50L~150L 범위입니다. 원룸, 오피스, 호텔 객실 등 공간이 제한된 환경에 적합하며, 직냉식 냉각 방식을 주로 사용합니다. 삼성 미니냉장고는 비스포크 디자인을 적용한 큐브(Cube) 냉장고도 제공하고 있으며, 이는 다용도 보관용으로 맥주, 화장품, 간식 등 특정 용도에 맞춘 온도 설정이 가능합니다. 전력 소비량이 월 15~25kWh로 경제적입니다.
+- **urls**: https://www.samsung.com/sec/refrigerators/one-door/
+- **sheet**: Product Line
+- **row**: 8
+- **generated_at**: 2026-02-08T10:00:00
+
+---
+**title**: 쇼케이스(Showcase) 냉장고에 대한 설명
+---
+- **contents**: 쇼케이스(Showcase) 냉장고는 도어 안쪽에 별도의 수납 공간을 두어 자주 사용하는 식품에 빠르게 접근할 수 있도록 설계된 냉장고입니다. 외부 도어(쇼케이스 도어)만 열면 음료나 간식 등 자주 꺼내는 식품에 접근할 수 있어 메인 도어를 여는 횟수를 줄여 냉기 손실을 최소화합니다. 삼성 쇼케이스 냉장고는 Food Showcase 라인업으로 제공되며, 에너지 효율 개선 효과가 약 15~20%입니다.
+- **urls**: https://www.samsung.com/sec/refrigerators/all-refrigerators/
+- **sheet**: Product Line
+- **row**: 9
+- **generated_at**: 2026-02-08T10:00:00
+
+---
+**title**: 상냉장 하냉동(Top Mount Freezer) 냉장고에 대한 설명
+---
+- **contents**: 상냉장 하냉동(Top Mount Freezer, TMF) 냉장고는 상단에 냉동실, 하단에 냉장실이 배치된 가장 전통적인 형태의 냉장고입니다. 반대로 상냉장 하냉동(BMF, Bottom Mount Freezer)은 상단에 냉장실, 하단에 냉동실이 위치하여 자주 사용하는 냉장실 접근이 편리합니다. 삼성에서는 두 가지 형태 모두 제공하고 있으며, 300L~500L 범위의 중형 제품이 주력입니다. 설치 폭이 좁은 공간에 적합하고, 가격대가 비교적 합리적입니다.
+- **urls**: https://www.samsung.com/sec/refrigerators/top-mount-freezer/
+- **sheet**: Product Line
+- **row**: 10
+- **generated_at**: 2026-02-08T10:00:00
+
+---
+**title**: 와인셀러(Wine Cellar)에 대한 설명
+---
+- **contents**: 와인셀러(Wine Cellar)는 와인의 최적 보관 환경을 제공하기 위해 설계된 전용 냉장고입니다. 와인 보관에 적합한 12~18°C 범위의 정밀 온도 제어, 진동 최소화, UV 차단 도어, 적정 습도 유지 기능을 갖추고 있습니다. 삼성 와인셀러는 비스포크 디자인을 적용한 모델을 제공하며, 레드와인과 화이트와인을 각각 다른 온도로 보관할 수 있는 듀얼 존(Dual Zone) 기능을 지원합니다. 보관 용량은 모델에 따라 30병~100병 이상까지 다양합니다.
+- **urls**: https://www.samsung.com/sec/refrigerators/all-refrigerators/
+- **sheet**: Product Line
+- **row**: 11
+- **generated_at**: 2026-02-08T10:00:00
+
+---
+**title**: 모듈형 냉장고(Modular Refrigerator)에 대한 설명
+---
+- **contents**: 모듈형 냉장고(Modular Refrigerator)는 개별 냉장고 유닛을 조합하여 사용자의 필요에 맞게 구성할 수 있는 냉장고입니다. 삼성 비스포크 라인업에서 1도어 냉장, 1도어 냉동, 1도어 김치, 1도어 와인 등 개별 유닛을 조합하여 나란히 배치할 수 있습니다. 각 유닛은 독립적으로 작동하며, 가족 구성원 수나 생활 패턴 변화에 따라 유닛을 추가하거나 제거할 수 있습니다. 유닛 간 연결은 키트를 통해 외관을 통일감 있게 마감할 수 있습니다.
+- **urls**: https://www.samsung.com/sec/refrigerators/bespoke-refrigerator/
+- **sheet**: Product Line
+- **row**: 12
+- **generated_at**: 2026-02-08T10:00:00
+
+---
+**title**: 냉장고 제품군별 선택 가이드
+---
+- **contents**: 삼성 냉장고는 다양한 제품군을 제공하고 있으며 가정 환경에 따라 적합한 제품이 다릅니다. 1. 4인 이상 대가족: 프렌치도어 또는 4도어(800L 이상) 권장 2. 2~3인 가구: 양문형(600~700L) 또는 상냉장 하냉동(300~500L) 권장 3. 1인 가구/원룸: 미니냉장고(50~150L) 또는 비스포크 1도어 권장 4. 주방 인테리어 중시: 비스포크 또는 빌트인 권장 5. 김치/발효식품 보관: 김치냉장고 별도 구매 권장 6. 와인 컬렉터: 와인셀러 별도 구매 권장 설치 공간의 폭, 깊이, 높이를 반드시 사전에 측정하고 제품 사양과 비교하여 선택해야 합니다.
+- **urls**: https://www.samsung.com/sec/refrigerators/all-refrigerators/
+- **sheet**: Product Line
+- **row**: 13
+- **generated_at**: 2026-02-08T10:00:00

@@ -1,0 +1,41 @@
+{
+  "ko_core_term": "제품 정보 확인",
+  "en_core_term": "Rating Plate",
+  "ko_nouns": [
+    "명판",
+    "시리얼번호",
+    "모델번호",
+    "정격전압",
+    "주파수",
+    "소비전력",
+    "냉매종류",
+    "충전량",
+    "제조일자",
+    "펌웨어버전",
+    "제어패널"
+  ],
+  "question_variants": [
+    "제품 정보 확인 알려줘",
+    "제품 정보 확인에 대해 설명해줘",
+    "제품 정보 확인이 뭐야?",
+    "제품 정보 확인 뭐야?",
+    "Rating Plate이 뭐야?",
+    "Rating Plate 설명해줘",
+    "제품 정보 확인(Rating Plate) 설명해줘",
+    "제품 정보 확인(Rating Plate)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "MAC",
+    "Plate",
+    "Rating",
+    "Rating Plate",
+    "SmartThings",
+    "냉장실",
+    "모델에 따라 상이",
+    "명판",
+    "시리얼번호",
+    "모델번호",
+    "펌웨어버전",
+    "제어패널"
+  ]
+}

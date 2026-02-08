@@ -1,0 +1,37 @@
+{
+  "ko_core_term": "자동 업데이트와 수동 업데이트",
+  "en_core_term": "Auto Update and Manual Update",
+  "ko_nouns": [
+    "자동 업데이트",
+    "수동 업데이트",
+    "새벽 시간대",
+    "업데이트 시작 버튼",
+    "자동 다운로드",
+    "자동 설치",
+    "업데이트 알림",
+    "기본값"
+  ],
+  "question_variants": [
+    "자동 업데이트와 수동 업데이트 알려줘",
+    "자동 업데이트와 수동 업데이트에 대해 설명해줘",
+    "자동 업데이트와 수동 업데이트가 뭐야?",
+    "자동 업데이트와 수동 업데이트 뭐야?",
+    "Auto Update and Manual Update이 뭐야?",
+    "Auto Update and Manual Update 설명해줘",
+    "자동 업데이트와 수동 업데이트(Auto Update and Manual Update) 설명해줘",
+    "자동 업데이트와 수동 업데이트(Auto Update and Manual Update)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "02:00~05:00",
+    "Auto Update",
+    "Manual Update",
+    "OFF",
+    "SmartThings",
+    "Update",
+    "자동 업데이트",
+    "수동 업데이트",
+    "새벽 시간대",
+    "업데이트 시작",
+    "기본값 ON"
+  ]
+}

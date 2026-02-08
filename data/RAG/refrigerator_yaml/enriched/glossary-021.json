@@ -1,0 +1,39 @@
+{
+  "ko_core_term": "전환실",
+  "en_core_term": "Convertible Room",
+  "ko_nouns": [
+    "모드전환",
+    "다용도보관공간",
+    "소프트냉동",
+    "김치보관",
+    "안정화시간",
+    "제어패널",
+    "세분화온도모드"
+  ],
+  "question_variants": [
+    "전환실 알려줘",
+    "전환실에 대해 설명해줘",
+    "전환실이 뭐야?",
+    "전환실 뭐야?",
+    "Convertible Room이 뭐야?",
+    "Convertible Room 설명해줘",
+    "전환실(Convertible Room) 설명해줘",
+    "전환실(Convertible Room)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "-18°C",
+    "-5°C",
+    "1°C",
+    "3°C",
+    "Convertible",
+    "Convertible Room",
+    "Room",
+    "SmartThings",
+    "냉동실",
+    "냉장실",
+    "전환실",
+    "모드전환",
+    "소프트냉동",
+    "김치보관"
+  ]
+}

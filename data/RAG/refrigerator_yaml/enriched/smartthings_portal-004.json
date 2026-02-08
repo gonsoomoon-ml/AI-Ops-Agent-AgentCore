@@ -1,0 +1,38 @@
+{
+  "ko_core_term": "에너지 리포트 확인",
+  "en_core_term": "Energy Report",
+  "ko_nouns": [
+    "에너지 리포트",
+    "사용량 대시보드",
+    "일별 사용량",
+    "월별 사용량",
+    "예상 전기 요금",
+    "한전 누진제",
+    "동일 제품군 비교",
+    "에너지 목표 설정"
+  ],
+  "question_variants": [
+    "에너지 리포트 확인 알려줘",
+    "에너지 리포트 확인에 대해 설명해줘",
+    "에너지 리포트 확인이 뭐야?",
+    "에너지 리포트 확인 뭐야?",
+    "Energy Report가 뭐야?",
+    "Energy Report 설명해줘",
+    "에너지 리포트 확인(Energy Report) 설명해줘",
+    "에너지 리포트 확인(Energy Report)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Energy",
+    "Life",
+    "SmartThings",
+    "Things Energy",
+    "Things Portal",
+    "kWh",
+    "대시보드",
+    "에너지 리포트",
+    "사용량",
+    "전기 요금",
+    "누진제",
+    "월별 목표"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "ko_core_term": "미니냉장고",
+  "en_core_term": "Compact Refrigerator",
+  "ko_nouns": [
+    "1도어",
+    "50L",
+    "150L",
+    "원룸",
+    "오피스",
+    "호텔객실",
+    "직냉식",
+    "큐브냉장고"
+  ],
+  "question_variants": [
+    "미니냉장고 알려줘",
+    "미니냉장고에 대해 설명해줘",
+    "미니냉장고가 뭐야?",
+    "미니냉장고 뭐야?",
+    "Compact Refrigerator이 뭐야?",
+    "Compact Refrigerator 설명해줘",
+    "미니냉장고(Compact Refrigerator) 설명해줘",
+    "미니냉장고(Compact Refrigerator)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Compact",
+    "Compact Refrigerator",
+    "Cube",
+    "Refrigerator",
+    "150L",
+    "50L",
+    "미니냉장고",
+    "1도어",
+    "직냉식",
+    "원룸",
+    "큐브냉장고"
+  ]
+}

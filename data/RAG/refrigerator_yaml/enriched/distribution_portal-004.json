@@ -1,0 +1,46 @@
+{
+  "ko_core_term": "펌웨어 배포 Workflow",
+  "en_core_term": "Workflow",
+  "ko_nouns": [
+    "SW PL",
+    "빌드 권한",
+    "배포 대상 지역",
+    "QA 권한",
+    "OTA 서버",
+    "24시간 이내",
+    "검증된 펌웨어",
+    "정상 동작"
+  ],
+  "question_variants": [
+    "펌웨어 배포 Workflow 알려줘",
+    "펌웨어 배포 Workflow에 대해 설명해줘",
+    "펌웨어 배포 Workflow가 뭐야?",
+    "펌웨어 배포 Workflow 뭐야?",
+    "Workflow이 뭐야?",
+    "Workflow 설명해줘",
+    "펌웨어 배포 Workflow(Workflow) 설명해줘",
+    "펌웨어 배포 Workflow(Workflow)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Confirm",
+    "Confirm or Reject",
+    "Detail",
+    "Distribution",
+    "Distribution Portal",
+    "Firmware",
+    "Firmware Version",
+    "Home",
+    "OTA",
+    "Reject",
+    "Release",
+    "Test",
+    "Version",
+    "Version Workflow List",
+    "Workflow",
+    "by QA",
+    "by SW PL",
+    "SW PL",
+    "빌드 권한",
+    "배포 단계"
+  ]
+}

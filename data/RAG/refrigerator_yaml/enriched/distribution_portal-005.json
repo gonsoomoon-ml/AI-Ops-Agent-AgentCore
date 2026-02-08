@@ -1,0 +1,50 @@
+{
+  "ko_core_term": "펌웨어 검증",
+  "en_core_term": "Firmware Test",
+  "ko_nouns": [
+    "QA Test",
+    "Developer Test",
+    "Field Test",
+    "Carrier Sample Test",
+    "시장 배포",
+    "테스트 시나리오",
+    "QA Test Deploy List",
+    "시리얼번호"
+  ],
+  "question_variants": [
+    "펌웨어 검증 알려줘",
+    "펌웨어 검증에 대해 설명해줘",
+    "펌웨어 검증이 뭐야?",
+    "펌웨어 검증 뭐야?",
+    "Firmware Test가 뭐야?",
+    "Firmware Test 설명해줘",
+    "펌웨어 검증(Firmware Test) 설명해줘",
+    "펌웨어 검증(Firmware Test)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Carrier",
+    "Carrier Sample Test",
+    "Deploy",
+    "Developer",
+    "Developer Test",
+    "Device",
+    "Distribution",
+    "Distribution Portal",
+    "Field",
+    "Field Test",
+    "Firmware",
+    "Firmware Test",
+    "Home",
+    "Request",
+    "Sample",
+    "Test",
+    "Test Deploy List",
+    "Test Device",
+    "Test Device Request",
+    "검증하기",
+    "펌웨어 업데이트",
+    "QA Test",
+    "시장 배포",
+    "테스트 시나리오"
+  ]
+}

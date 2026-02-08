@@ -1,0 +1,42 @@
+{
+  "ko_core_term": "상냉장 하냉동",
+  "en_core_term": "Top Mount Freezer",
+  "ko_nouns": [
+    "TMF",
+    "BMF",
+    "상단냉동실",
+    "하단냉장실",
+    "전통적형태",
+    "중형제품",
+    "설치폭",
+    "300L"
+  ],
+  "question_variants": [
+    "상냉장 하냉동 알려줘",
+    "상냉장 하냉동에 대해 설명해줘",
+    "상냉장 하냉동이 뭐야?",
+    "상냉장 하냉동 뭐야?",
+    "Top Mount Freezer이 뭐야?",
+    "Top Mount Freezer 설명해줘",
+    "상냉장 하냉동(Top Mount Freezer) 설명해줘",
+    "상냉장 하냉동(Top Mount Freezer)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "BMF",
+    "Bottom Mount Freezer",
+    "Bottom",
+    "Freezer",
+    "Mount",
+    "TMF",
+    "Top",
+    "Top Mount Freezer",
+    "냉동실",
+    "냉장실",
+    "상단",
+    "하단",
+    "전통적형태",
+    "중형",
+    "300L",
+    "500L"
+  ]
+}

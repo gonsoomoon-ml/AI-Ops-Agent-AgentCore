@@ -1,0 +1,37 @@
+{
+  "ko_core_term": "SmartThings",
+  "en_core_term": "SmartThings",
+  "ko_nouns": [
+    "스마트싱스",
+    "통합관리",
+    "원격제어",
+    "에너지모니터링",
+    "도어열림알림",
+    "필터교체알림",
+    "타사연동"
+  ],
+  "question_variants": [
+    "SmartThings 알려줘",
+    "SmartThings에 대해 설명해줘",
+    "SmartThings가 뭐야?",
+    "SmartThings 뭐야?",
+    "SmartThings이 뭐야?",
+    "SmartThings 설명해줘",
+    "SmartThings(SmartThings) 설명해줘",
+    "SmartThings(SmartThings)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "IoT",
+    "SmartThings",
+    "Things Hub",
+    "세탁기",
+    "스마트싱스",
+    "통합관리",
+    "원격제어",
+    "에너지모니터링",
+    "도어열림알림",
+    "필터교체알림",
+    "타사연동",
+    "스마트가전"
+  ]
+}

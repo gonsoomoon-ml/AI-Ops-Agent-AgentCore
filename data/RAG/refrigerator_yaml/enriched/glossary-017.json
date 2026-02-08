@@ -1,0 +1,35 @@
+{
+  "ko_core_term": "도어알람",
+  "en_core_term": "Door Alarm",
+  "ko_nouns": [
+    "경고음",
+    "도어",
+    "알람",
+    "제어패널",
+    "스마트폰알림",
+    "2분",
+    "자동해제"
+  ],
+  "question_variants": [
+    "도어알람 알려줘",
+    "도어알람에 대해 설명해줘",
+    "도어알람이 뭐야?",
+    "도어알람 뭐야?",
+    "Door Alarm이 뭐야?",
+    "Door Alarm 설명해줘",
+    "도어알람(Door Alarm) 설명해줘",
+    "도어알람(Door Alarm)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Alarm",
+    "Door",
+    "Door Alarm",
+    "OFF",
+    "SmartThings",
+    "경고음",
+    "도어열림",
+    "제어패널",
+    "2분",
+    "자동해제"
+  ]
+}

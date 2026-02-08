@@ -1,0 +1,42 @@
+{
+  "ko_core_term": "테스트 제품 관리",
+  "en_core_term": "",
+  "ko_nouns": [
+    "양산 출하",
+    "품질검증",
+    "기능 테스트",
+    "현장 테스트",
+    "유통 채널",
+    "전시 데모",
+    "독립적인 테스트 환경",
+    "카테고리별 분리"
+  ],
+  "question_variants": [
+    "테스트 제품 관리 알려줘",
+    "테스트 제품 관리에 대해 설명해줘",
+    "테스트 제품 관리가 뭐야?",
+    "테스트 제품 관리 뭐야?",
+    "테스트 제품 관리 어떻게 해?",
+    "테스트 제품 관리 알려주세요",
+    "테스트 제품 관리이 뭔가요?",
+    "테스트 제품 관리 무엇인가요?"
+  ],
+  "search_keywords": [
+    "Carrier",
+    "Carrier Sample",
+    "Developer",
+    "Developer Test",
+    "Distribution",
+    "Distribution Portal",
+    "Field",
+    "Field Test",
+    "Production",
+    "QA",
+    "Sample",
+    "Test",
+    "필드 테스트",
+    "양산 출하",
+    "품질검증",
+    "카테고리별 분리"
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "ko_core_term": "지역별 배포 관리",
+  "en_core_term": "",
+  "ko_nouns": [
+    "지역별",
+    "지역코드",
+    "모델번호",
+    "KR",
+    "US",
+    "EU",
+    "AP",
+    "ME",
+    "LA",
+    "전력규격",
+    "법규",
+    "체크박스"
+  ],
+  "question_variants": [
+    "지역별 배포 관리 알려줘",
+    "지역별 배포 관리에 대해 설명해줘",
+    "지역별 배포 관리가 뭐야?",
+    "지역별 배포 관리 뭐야?",
+    "지역별 배포 관리 어떻게 해?",
+    "지역별 배포 관리 알려주세요",
+    "지역별 배포 관리이 뭔가요?",
+    "지역별 배포 관리 무엇인가요?"
+  ],
+  "search_keywords": [
+    "Distribution",
+    "Distribution Portal",
+    "Version",
+    "Version Workflow List",
+    "Workflow",
+    "지역별",
+    "지역코드",
+    "모델번호",
+    "KR",
+    "US",
+    "EU",
+    "AP"
+  ]
+}

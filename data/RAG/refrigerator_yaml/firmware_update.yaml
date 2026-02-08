@@ -1,0 +1,202 @@
+category_id: firmware_update
+category_name: Firmware Update
+entry_count: 10
+entries:
+- title: 냉장고 펌웨어 업데이트(OTA)에 대한 설명
+  answer: '냉장고 펌웨어 업데이트는 OTA(Over-The-Air) 방식으로 Wi-Fi를 통해 냉장고의 소프트웨어를 최신 버전으로 업데이트하는
+    것을 의미합니다. 펌웨어 업데이트를 통해 기존 기능의 버그 수정, 새로운 기능 추가, 보안 패치 적용, 에너지 효율 알고리즘 개선 등이 이루어집니다.
+    펌웨어 업데이트는 크게 2가지 유형으로 구분됩니다. 1. 시스템 펌웨어 업데이트: 메인보드의 제어 소프트웨어를 업데이트합니다. 온도 제어 알고리즘,
+    센서 보정, 에러 코드 체계 등 핵심 기능이 포함됩니다. 2. Wi-Fi 모듈 펌웨어 업데이트: IoT 모듈의 소프트웨어를 업데이트합니다.
+    SmartThings 연동, 원격 제어, 보안 프로토콜 등 네트워크 관련 기능이 포함됩니다.'
+  url: https://www.samsung.com/sec/support/home-appliances/
+  sheet: Firmware Update
+  row: 2
+  error_codes: []
+  keywords:
+  - Air
+  - IoT
+  - OTA
+  - Over
+  - Over-The-Air
+  - SmartThings
+  - 메인보드
+  - 에러 코드
+  - 펌웨어 업데이트
+  question_variants:
+  - 냉장고 펌웨어 업데이트(OTA)이 뭐야?
+  - 냉장고 펌웨어 업데이트(OTA) 설명해줘
+  id: firmware_update-001
+- title: 펌웨어 업데이트 시점 설명
+  answer: '냉장고 펌웨어 업데이트는 Wi-Fi 연결 상태에서 다음과 같은 시점에 업데이트를 확인합니다. 1. 최초 Wi-Fi 연결 시: SmartThings
+    앱에 냉장고를 등록하고 Wi-Fi에 연결하면 즉시 업데이트 가능 여부를 확인합니다. 2. 주기적 확인(Polling): 1일에 1회 자동으로
+    서버에 접속하여 새로운 펌웨어가 있는지 확인합니다. 확인 시점은 새벽 시간대(02:00~05:00)에 랜덤으로 설정됩니다. 3. 수동 확인:
+    SmartThings 앱의 설정 > 정보 메뉴에서 사용자가 직접 업데이트 확인 버튼을 눌러 확인할 수 있습니다. 4. 네트워크 재연결 시:
+    Wi-Fi 연결이 끊어졌다가 다시 연결되면 업데이트 가능 여부를 확인합니다.'
+  url: https://www.samsung.com/sec/support/home-appliances/
+  sheet: Firmware Update
+  row: 3
+  error_codes: []
+  keywords:
+  - 02:00~05:00
+  - Polling
+  - SmartThings
+  - 펌웨어 업데이트
+  question_variants:
+  - 펌웨어 업데이트 시점 설명 알려줘
+  - 펌웨어 업데이트 시점 설명에 대해 설명해줘
+  id: firmware_update-002
+- title: 펌웨어 업데이트를 위한 Wi-Fi 요구사항
+  answer: '냉장고 펌웨어 업데이트를 위해서는 다음과 같은 Wi-Fi 환경이 필요합니다. 1. Wi-Fi 규격: 802.11 b/g/n (2.4GHz)
+    지원 필수. 일부 프리미엄 모델은 5GHz도 지원합니다. 2. 인터넷 속도: 최소 1Mbps 이상 권장. 펌웨어 파일 크기는 일반적으로 10~50MB입니다.
+    3. 네트워크 안정성: 업데이트 중 Wi-Fi 연결이 끊어지면 업데이트가 중단되며, 재연결 후 이어서 다운로드됩니다. 4. 보안 프로토콜:
+    WPA/WPA2 지원. WPA3 전용 네트워크에서는 연결이 되지 않을 수 있습니다. 5. 공유기 설정: MAC 주소 필터링이 활성화된 경우,
+    냉장고의 MAC 주소를 허용 목록에 추가해야 합니다. MAC 주소는 냉장고 설정 메뉴 또는 뒷면 명판에서 확인할 수 있습니다.'
+  url: https://www.samsung.com/sec/support/home-appliances/
+  sheet: Firmware Update
+  row: 4
+  error_codes: []
+  keywords:
+  - 2.4GHz
+  - MAC
+  - WPA
+  - 공유기
+  - 펌웨어 업데이트
+  question_variants:
+  - 펌웨어 업데이트를 위한 Wi-Fi 요구사항 알려줘
+  - 펌웨어 업데이트를 위한 Wi-Fi 요구사항에 대해 설명해줘
+  id: firmware_update-003
+- title: 자동 업데이트(Auto Update)와 수동 업데이트(Manual Update) 설명
+  answer: '냉장고 펌웨어의 업데이트 방식은 자동 업데이트와 수동 업데이트 두 가지가 있습니다. 1. 자동 업데이트(Auto Update):
+    SmartThings 앱에서 자동 업데이트를 활성화하면, 새로운 펌웨어가 배포될 때 사용자 확인 없이 자동으로 다운로드 및 설치가 진행됩니다.
+    업데이트는 주로 새벽 시간대(02:00~05:00)에 진행되어 사용에 영향을 최소화합니다. 자동 업데이트는 SmartThings 앱 > 냉장고
+    설정 > 자동 업데이트에서 ON/OFF 할 수 있으며, 기본값은 ON입니다. 2. 수동 업데이트(Manual Update): 자동 업데이트가
+    비활성화된 경우, SmartThings 앱에서 업데이트 알림을 확인하고 사용자가 직접 ''업데이트 시작'' 버튼을 눌러 진행합니다.'
+  url: https://www.samsung.com/sec/support/home-appliances/
+  sheet: Firmware Update
+  row: 5
+  error_codes: []
+  keywords:
+  - 02:00~05:00
+  - Auto Update
+  - Manual Update
+  - 'OFF'
+  - SmartThings
+  - Update
+  question_variants:
+  - 자동 업데이트(Auto Update)와 수동 업데이트(Manual Update) 설명 알려줘
+  - 자동 업데이트(Auto Update)와 수동 업데이트(Manual Update) 설명에 대해 설명해줘
+  id: firmware_update-004
+- title: 펌웨어 업데이트 실패 시 대응 방법
+  answer: '냉장고 펌웨어 업데이트가 실패한 경우 다음과 같이 대응할 수 있습니다. 1. Wi-Fi 연결 상태 확인: 업데이트 중 Wi-Fi
+    연결이 끊어졌을 수 있으므로 연결 상태를 확인하고 재연결합니다. 2. 재시도: SmartThings 앱에서 다시 업데이트를 시도합니다. 다운로드가
+    완료된 상태에서 설치에 실패한 경우 자동으로 재시도됩니다. 3. 전원 재부팅: 냉장고 전원 플러그를 뽑고 1분 후 다시 꽂아 재부팅한 후 업데이트를
+    재시도합니다. 4. 네트워크 초기화: 냉장고의 Wi-Fi 설정을 초기화하고 재연결한 후 업데이트를 시도합니다. 업데이트 실패가 반복되면 서비스
+    센터에 문의하시기 바랍니다. 업데이트 실패 시에도 기존 펌웨어는 유지되므로 냉장고의 냉각 기능에는 영향이 없습니다.'
+  url: https://www.samsung.com/sec/support/home-appliances/
+  sheet: Firmware Update
+  row: 6
+  error_codes: []
+  keywords:
+  - SmartThings
+  - 문의하시기
+  - 펌웨어 업데이트
+  question_variants:
+  - 펌웨어 업데이트 실패 시 대응 어떻게 해?
+  - 펌웨어 업데이트 실패 시 대응 방법 알려줘
+  id: firmware_update-005
+- title: 펌웨어 업데이트 이력 확인 방법
+  answer: '냉장고의 펌웨어 업데이트 이력을 확인하는 방법은 다음과 같습니다. 1. SmartThings 앱에서 확인: 냉장고 선택 > 설정
+    > 정보에서 현재 펌웨어 버전을 확인할 수 있습니다. 업데이트 이력은 알림 이력에서 시간순으로 확인 가능합니다. 2. 냉장고 본체에서 확인:
+    제어 패널의 설정 메뉴에서 소프트웨어 버전 정보를 확인할 수 있습니다(모델에 따라 지원 여부 상이). 3. Service Portal에서 확인:
+    서비스 기사는 Service Portal에서 시리얼번호로 조회하여 해당 제품의 펌웨어 업데이트 이력을 확인할 수 있습니다. 펌웨어 버전 형식은
+    일반적으로 ''V.XX.YY.ZZ'' (예: V.03.12.01) 형태이며, XX는 메이저 버전, YY는 마이너 버전, ZZ는 패치 버전을
+    나타냅니다.'
+  url: https://www.samsung.com/sec/support/home-appliances/
+  sheet: Firmware Update
+  row: 7
+  error_codes: []
+  keywords:
+  - Service
+  - Service Portal
+  - SmartThings
+  - 모델에 따라 지원 여부 상이
+  - '예: V.03.12.01'
+  - 펌웨어 업데이트
+  question_variants:
+  - 펌웨어 업데이트 이력 확인 어떻게 해?
+  - 펌웨어 업데이트 이력 확인 방법 알려줘
+  id: firmware_update-006
+- title: 펌웨어 업데이트 용량 및 소요 시간
+  answer: '냉장고 펌웨어 업데이트의 파일 크기와 소요 시간은 업데이트 유형에 따라 다릅니다. 1. 시스템 펌웨어: 파일 크기 약 20~50MB,
+    다운로드 약 5~15분, 설치 약 5~10분 2. Wi-Fi 모듈 펌웨어: 파일 크기 약 5~15MB, 다운로드 약 2~5분, 설치 약 3~5분
+    업데이트 중에도 냉장고의 냉각 기능은 정상 작동하며, 제어 패널의 일부 버튼이 일시적으로 비활성화될 수 있습니다. 업데이트 완료 후 냉장고가
+    자동으로 재시작되며, 이전에 설정한 온도와 모드는 유지됩니다. 다운로드 파일은 냉장고 내부 메모리에 임시 저장되며, 설치 완료 후 자동 삭제됩니다.'
+  url: https://www.samsung.com/sec/support/home-appliances/
+  sheet: Firmware Update
+  row: 8
+  error_codes: []
+  keywords:
+  - 펌웨어 업데이트
+  question_variants:
+  - 펌웨어 업데이트 용량 및 소요 시간 알려줘
+  - 펌웨어 업데이트 용량 및 소요 시간에 대해 설명해줘
+  id: firmware_update-007
+- title: 펌웨어 업데이트 알림 설정
+  answer: 냉장고 펌웨어 업데이트 알림은 SmartThings 앱에서 설정할 수 있습니다. 1. SmartThings 앱을 실행하고 등록된
+    냉장고를 선택합니다. 2. 설정 > 알림 설정 메뉴에서 '펌웨어 업데이트 알림'을 ON으로 설정합니다. 알림이 활성화되면 다음 시점에 푸시
+    알림을 받을 수 있습니다. - 새로운 펌웨어 배포 시 - 다운로드 완료 시 (수동 업데이트 설정인 경우) - 업데이트 설치 완료 시 - 업데이트
+    실패 시 자동 업데이트가 설정된 경우에도 알림을 통해 업데이트 진행 상태를 확인할 수 있습니다.
+  url: https://www.samsung.com/sec/support/home-appliances/
+  sheet: Firmware Update
+  row: 9
+  error_codes: []
+  keywords:
+  - SmartThings
+  - 수동 업데이트 설정인 경우
+  - 펌웨어 업데이트
+  question_variants:
+  - 펌웨어 업데이트 알림 설정 알려줘
+  - 펌웨어 업데이트 알림 설정에 대해 설명해줘
+  id: firmware_update-008
+- title: 펌웨어 업데이트 후 설정 유지 여부
+  answer: '냉장고 펌웨어 업데이트 후 사용자 설정은 다음과 같이 유지됩니다. 1. 유지되는 설정: - 냉장실/냉동실/전환실 온도 설정 -
+    절전모드, 휴가모드 등 운전 모드 설정 - 도어알람 ON/OFF 설정 - Wi-Fi 연결 정보 - SmartThings 기기 등록 정보 2.
+    초기화될 수 있는 설정: - 일부 디스플레이 밝기/언어 설정 (모델에 따라 상이) - 필터 교체 카운터 (유지되는 것이 일반적이나 예외 가능)
+    펌웨어 업데이트 후 설정이 초기화된 경우, SmartThings 앱에서 이전 설정을 확인하고 다시 적용할 수 있습니다.'
+  url: https://www.samsung.com/sec/support/home-appliances/
+  sheet: Firmware Update
+  row: 10
+  error_codes: []
+  keywords:
+  - 'OFF'
+  - SmartThings
+  - 냉동실
+  - 냉장실
+  - 모델에 따라 상이
+  - 유지되는 것이 일반적이나 예외 가능
+  - 전환실
+  - 펌웨어 업데이트
+  question_variants:
+  - 펌웨어 업데이트 후 설정 유지 여부 알려줘
+  - 펌웨어 업데이트 후 설정 유지 여부에 대해 설명해줘
+  id: firmware_update-009
+- title: Family Hub 디스플레이 소프트웨어 업데이트에 대한 설명
+  answer: Family Hub가 탑재된 냉장고는 냉장고 시스템 펌웨어 외에 별도로 Family Hub 디스플레이의 Tizen OS 업데이트가
+    제공됩니다. Family Hub 업데이트는 다음과 같은 내용을 포함합니다. - 새로운 앱 및 서비스 추가 - UI/UX 개선 - 보안 패치
+    - 식품 인식 AI 모델 업데이트 - Bixby 음성 인식 개선 Family Hub 업데이트는 디스플레이 하단의 설정 > 소프트웨어 업데이트
+    메뉴에서 확인 및 실행할 수 있습니다. 업데이트 파일 크기가 500MB~2GB로 크기 때문에 Wi-Fi 연결이 안정적인 환경에서 진행하는 것을
+    권장합니다. 업데이트 중 디스플레이가 약 10~20분간 사용이 불가하지만, 냉각 기능은 정상 작동합니다.
+  url: https://www.samsung.com/sec/refrigerators/family-hub/
+  sheet: Firmware Update
+  row: 11
+  error_codes: []
+  keywords:
+  - Bixby
+  - Family
+  - Family Hub
+  - Hub
+  - Tizen
+  question_variants:
+  - Family Hub 디스플레이 소프트웨어 업데이트이 뭐야?
+  - Family Hub 디스플레이 소프트웨어 업데이트 설명해줘
+  id: firmware_update-010

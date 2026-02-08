@@ -1,0 +1,36 @@
+{
+  "ko_core_term": "Distribution Portal 접속",
+  "en_core_term": "Distribution Portal",
+  "ko_nouns": [
+    "접속 방법",
+    "IP 대역",
+    "사외 네트워크",
+    "403 에러",
+    "IP 등록",
+    "IT 인프라 팀",
+    "허용된 IP"
+  ],
+  "question_variants": [
+    "Distribution Portal 접속 알려줘",
+    "Distribution Portal 접속에 대해 설명해줘",
+    "Distribution Portal 접속이 뭐야?",
+    "Distribution Portal 접속 뭐야?",
+    "Distribution Portal이 뭐야?",
+    "Distribution Portal 설명해줘",
+    "Distribution Portal 접속(Distribution Portal) 설명해줘",
+    "Distribution Portal 접속(Distribution Portal)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Distribution",
+    "Distribution Portal",
+    "Portal",
+    "VPN",
+    "접속 방법",
+    "IP 대역",
+    "403 에러",
+    "사외 네트워크",
+    "IP 등록",
+    "IT 인프라",
+    "허용된 IP"
+  ]
+}

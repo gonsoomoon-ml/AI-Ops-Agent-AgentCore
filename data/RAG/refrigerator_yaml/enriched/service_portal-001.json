@@ -1,0 +1,38 @@
+{
+  "ko_core_term": "Role 권한 획득",
+  "en_core_term": "Role",
+  "ko_nouns": [
+    "권한",
+    "역할",
+    "Engineer",
+    "Manager",
+    "Viewer",
+    "승인",
+    "협력사",
+    "인증"
+  ],
+  "question_variants": [
+    "Role 권한 획득 알려줘",
+    "Role 권한 획득에 대해 설명해줘",
+    "Role 권한 획득이 뭐야?",
+    "Role 권한 획득 뭐야?",
+    "Role이 뭐야?",
+    "Role 설명해줘",
+    "Role 권한 획득(Role) 설명해줘",
+    "Role 권한 획득(Role)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Engineer",
+    "Manager",
+    "Role",
+    "Service",
+    "Service Portal",
+    "Viewer",
+    "진행하기",
+    "권한",
+    "역할",
+    "승인",
+    "협력사",
+    "인증"
+  ]
+}

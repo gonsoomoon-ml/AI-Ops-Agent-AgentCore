@@ -1,0 +1,36 @@
+{
+  "ko_core_term": "AI 에너지관리",
+  "en_core_term": "AI Energy Mode",
+  "ko_nouns": [
+    "컴프레서 가동",
+    "사용 패턴 학습",
+    "에너지 최적화",
+    "월별 에너지 리포트",
+    "비스포크 냉장고",
+    "인공지능 기반",
+    "에너지 절감"
+  ],
+  "question_variants": [
+    "AI 에너지관리 알려줘",
+    "AI 에너지관리에 대해 설명해줘",
+    "AI 에너지관리가 뭐야?",
+    "AI 에너지관리 뭐야?",
+    "AI Energy Mode이 뭐야?",
+    "AI Energy Mode 설명해줘",
+    "AI 에너지관리(AI Energy Mode) 설명해줘",
+    "AI 에너지관리(AI Energy Mode)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "AI Energy Mode",
+    "Energy",
+    "Energy Mode",
+    "Mode",
+    "SmartThings",
+    "도어 개폐 빈도",
+    "시간대별 사용량",
+    "컴프레서 가동",
+    "에너지 최적화",
+    "인공지능 학습",
+    "비스포크"
+  ]
+}

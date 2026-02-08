@@ -1,0 +1,38 @@
+{
+  "ko_core_term": "와인셀러",
+  "en_core_term": "Wine Cellar",
+  "ko_nouns": [
+    "와인보관",
+    "듀얼존",
+    "레드와인",
+    "화이트와인",
+    "UV차단",
+    "진동최소화",
+    "정밀온도제어",
+    "보관용량"
+  ],
+  "question_variants": [
+    "와인셀러 알려줘",
+    "와인셀러에 대해 설명해줘",
+    "와인셀러가 뭐야?",
+    "와인셀러 뭐야?",
+    "Wine Cellar이 뭐야?",
+    "Wine Cellar 설명해줘",
+    "와인셀러(Wine Cellar) 설명해줘",
+    "와인셀러(Wine Cellar)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Cellar",
+    "Dual",
+    "Dual Zone",
+    "Wine",
+    "Wine Cellar",
+    "Zone",
+    "제공하기",
+    "와인보관",
+    "듀얼존",
+    "UV차단",
+    "진동최소화",
+    "레드와인"
+  ]
+}

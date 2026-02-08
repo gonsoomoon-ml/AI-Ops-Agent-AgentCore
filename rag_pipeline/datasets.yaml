@@ -1,0 +1,47 @@
+# RAG Pipeline — Dataset Registry
+# Each dataset defines paths, Bedrock KB IDs, and domain-specific config.
+# Scripts use --dataset <name> to select which dataset to process.
+
+datasets:
+  refrigerator:
+    name: "Samsung Refrigerator Q&A"
+    description: "삼성 냉장고 진단, 펌웨어, 용어, 서비스 포털 등 Q&A"
+    raw_dir: "data/RAG/refrigerator"
+    yaml_dir: "data/RAG/refrigerator_yaml"
+    # Bedrock KB (production)
+    s3_bucket: "ops-fridge-kb-v2-3432"
+    kb_id: "XANPGITYE3"
+    ds_id: "C0IFPMQ3SP"
+    kb_name: "ops-fridge-kb-v2"
+    embedding_model: "cohere.embed-multilingual-v3"
+    # LLM enrichment config
+    stop_words: >-
+      냉장고, 삼성, 제품, 기능, 설정, 서비스, 방법, 확인, 사용, 문제,
+      해결, 냉장, 냉각, 온도, 기체, 액체, 내부, 외부
+    # Category display names (English → Korean)
+    category_names:
+      Diagnostics: "진단/에러코드"
+      Distribution Portal: "배포 포털"
+      Firmware Update: "펌웨어 업데이트"
+      Glossary: "용어 사전"
+      Model Matching: "모델 매칭"
+      Product Line: "제품 라인업"
+      Service Portal: "서비스 포털"
+      Smart Feature: "스마트 기능"
+      SmartThings Portal: "SmartThings 포털"
+
+  bridge:
+    name: "Samsung Bridge (TSS/CMS/SMF)"
+    description: "삼성 TSS, CMS Portal, SMF, OMC 업데이트, 앱 배포 등 Q&A"
+    raw_dir: "data/RAG/bridge"
+    yaml_dir: "data/RAG/bridge_yaml"
+    # Bedrock KB (TBD — will be created after data validation)
+    s3_bucket: ""
+    kb_id: ""
+    ds_id: ""
+    kb_name: ""
+    embedding_model: "cohere.embed-multilingual-v3"
+    # LLM enrichment config (TBD — analyze data first, then set)
+    stop_words: ""
+    # Category display names (TBD — will be populated after convert_md_to_yaml.py run)
+    category_names: {}

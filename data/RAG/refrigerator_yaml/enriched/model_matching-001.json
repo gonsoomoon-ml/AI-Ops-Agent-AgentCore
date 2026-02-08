@@ -1,0 +1,37 @@
+{
+  "ko_core_term": "모델 식별 시스템",
+  "en_core_term": "Model Matching System",
+  "ko_nouns": [
+    "모델번호",
+    "시리얼번호",
+    "사양",
+    "부품 호환성",
+    "서비스 이력",
+    "자동 매칭",
+    "부품 목록",
+    "서비스 매뉴얼"
+  ],
+  "question_variants": [
+    "모델 식별 시스템 알려줘",
+    "모델 식별 시스템에 대해 설명해줘",
+    "모델 식별 시스템이 뭐야?",
+    "모델 식별 시스템 뭐야?",
+    "Model Matching System이 뭐야?",
+    "Model Matching System 설명해줘",
+    "모델 식별 시스템(Model Matching System) 설명해줘",
+    "모델 식별 시스템(Model Matching System)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Matching",
+    "Model",
+    "Model Matching System",
+    "System",
+    "에러코드",
+    "모델 식별",
+    "자동 매칭",
+    "서비스 이력",
+    "부품 호환성",
+    "시리얼번호",
+    "모델번호"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "ko_core_term": "절전모드",
+  "en_core_term": "Energy Saving Mode",
+  "ko_nouns": [
+    "전력소비",
+    "컴프레서가동빈도",
+    "장기간외출",
+    "조명OFF",
+    "전력절감",
+    "에너지소비최소화"
+  ],
+  "question_variants": [
+    "절전모드 알려줘",
+    "절전모드에 대해 설명해줘",
+    "절전모드가 뭐야?",
+    "절전모드 뭐야?",
+    "Energy Saving Mode이 뭐야?",
+    "Energy Saving Mode 설명해줘",
+    "절전모드(Energy Saving Mode) 설명해줘",
+    "절전모드(Energy Saving Mode)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Energy",
+    "Energy Saving Mode",
+    "Mode",
+    "Saving",
+    "SmartThings",
+    "냉장실",
+    "절전모드",
+    "전력소비",
+    "컴프레서가동",
+    "장기간외출",
+    "전력절감"
+  ]
+}

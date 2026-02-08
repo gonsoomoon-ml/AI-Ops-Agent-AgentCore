@@ -1,0 +1,36 @@
+{
+  "ko_core_term": "휴가모드",
+  "en_core_term": "Vacation Mode",
+  "ko_nouns": [
+    "장기간외출",
+    "에너지소비최소화",
+    "냉장실15도",
+    "컴프레서가동최소화",
+    "냉동식품보관",
+    "에너지30~40%절감",
+    "정상온도복귀"
+  ],
+  "question_variants": [
+    "휴가모드 알려줘",
+    "휴가모드에 대해 설명해줘",
+    "휴가모드가 뭐야?",
+    "휴가모드 뭐야?",
+    "Vacation Mode이 뭐야?",
+    "Vacation Mode 설명해줘",
+    "휴가모드(Vacation Mode) 설명해줘",
+    "휴가모드(Vacation Mode)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Mode",
+    "SmartThings",
+    "Vacation",
+    "Vacation Mode",
+    "냉동실",
+    "냉장실",
+    "장기간외출",
+    "에너지소비최소화",
+    "컴프레서가동",
+    "15도",
+    "에너지절감"
+  ]
+}

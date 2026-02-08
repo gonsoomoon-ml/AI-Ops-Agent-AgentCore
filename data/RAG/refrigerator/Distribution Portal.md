@@ -1,0 +1,70 @@
+**title**: Distribution Portal 접속 방법
+---
+- **contents**: Distribution Portal은 삼성 냉장고의 생산부터 출하, QA 검증, 시장 배포까지 전 과정을 관리하는 포털입니다. https://dist.samsung.com/portal 로 접속할 수 있습니다. 다만, 허용된 IP 대역에서만 접속 가능하며, 사외 네트워크에서 접속 시 VPN 연결이 필요합니다. 403 에러가 발생하는 경우 IT 인프라 팀에 IP 등록을 요청해야 합니다.
+- **urls**: https://www.samsung.com/sec/support/
+- **sheet**: Distribution Portal
+- **row**: 2
+- **generated_at**: 2026-02-08T10:00:00
+
+---
+**title**: Distribution Portal에서 관리하는 테스트 제품 관리
+---
+- **contents**: 시장 출하 제품과 분리하여 테스트할 수 있도록 테스트 제품 등록 기능을 제공하고 있으며, 용도별로 카테고리를 분리하여 관리합니다. 1. Production: 양산 출하 제품 2. QA Test: 품질검증(QA)팀의 검증용 제품 3. Developer Test: 개발팀의 기능 테스트용 제품 4. Field Test: 현장 테스트(필드 테스트)용 제품 5. Carrier Sample: 유통 채널 전시/데모용 제품 각 카테고리의 제품은 독립적인 테스트 환경에서 관리되며, 펌웨어 배포 시에도 카테고리별로 분리하여 배포할 수 있습니다.
+- **urls**: https://www.samsung.com/sec/support/
+- **sheet**: Distribution Portal
+- **row**: 3
+- **generated_at**: 2026-02-08T10:00:00
+
+---
+**title**: Distribution Portal에서 제품 로그 확인 방법
+---
+- **contents**: Distribution Portal에서 제품의 생산/출하/업데이트 로그를 확인하는 방법은 다음과 같습니다. Home > Information > Device > Device Info 메뉴에서 시리얼번호로 조회하면 해당 제품의 전체 이력을 확인할 수 있습니다. 확인 가능한 로그 항목은 다음과 같습니다. - 생산일자 및 생산 라인 정보 - 출고일자 및 출고 목적지 - 펌웨어 버전 이력 - 품질 검증(QA) 통과 여부 - 리콜 대상 여부
+- **urls**: https://www.samsung.com/sec/support/
+- **sheet**: Distribution Portal
+- **row**: 4
+- **generated_at**: 2026-02-08T10:00:00
+
+---
+**title**: Distribution Portal에서 펌웨어 배포 Workflow 세부 설명
+---
+- **contents**: Distribution Portal에서의 냉장고 펌웨어 배포 운영은 크게 두 단계로 나뉩니다. 1. 개발팀에서 검증된 펌웨어 버전을 서버를 통해 배포할지 여부를 판단하는 단계 (Release) - SW PL 2. 배포된 펌웨어를 QA 테스트를 통해 확정하는 단계 (Confirm or Reject) - QA 이 과정을 거쳐 최종적으로 사용자에게 OTA 업데이트가 제공됩니다. **Release 단계 (by SW PL)** 1. 해당 모델 빌드 권한을 가진 SW PL이 Home > Version > Firmware Version > Version Workflow List에 접속합니다. 2. Version Workflow List에서 Release할 버전을 선택하여 Detail 페이지로 진입합니다. 3. 배포 대상 지역과 모델을 선택합니다. 4. Release 버튼을 눌러 Release를 진행합니다. **Confirm/Reject 단계 (by QA)** 1. QA 권한을 가진 담당자가 QA Test 제품으로 해당 펌웨어의 테스트를 완료합니다. 2. 정상 동작 확인 시 Confirm, 비정상 동작 확인 시 Reject를 진행합니다. 3. Confirm된 펌웨어는 24시간 이내에 OTA 서버에 반영되어 사용자에게 배포됩니다.
+- **urls**: https://www.samsung.com/sec/support/
+- **sheet**: Distribution Portal
+- **row**: 5
+- **generated_at**: 2026-02-08T10:00:00
+
+---
+**title**: Distribution Portal에서 펌웨어 검증/테스트 방법
+---
+- **contents**: 시장 배포 전 펌웨어의 동작을 검증하기 위해 4가지 테스트 시나리오를 제공합니다. - Developer Test: 개발자가 기능 개발 중 테스트에 사용 - QA Test: QA팀이 시장 배포 전 최종 검증에 사용 - Field Test: 실제 사용 환경에서의 동작 확인에 사용 - Carrier Sample Test: 유통 채널의 데모 제품 테스트에 사용 QA Test 기준으로 테스트 방법은 다음과 같습니다. 1. Home > Test > Test Device > Test Device Request에서 테스트 제품을 QA Test 카테고리로 등록합니다. 시리얼번호를 입력하고 Request 버튼을 누릅니다. 2. Home > Test > Firmware Test > QA Test Deploy List에서 테스트할 펌웨어 버전을 선택하고 Deploy합니다. 3. 테스트 제품의 전원을 재부팅한 후 펌웨어 업데이트가 정상적으로 진행되는지 확인합니다. 4. 업데이트 완료 후 냉각 성능, 센서 동작, 스마트 기능 등을 종합 검증합니다.
+- **urls**: https://www.samsung.com/sec/support/
+- **sheet**: Distribution Portal
+- **row**: 6
+- **generated_at**: 2026-02-08T10:00:00
+
+---
+**title**: Distribution Portal에서 지역별 배포 관리 방법
+---
+- **contents**: Distribution Portal에서는 냉장고 펌웨어를 지역별로 분리하여 배포할 수 있습니다. 지역 구분은 모델번호 뒤 2자리 지역 코드로 관리됩니다. - KR: 한국 - US: 북미 - EU: 유럽 - AP: 아시아/태평양 - ME: 중동/아프리카 - LA: 중남미 지역별 배포를 설정하는 방법은 다음과 같습니다. 1. Version Workflow List에서 Release할 버전을 선택합니다. 2. 배포 대상 지역을 체크박스로 선택합니다. 선택하지 않은 지역에는 배포되지 않습니다. 3. 지역별로 다른 펌웨어 버전을 배포할 수 있으며, 각 지역의 전력 규격, 법규, 언어 등이 반영됩니다.
+- **urls**: https://www.samsung.com/sec/support/
+- **sheet**: Distribution Portal
+- **row**: 7
+- **generated_at**: 2026-02-08T10:00:00
+
+---
+**title**: Distribution Portal에서 리콜 관리 방법
+---
+- **contents**: Distribution Portal에서는 제품 리콜 시 대상 제품을 시리얼번호 기반으로 관리할 수 있습니다. 1. Home > Recall Management 메뉴에 접속합니다. 2. 리콜 캠페인을 생성하고 대상 모델과 시리얼번호 범위를 지정합니다. 3. 리콜 대상 제품이 서비스 접수되면 자동으로 리콜 안내가 표시됩니다. 4. 리콜 조치 현황(조치 완료/미조치)을 실시간으로 모니터링할 수 있습니다. 리콜 대상 제품에 대해서는 특별 펌웨어를 긴급 배포할 수도 있으며, 이 경우 일반 배포 Workflow(Release → QA Confirm)를 거치지 않고 긴급 배포 프로세스를 통해 신속하게 배포할 수 있습니다.
+- **urls**: https://www.samsung.com/sec/support/
+- **sheet**: Distribution Portal
+- **row**: 8
+- **generated_at**: 2026-02-08T10:00:00
+
+---
+**title**: QnA. Distribution Portal의 기존 URL로 접속이 되지 않습니다.
+---
+- **contents**: 서버 도메인이 변경되어 기존 URL을 더 이상 지원하지 않게 되었습니다. 아래 신규 주소로 접속 부탁드립니다. https://dist.samsung.com/portal 기존 URL에서 자동 리다이렉트가 되지 않는 경우, 브라우저 캐시를 삭제한 후 신규 URL로 직접 접속하시기 바랍니다. 접속 관련 문의는 IT 인프라 팀으로 문의하시기 바랍니다.
+- **urls**: https://www.samsung.com/sec/support/
+- **sheet**: Distribution Portal
+- **row**: 9
+- **generated_at**: 2026-02-08T10:00:00

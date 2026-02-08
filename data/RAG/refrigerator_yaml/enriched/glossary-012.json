@@ -1,0 +1,37 @@
+{
+  "ko_core_term": "메탈쿨링",
+  "en_core_term": "Metal Cooling",
+  "ko_nouns": [
+    "금속패널",
+    "냉기보존",
+    "열전도율",
+    "냉기방출",
+    "도어쪽",
+    "음료온도",
+    "소스류",
+    "온도복원"
+  ],
+  "question_variants": [
+    "메탈쿨링 알려줘",
+    "메탈쿨링에 대해 설명해줘",
+    "메탈쿨링이 뭐야?",
+    "메탈쿨링 뭐야?",
+    "Metal Cooling이 뭐야?",
+    "Metal Cooling 설명해줘",
+    "메탈쿨링(Metal Cooling) 설명해줘",
+    "메탈쿨링(Metal Cooling)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Cooling",
+    "Metal",
+    "Metal Cooling",
+    "메탈쿨링",
+    "금속패널",
+    "냉기보존",
+    "열전도율",
+    "냉기방출",
+    "도어쪽적용",
+    "온도복원",
+    "금속내벽"
+  ]
+}

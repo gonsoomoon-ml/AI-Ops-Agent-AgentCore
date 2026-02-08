@@ -1,0 +1,41 @@
+{
+  "ko_core_term": "Family Hub 디스플레이",
+  "en_core_term": "Family Hub",
+  "ko_nouns": [
+    "터치스크린",
+    "식품관리",
+    "유통기한",
+    "음악스트리밍",
+    "화상통화",
+    "레시피검색",
+    "Tizen OS",
+    "OTA업데이트"
+  ],
+  "question_variants": [
+    "Family Hub 디스플레이 알려줘",
+    "Family Hub 디스플레이에 대해 설명해줘",
+    "Family Hub 디스플레이가 뭐야?",
+    "Family Hub 디스플레이 뭐야?",
+    "Family Hub이 뭐야?",
+    "Family Hub 설명해줘",
+    "Family Hub 디스플레이(Family Hub) 설명해줘",
+    "Family Hub 디스플레이(Family Hub)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Air",
+    "Bixby",
+    "Family",
+    "Family Hub",
+    "Hub",
+    "Melon",
+    "OTA",
+    "Over",
+    "Over-The-Air",
+    "Spotify",
+    "Tizen",
+    "유통기",
+    "터치스크린",
+    "화상통화",
+    "레시피검색"
+  ]
+}

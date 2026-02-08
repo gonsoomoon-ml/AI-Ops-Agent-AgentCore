@@ -1,0 +1,38 @@
+{
+  "ko_core_term": "명판",
+  "en_core_term": "Rating Plate",
+  "ko_nouns": [
+    "명판",
+    "모델번호",
+    "시리얼번호",
+    "정격전압",
+    "소비전력",
+    "냉매종류",
+    "충전량",
+    "제조일자"
+  ],
+  "question_variants": [
+    "명판 알려줘",
+    "명판에 대해 설명해줘",
+    "명판이 뭐야?",
+    "명판 뭐야?",
+    "Rating Plate이 뭐야?",
+    "Rating Plate 설명해줘",
+    "명판(Rating Plate) 설명해줘",
+    "명판(Rating Plate)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Plate",
+    "Rating",
+    "Rating Plate",
+    "SmartThings",
+    "가장 일반적",
+    "냉장실",
+    "빌트인 모델",
+    "명판",
+    "모델번호",
+    "시리얼번호",
+    "정격전압",
+    "제조일자"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "ko_core_term": "필터 교체 알림",
+  "en_core_term": "Filter Replacement Alert",
+  "ko_nouns": [
+    "정수필터",
+    "탈취필터",
+    "교체시기",
+    "필터리셋",
+    "정품필터",
+    "카운터초기화",
+    "사용량기반"
+  ],
+  "question_variants": [
+    "필터 교체 알림 알려줘",
+    "필터 교체 알림에 대해 설명해줘",
+    "필터 교체 알림이 뭐야?",
+    "필터 교체 알림 뭐야?",
+    "Filter Replacement Alert이 뭐야?",
+    "Filter Replacement Alert 설명해줘",
+    "필터 교체 알림(Filter Replacement Alert) 설명해줘",
+    "필터 교체 알림(Filter Replacement Alert)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Alert",
+    "Filter",
+    "Filter Replacement Alert",
+    "Replacement",
+    "SmartThings",
+    "정수필터",
+    "탈취필터",
+    "필터리셋",
+    "교체시기",
+    "정품필터"
+  ]
+}

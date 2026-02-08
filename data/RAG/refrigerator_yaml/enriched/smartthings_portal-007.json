@@ -1,0 +1,37 @@
+{
+  "ko_core_term": "자동화 설정",
+  "en_core_term": "Automation",
+  "ko_nouns": [
+    "자동화규칙",
+    "조건동작",
+    "시간기반",
+    "위치기반",
+    "이벤트기반",
+    "연동기반",
+    "절전모드",
+    "복수조건"
+  ],
+  "question_variants": [
+    "자동화 설정 알려줘",
+    "자동화 설정에 대해 설명해줘",
+    "자동화 설정이 뭐야?",
+    "자동화 설정 뭐야?",
+    "Automation이 뭐야?",
+    "Automation 설명해줘",
+    "자동화 설정(Automation) 설명해줘",
+    "자동화 설정(Automation)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Automation",
+    "If",
+    "SmartThings",
+    "Then",
+    "Things Portal",
+    "자동화규칙",
+    "조건동작",
+    "시간기반",
+    "위치기반",
+    "이벤트기반",
+    "절전모드"
+  ]
+}

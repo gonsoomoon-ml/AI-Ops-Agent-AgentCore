@@ -1,0 +1,38 @@
+{
+  "ko_core_term": "급속냉동",
+  "en_core_term": "Power Freeze",
+  "ko_nouns": [
+    "냉각성능",
+    "최대출력",
+    "컴프레서",
+    "팬",
+    "세포손상",
+    "식감",
+    "영양소",
+    "일반모드"
+  ],
+  "question_variants": [
+    "급속냉동 알려줘",
+    "급속냉동에 대해 설명해줘",
+    "급속냉동이 뭐야?",
+    "급속냉동 뭐야?",
+    "Power Freeze이 뭐야?",
+    "Power Freeze 설명해줘",
+    "급속냉동(Power Freeze) 설명해줘",
+    "급속냉동(Power Freeze)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Freeze",
+    "Power",
+    "Power Freeze",
+    "SmartThings",
+    "냉동실",
+    "급속냉동",
+    "냉각성능",
+    "최대출력",
+    "컴프레서",
+    "세포손상",
+    "식감보존",
+    "영양소보존"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "ko_core_term": "IoT 모듈",
+  "en_core_term": "Internet of Things",
+  "ko_nouns": [
+    "통신 모듈",
+    "Wi-Fi 모듈",
+    "무선 공유기",
+    "원격 온도 제어",
+    "에너지 모니터링",
+    "도어 열림 알림",
+    "2.4GHz",
+    "5GHz 대역"
+  ],
+  "question_variants": [
+    "IoT 모듈 알려줘",
+    "IoT 모듈에 대해 설명해줘",
+    "IoT 모듈이 뭐야?",
+    "IoT 모듈 뭐야?",
+    "Internet of Things이 뭐야?",
+    "Internet of Things 설명해줘",
+    "IoT 모듈(Internet of Things) 설명해줘",
+    "IoT 모듈(Internet of Things)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Hz Wi",
+    "Internet",
+    "Internet of Things",
+    "IoT",
+    "SmartThings",
+    "Things",
+    "공유기",
+    "통신 모듈",
+    "Wi-Fi 모듈",
+    "원격 제어",
+    "2.4GHz",
+    "5GHz"
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "ko_core_term": "Family Hub",
+  "en_core_term": "Family Hub",
+  "ko_nouns": [
+    "터치스크린",
+    "디스플레이",
+    "플랫폼",
+    "식품관리카메라",
+    "레시피검색",
+    "메모공유",
+    "스마트홈제어",
+    "음성비서"
+  ],
+  "question_variants": [
+    "Family Hub 알려줘",
+    "Family Hub에 대해 설명해줘",
+    "Family Hub가 뭐야?",
+    "Family Hub 뭐야?",
+    "Family Hub이 뭐야?",
+    "Family Hub 설명해줘",
+    "Family Hub(Family Hub) 설명해줘",
+    "Family Hub(Family Hub)가 무엇인가요",
+    "Family Hub 무엇인가요?"
+  ],
+  "search_keywords": [
+    "Bixby",
+    "Family",
+    "Family Hub",
+    "Full",
+    "SmartThings",
+    "터치스크린",
+    "디스플레이",
+    "식품관리카메라",
+    "레시피",
+    "스마트홈제어",
+    "음성비서",
+    "21.5인치"
+  ]
+}

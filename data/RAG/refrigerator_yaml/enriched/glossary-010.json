@@ -1,0 +1,35 @@
+{
+  "ko_core_term": "멀티 쿨링",
+  "en_core_term": "Multi Cooling",
+  "ko_nouns": [
+    "냉기 배출구",
+    "균일 냉기",
+    "냉기 순환",
+    "온도 편차",
+    "5개 배출구",
+    "구석구석 냉각",
+    "일정 온도 유지"
+  ],
+  "question_variants": [
+    "멀티 쿨링 알려줘",
+    "멀티 쿨링에 대해 설명해줘",
+    "멀티 쿨링이 뭐야?",
+    "멀티 쿨링 뭐야?",
+    "Multi Cooling이 뭐야?",
+    "Multi Cooling 설명해줘",
+    "멀티 쿨링(Multi Cooling) 설명해줘",
+    "멀티 쿨링(Multi Cooling)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Cooling",
+    "Multi",
+    "Multi Cooling",
+    "멀티 쿨링",
+    "냉기 배출구",
+    "균일 냉기",
+    "냉기 순환",
+    "온도 편차",
+    "5개 배출구",
+    "구석구석 냉각"
+  ]
+}

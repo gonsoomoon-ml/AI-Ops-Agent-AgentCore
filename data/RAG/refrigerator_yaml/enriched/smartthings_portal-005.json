@@ -1,0 +1,37 @@
+{
+  "ko_core_term": "기기 공유",
+  "en_core_term": "Members",
+  "ko_nouns": [
+    "구성원",
+    "초대",
+    "가족 구성원",
+    "삼성 계정",
+    "이메일",
+    "소유자",
+    "수락",
+    "제어 기능"
+  ],
+  "question_variants": [
+    "기기 공유 알려줘",
+    "기기 공유에 대해 설명해줘",
+    "기기 공유가 뭐야?",
+    "기기 공유 뭐야?",
+    "Members이 뭐야?",
+    "Members 설명해줘",
+    "기기 공유(Members) 설명해줘",
+    "기기 공유(Members)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Home",
+    "Members",
+    "My Home",
+    "SmartThings",
+    "Things Portal",
+    "최초 등록자",
+    "구성원",
+    "초대",
+    "가족 구성원",
+    "삼성 계정",
+    "소유자"
+  ]
+}

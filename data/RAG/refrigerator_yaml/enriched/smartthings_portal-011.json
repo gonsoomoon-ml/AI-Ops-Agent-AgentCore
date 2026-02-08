@@ -1,0 +1,36 @@
+{
+  "ko_core_term": "위치 설정",
+  "en_core_term": "Location",
+  "ko_nouns": [
+    "위치 추가",
+    "방 생성",
+    "위치 기반 자동화",
+    "기기 그룹핑",
+    "위치별 에너지 사용량",
+    "최대 20개 위치",
+    "최대 200개 기기"
+  ],
+  "question_variants": [
+    "위치 설정 알려줘",
+    "위치 설정에 대해 설명해줘",
+    "위치 설정이 뭐야?",
+    "위치 설정 뭐야?",
+    "Location이 뭐야?",
+    "Location 설명해줘",
+    "위치 설정(Location) 설명해줘",
+    "위치 설정(Location)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Devices",
+    "Location",
+    "Room",
+    "SmartThings",
+    "Things Portal",
+    "사무실",
+    "예: 주방",
+    "거실",
+    "위치 추가",
+    "위치 기반 자동화",
+    "기기 그룹핑"
+  ]
+}

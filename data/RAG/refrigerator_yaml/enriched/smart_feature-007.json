@@ -1,0 +1,36 @@
+{
+  "ko_core_term": "에너지 모니터링",
+  "en_core_term": "Energy Monitoring",
+  "ko_nouns": [
+    "전력 사용량",
+    "실시간 확인",
+    "일별",
+    "주별",
+    "월별",
+    "그래프",
+    "목표 에너지",
+    "평균 사용량"
+  ],
+  "question_variants": [
+    "에너지 모니터링 알려줘",
+    "에너지 모니터링에 대해 설명해줘",
+    "에너지 모니터링이 뭐야?",
+    "에너지 모니터링 뭐야?",
+    "Energy Monitoring이 뭐야?",
+    "Energy Monitoring 설명해줘",
+    "에너지 모니터링(Energy Monitoring) 설명해줘",
+    "에너지 모니터링(Energy Monitoring)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Energy",
+    "Energy Monitoring",
+    "Monitoring",
+    "SmartThings",
+    "Things Energy",
+    "전력 사용량",
+    "실시간",
+    "그래프",
+    "목표 에너지",
+    "평균 사용량"
+  ]
+}

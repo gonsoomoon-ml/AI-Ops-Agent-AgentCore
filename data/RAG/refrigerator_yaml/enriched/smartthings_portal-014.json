@@ -1,0 +1,38 @@
+{
+  "ko_core_term": "기기 삭제",
+  "en_core_term": "Remove Device",
+  "ko_nouns": [
+    "삭제",
+    "Remove",
+    "톱니바퀴",
+    "알림이력",
+    "에너지데이터",
+    "공유구성원",
+    "자동화규칙",
+    "비활성화"
+  ],
+  "question_variants": [
+    "기기 삭제 알려줘",
+    "기기 삭제에 대해 설명해줘",
+    "기기 삭제가 뭐야?",
+    "기기 삭제 뭐야?",
+    "Remove Device가 뭐야?",
+    "Remove Device 설명해줘",
+    "기기 삭제(Remove Device) 설명해줘",
+    "기기 삭제(Remove Device)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Device",
+    "Remove",
+    "Remove Device",
+    "SmartThings",
+    "Things Portal",
+    "톱니바퀴",
+    "기기삭제",
+    "알림이력",
+    "에너지데이터",
+    "자동화규칙",
+    "공유구성원",
+    "비활성화"
+  ]
+}

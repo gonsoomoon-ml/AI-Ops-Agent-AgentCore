@@ -1,0 +1,41 @@
+{
+  "ko_core_term": "부품 주문 절차",
+  "en_core_term": "",
+  "ko_nouns": [
+    "부품주문",
+    "모델번호",
+    "부품목록",
+    "재고상태",
+    "즉시출고",
+    "입고예정일",
+    "배송지선택",
+    "무상수리부품"
+  ],
+  "question_variants": [
+    "부품 주문 절차 알려줘",
+    "부품 주문 절차에 대해 설명해줘",
+    "부품 주문 절차가 뭐야?",
+    "부품 주문 절차 뭐야?",
+    "부품 주문 절차 어떻게 해?",
+    "부품 주문 절차 알려주세요",
+    "부품 주문 절차이 뭔가요?",
+    "부품 주문 절차 무엇인가요?"
+  ],
+  "search_keywords": [
+    "Engineer",
+    "Exploded",
+    "Exploded View",
+    "In Stock",
+    "Low",
+    "Low Stock",
+    "Out",
+    "Out of Stock",
+    "Service",
+    "Service Portal",
+    "Stock",
+    "View",
+    "부품주문",
+    "모델번호입력",
+    "재고상태확인"
+  ]
+}

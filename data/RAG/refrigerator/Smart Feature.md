@@ -1,0 +1,88 @@
+**title**: 스마트 기능 제공 방식 설명
+---
+- **contents**: 삼성 냉장고의 스마트 기능은 IoT 모듈을 통해 다양한 방식으로 제공됩니다. 크게 다음과 같이 분류할 수 있습니다. 1. 기기 연동 단계: SmartThings 앱에 냉장고를 등록하고 Wi-Fi에 연결하여 원격 제어 기능을 활성화합니다. 2. 일상 사용 단계: 온도 제어, 에너지 모니터링, 도어 알림 등 일상적인 스마트 기능을 사용합니다. 3. 유지보수 단계: 필터 교체 알림, 자가진단, 펌웨어 업데이트 등 유지보수 관련 기능을 활용합니다. SmartThings 앱을 통한 기능 업데이트는 약 1개월 주기로 확인하여 새로운 기능이 추가되면 알림을 통해 안내됩니다.
+- **urls**: https://www.samsung.com/sec/smartthings/
+- **sheet**: Smart Feature
+- **row**: 2
+- **generated_at**: 2026-02-08T10:00:00
+
+---
+**title**: SmartThings 앱 연동 방법
+---
+- **contents**: SmartThings 앱과 냉장고를 연동하는 방법은 다음과 같습니다. 1. 스마트폰에 SmartThings 앱을 설치하고 삼성 계정으로 로그인합니다. 2. 앱 하단의 '+' 버튼을 눌러 기기 추가를 선택합니다. 3. 가전제품 > 냉장고를 선택하고 화면의 안내에 따릅니다. 4. 냉장고 제어 패널에서 SmartThings 연결 모드를 활성화합니다(모델에 따라 Wi-Fi 버튼 3초 길게 누르기 또는 설정 메뉴 진입). 5. 앱에서 가정의 Wi-Fi 네트워크를 선택하고 비밀번호를 입력합니다. 6. 연결이 완료되면 냉장고가 SmartThings 앱 대시보드에 표시됩니다. 연동 시 2.4GHz Wi-Fi 네트워크를 사용해야 하며, 5GHz 전용 네트워크에서는 연결이 되지 않을 수 있습니다.
+- **urls**: https://www.samsung.com/sec/smartthings/
+- **sheet**: Smart Feature
+- **row**: 3
+- **generated_at**: 2026-02-08T10:00:00
+
+---
+**title**: AI 에너지관리(AI Energy Mode)에 대한 설명
+---
+- **contents**: AI 에너지관리(AI Energy Mode)는 삼성 냉장고에 탑재된 인공지능 기반 에너지 최적화 기능입니다. 냉장고의 사용 패턴(도어 개폐 빈도, 시간대별 사용량), 외부 온도, 내부 식품량 등을 AI가 학습하여 컴프레서 가동을 최적화합니다. 이를 통해 일반 운전 대비 약 10~15%의 에너지 절감이 가능합니다. AI 에너지관리는 SmartThings 앱에서 활성화할 수 있으며, 월별 에너지 사용량 리포트도 확인할 수 있습니다. 2024년 이후 출시된 비스포크 냉장고에 기본 탑재되어 있습니다.
+- **urls**: https://www.samsung.com/sec/smartthings/
+- **sheet**: Smart Feature
+- **row**: 4
+- **generated_at**: 2026-02-08T10:00:00
+
+---
+**title**: 식품관리 카메라(Food Camera)에 대한 설명
+---
+- **contents**: 식품관리 카메라(Food Camera)는 냉장고 내부에 장착된 카메라로, 내부 식품 상태를 촬영하여 SmartThings 앱으로 확인할 수 있는 기능입니다. Family Hub 모델에 기본 탑재되어 있으며, 일부 프리미엄 비스포크 모델에서도 지원됩니다. 냉장고 도어를 닫을 때마다 자동으로 내부 사진이 촬영되며, 외출 중 마트에서 냉장고 내부를 확인하여 중복 구매를 방지할 수 있습니다. AI Vision 기술이 적용된 모델에서는 식품을 자동으로 인식하여 유통기한 관리와 레시피 추천 기능도 제공합니다.
+- **urls**: https://www.samsung.com/sec/refrigerators/family-hub/
+- **sheet**: Smart Feature
+- **row**: 5
+- **generated_at**: 2026-02-08T10:00:00
+
+---
+**title**: Family Hub 디스플레이 기능에 대한 설명
+---
+- **contents**: Family Hub 디스플레이는 삼성 프리미엄 냉장고에 탑재된 대형 터치스크린으로, 다음과 같은 기능을 제공합니다. 1. 식품 관리: 내부 카메라 실시간 확인, 식품 유통기한 관리, 쇼핑 리스트 작성 2. 엔터테인먼트: 음악 스트리밍(Spotify, Melon 등), 동영상 재생, TV 미러링 3. 가족 커뮤니케이션: 메모 공유, 사진 앨범, 일정 관리, 화상 통화 4. 스마트홈 제어: 연결된 삼성 가전 일괄 제어, 보안 카메라 확인, 조명/에어컨 제어 5. 요리 지원: 레시피 검색, 타이머, 단위 변환, 음성 비서(Bixby) Family Hub는 Tizen OS 기반으로 작동하며, OTA(Over-The-Air) 업데이트를 통해 새로운 기능이 추가됩니다.
+- **urls**: https://www.samsung.com/sec/refrigerators/family-hub/
+- **sheet**: Smart Feature
+- **row**: 6
+- **generated_at**: 2026-02-08T10:00:00
+
+---
+**title**: 원격 온도 제어 기능에 대한 설명
+---
+- **contents**: 원격 온도 제어는 SmartThings 앱을 통해 외부에서 냉장고의 온도를 조절할 수 있는 기능입니다. 냉장실, 냉동실, 전환실 등 각 공간의 온도를 개별적으로 설정할 수 있으며, 설정 가능한 온도 범위는 다음과 같습니다. - 냉장실: 1°C ~ 7°C (기본값: 3°C) - 냉동실: -23°C ~ -15°C (기본값: -18°C) - 전환실: 모드에 따라 상이 온도 변경 후 설정 온도에 도달하기까지 약 1~3시간이 소요되며, 앱에서 현재 온도와 설정 온도를 실시간으로 확인할 수 있습니다. 급속냉동(Power Freeze), 급속냉장(Power Cool) 기능도 앱에서 원격으로 활성화할 수 있습니다.
+- **urls**: https://www.samsung.com/sec/smartthings/
+- **sheet**: Smart Feature
+- **row**: 7
+- **generated_at**: 2026-02-08T10:00:00
+
+---
+**title**: 에너지 모니터링(Energy Monitoring) 기능에 대한 설명
+---
+- **contents**: 에너지 모니터링은 SmartThings 앱에서 냉장고의 전력 사용량을 실시간으로 확인할 수 있는 기능입니다. SmartThings Energy 서비스를 통해 일별, 주별, 월별 에너지 사용량을 그래프로 확인할 수 있으며, 목표 에너지 사용량을 설정하여 초과 시 알림을 받을 수도 있습니다. 또한 동일 제품군 사용자의 평균 사용량과 비교하여 본인의 에너지 효율 수준을 파악할 수 있습니다. SmartThings Energy는 냉장고 외에도 연결된 모든 삼성 가전의 에너지 사용량을 통합 관리할 수 있습니다.
+- **urls**: https://www.samsung.com/sec/smartthings/smartthings-energy/
+- **sheet**: Smart Feature
+- **row**: 8
+- **generated_at**: 2026-02-08T10:00:00
+
+---
+**title**: 도어 열림 알림(Door Open Alert) 기능에 대한 설명
+---
+- **contents**: 도어 열림 알림은 냉장고 도어가 일정 시간 이상 열려 있을 때 스마트폰으로 푸시 알림을 보내는 기능입니다. 기존 도어알람(경고음)은 냉장고 근처에 있어야 들을 수 있지만, SmartThings 앱 연동 시 외출 중에도 도어 열림 상태를 알 수 있습니다. 기본 설정은 2분 이상 도어가 열려 있을 경우 알림이 발송되며, 알림 시간은 SmartThings 앱에서 1분~5분 사이로 변경할 수 있습니다. 이 기능은 냉기 손실 방지와 에너지 절약에 효과적입니다.
+- **urls**: https://www.samsung.com/sec/smartthings/
+- **sheet**: Smart Feature
+- **row**: 9
+- **generated_at**: 2026-02-08T10:00:00
+
+---
+**title**: 필터 교체 알림(Filter Replacement Alert) 기능에 대한 설명
+---
+- **contents**: 필터 교체 알림은 냉장고의 정수필터와 탈취필터의 교체 시기를 SmartThings 앱을 통해 알려주는 기능입니다. 정수필터는 약 6개월, 탈취필터는 약 6개월~1년 주기로 교체가 권장되며, 사용량과 경과 시간을 기반으로 교체 시기를 자동으로 계산합니다. 알림이 발생하면 앱에서 바로 삼성 정품 필터를 주문할 수 있는 링크가 제공됩니다. 필터 교체 후에는 냉장고 제어 패널에서 필터 리셋 버튼을 눌러 카운터를 초기화해야 합니다.
+- **urls**: https://www.samsung.com/sec/support/home-appliances/
+- **sheet**: Smart Feature
+- **row**: 10
+- **generated_at**: 2026-02-08T10:00:00
+
+---
+**title**: 휴가모드(Vacation Mode) 기능에 대한 설명
+---
+- **contents**: 휴가모드(Vacation Mode)는 장기간 외출 시 냉장고의 에너지 소비를 최소화하는 기능입니다. 휴가모드를 활성화하면 냉장실의 온도를 약 15°C로 높여 컴프레서 가동을 최소화하고, 냉동실은 기존 설정 온도를 유지합니다. 이를 통해 냉동 식품은 안전하게 보관하면서 전체 에너지 소비를 약 30~40% 줄일 수 있습니다. 휴가모드는 제어 패널 또는 SmartThings 앱에서 설정할 수 있으며, 해제 후 냉장실이 정상 온도로 복귀하는 데 약 2~4시간이 소요됩니다.
+- **urls**: https://www.samsung.com/sec/support/home-appliances/
+- **sheet**: Smart Feature
+- **row**: 11
+- **generated_at**: 2026-02-08T10:00:00

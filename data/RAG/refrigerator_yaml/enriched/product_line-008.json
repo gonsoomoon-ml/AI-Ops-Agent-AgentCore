@@ -1,0 +1,35 @@
+{
+  "ko_core_term": "쇼케이스 냉장고",
+  "en_core_term": "Showcase",
+  "ko_nouns": [
+    "쇼케이스 도어",
+    "외부 도어",
+    "메인 도어",
+    "냉기 손실",
+    "Food Showcase",
+    "수납 공간",
+    "에너지 효율"
+  ],
+  "question_variants": [
+    "쇼케이스 냉장고 알려줘",
+    "쇼케이스 냉장고에 대해 설명해줘",
+    "쇼케이스 냉장고가 뭐야?",
+    "쇼케이스 냉장고 뭐야?",
+    "Showcase이 뭐야?",
+    "Showcase 설명해줘",
+    "쇼케이스 냉장고(Showcase) 설명해줘",
+    "쇼케이스 냉장고(Showcase)가 무엇인가요"
+  ],
+  "search_keywords": [
+    "Food",
+    "Food Showcase",
+    "Showcase",
+    "쇼케이스 도어",
+    "외부 도어",
+    "메인 도어",
+    "냉기 손실",
+    "에너지 효율",
+    "수납 공간",
+    "음료 간식"
+  ]
+}
