@@ -338,26 +338,17 @@ def upload_and_sync():
     s3_bucket = _ds_config.get("s3_bucket", "")
 
     if not kb_id or not ds_id or not s3_bucket:
-        # Fallback: try SSM lookup
-        kb_name = _ds_config.get("kb_name", "")
-        if not kb_name:
-            print("  ERROR: datasets.yaml에 kb_id, ds_id, s3_bucket이 설정되지 않았습니다.")
-            return
-
-        ssm = boto3.client("ssm")
-        try:
-            kb_id = ssm.get_parameter(Name=f"{kb_name}-kb-id")["Parameter"]["Value"]
-        except Exception:
-            print(f"  ERROR: KB ID를 찾을 수 없습니다 (SSM: {kb_name}-kb-id)")
-            return
-
-        bedrock_agent = boto3.client("bedrock-agent")
-        ds_list = bedrock_agent.list_data_sources(knowledgeBaseId=kb_id)
-        ds_id = ds_list["dataSourceSummaries"][0]["dataSourceId"]
-
-        ds_info = bedrock_agent.get_data_source(knowledgeBaseId=kb_id, dataSourceId=ds_id)
-        bucket_arn = ds_info["dataSource"]["dataSourceConfiguration"]["s3Configuration"]["bucketArn"]
-        s3_bucket = bucket_arn.split(":::")[-1]
+        dataset_name = _ds_config.get("kb_name", "your-dataset")
+        print("  ERROR: datasets.yaml에 Bedrock KB 리소스 ID가 설정되지 않았습니다.")
+        print()
+        print("  먼저 Bedrock KB를 생성하세요:")
+        print(f"    uv run python rag_pipeline/create_kb.py --dataset <name> --mode create")
+        print()
+        print("  생성 후 출력된 값을 datasets.yaml에 입력하세요:")
+        print('    s3_bucket: "your-bucket-name"')
+        print('    kb_id: "your-kb-id"')
+        print('    ds_id: "your-ds-id"')
+        return
 
     print(f"  KB ID: {kb_id}")
     print(f"  DS ID: {ds_id}")

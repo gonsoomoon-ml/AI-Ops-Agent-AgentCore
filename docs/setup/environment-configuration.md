@@ -173,7 +173,7 @@ AWS_REGION=us-east-1
 BEDROCK_MODEL_ID=global.anthropic.claude-sonnet-4-5-20250929-v1:0
 BEDROCK_TEMPERATURE=0.0
 PROMPT_CACHE_ENABLED=true
-BEDROCK_KNOWLEDGE_BASE_ID=G5GG6ZV8GX    # Bridge KB
+BEDROCK_KNOWLEDGE_BASE_ID=your-kb-id     # create_kb.py 실행 후 입력
 
 # Agent
 AGENT_LANGUAGE=ko

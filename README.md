@@ -100,13 +100,14 @@ data/RAG/refrigerator_yaml/         # 파이프라인 처리 결과
 ### 파이프라인 흐름
 
 ```
-Markdown (Q&A) → YAML 변환 → LLM 키워드 보강 → S3 업로드 → Bedrock KB 동기화 → 검색 평가
+Markdown (Q&A) → YAML 변환 → LLM 키워드 보강 → Bedrock KB 생성 → S3 업로드 + 동기화 → 검색 평가
 ```
 
 | 단계 | 스크립트 | 설명 |
 |------|----------|------|
 | 변환 | `convert_md_to_yaml.py` | Markdown Q&A → 구조화된 YAML |
 | 보강 | `llm_enrich.py` | LLM이 핵심 키워드를 추출하여 BM25 검색 최적화 |
+| KB 생성 | `create_kb.py` | Bedrock KB + OpenSearch + S3 인프라 생성 |
 | 적재 | `prepare_and_sync.py` | 메타데이터 생성 + S3 업로드 + KB 동기화 |
 | 평가 | `evaluate_retrieval.py` | Retrieve / RetrieveAndGenerate 검색 품질 측정 |
 
@@ -265,11 +266,15 @@ uv run python rag_pipeline/convert_md_to_yaml.py --dataset refrigerator
 # 2. LLM 키워드 보강 (BM25 검색 최적화)
 uv run python rag_pipeline/llm_enrich.py --dataset refrigerator
 
-# 3. Bedrock KB 업로드 아티팩트 생성 + S3 동기화
+# 3. Bedrock KB 생성 (S3 + OpenSearch + KB — 최초 1회)
+uv run python rag_pipeline/create_kb.py --dataset refrigerator --mode create
+#    → 출력된 s3_bucket, kb_id, ds_id를 datasets.yaml에 입력
+
+# 4. Bedrock KB 업로드 아티팩트 생성 + S3 동기화
 uv run python rag_pipeline/prepare_and_sync.py --dataset refrigerator --mode prepare
 uv run python rag_pipeline/prepare_and_sync.py --dataset refrigerator --mode sync
 
-# 4. 검색 품질 평가
+# 5. 검색 품질 평가
 uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator
 uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator --rag  # RetrieveAndGenerate
 ```

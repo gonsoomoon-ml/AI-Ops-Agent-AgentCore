@@ -29,12 +29,13 @@ uv run ruff check src/ tests/ --fix    # Lint + auto-fix
 uv run mypy src/ops_agent              # Type check (strict mode)
 
 # RAG pipeline (per-dataset: refrigerator, bridge)
-uv run python rag_pipeline/convert_md_to_yaml.py --dataset bridge    # Markdown → YAML
-uv run python rag_pipeline/llm_enrich.py --dataset bridge            # LLM keyword enrichment
-uv run python rag_pipeline/prepare_and_sync.py --dataset bridge --mode prepare  # Build artifacts
-uv run python rag_pipeline/prepare_and_sync.py --dataset bridge --mode sync     # S3 upload + KB sync
-uv run python rag_pipeline/evaluate_retrieval.py --dataset bridge               # Retrieval evaluation
-uv run python rag_pipeline/evaluate_retrieval.py --dataset bridge --rag         # RetrieveAndGenerate
+uv run python rag_pipeline/convert_md_to_yaml.py --dataset refrigerator     # Markdown → YAML
+uv run python rag_pipeline/llm_enrich.py --dataset refrigerator             # LLM keyword enrichment
+uv run python rag_pipeline/create_kb.py --dataset refrigerator --mode create  # Create Bedrock KB (first time)
+uv run python rag_pipeline/prepare_and_sync.py --dataset refrigerator --mode prepare  # Build artifacts
+uv run python rag_pipeline/prepare_and_sync.py --dataset refrigerator --mode sync     # S3 upload + KB sync
+uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator               # Retrieval evaluation
+uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator --rag         # RetrieveAndGenerate
 
 # AgentCore deployment
 cd agentcore

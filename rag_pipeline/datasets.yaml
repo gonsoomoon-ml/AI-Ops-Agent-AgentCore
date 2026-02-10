@@ -8,11 +8,12 @@ datasets:
     description: "삼성 냉장고 진단, 펌웨어, 용어, 서비스 포털 등 Q&A"
     raw_dir: "data/RAG/refrigerator"
     yaml_dir: "data/RAG/refrigerator_yaml"
-    # Bedrock KB (production)
-    s3_bucket: "ops-fridge-kb-v2-3432"
-    kb_id: "XANPGITYE3"
-    ds_id: "C0IFPMQ3SP"
-    kb_name: "ops-fridge-kb-v2"
+    # Bedrock KB — create_kb.py 실행 후 아래 값을 업데이트하세요
+    # uv run python rag_pipeline/create_kb.py --dataset refrigerator --mode create
+    s3_bucket: ""       # create_kb.py 출력값 입력
+    kb_id: ""           # create_kb.py 출력값 입력
+    ds_id: ""           # create_kb.py 출력값 입력
+    kb_name: "ops-fridge-kb"
     embedding_model: "cohere.embed-multilingual-v3"
     # LLM enrichment config
     stop_words: >-
@@ -35,10 +36,11 @@ datasets:
     description: "삼성 TSS, CMS Portal, SMF, OMC 업데이트, 앱 배포 등 Q&A"
     raw_dir: "data/RAG/bridge"
     yaml_dir: "data/RAG/bridge_yaml"
-    # Bedrock KB (production)
-    s3_bucket: "ops-bridge-kb-fc4e"
-    kb_id: "G5GG6ZV8GX"
-    ds_id: "ZQUUKFZVSU"
+    # Bedrock KB — create_kb.py 실행 후 아래 값을 업데이트하세요
+    # uv run python rag_pipeline/create_kb.py --dataset bridge --mode create
+    s3_bucket: ""       # create_kb.py 출력값 입력
+    kb_id: ""           # create_kb.py 출력값 입력
+    ds_id: ""           # create_kb.py 출력값 입력
     kb_name: "ops-bridge-kb"
     embedding_model: "cohere.embed-multilingual-v3"
     # LLM enrichment config

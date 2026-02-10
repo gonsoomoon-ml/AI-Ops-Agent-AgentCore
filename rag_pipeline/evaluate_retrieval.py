@@ -377,17 +377,17 @@ def get_test_cases(dataset_name):
 
 
 def get_kb_id(ds_config):
-    """datasets.yaml 또는 SSM에서 KB ID 조회."""
+    """datasets.yaml에서 KB ID 조회."""
     kb_id = ds_config.get("kb_id", "")
     if kb_id:
         return kb_id
 
-    # Fallback: SSM lookup
-    kb_name = ds_config.get("kb_name", "")
-    if not kb_name:
-        raise ValueError("datasets.yaml에 kb_id 또는 kb_name이 설정되지 않았습니다.")
-    ssm = boto3.client("ssm")
-    return ssm.get_parameter(Name=f"{kb_name}-kb-id")["Parameter"]["Value"]
+    raise ValueError(
+        "datasets.yaml에 kb_id가 설정되지 않았습니다.\n\n"
+        "  먼저 Bedrock KB를 생성하세요:\n"
+        "    uv run python rag_pipeline/create_kb.py --dataset <name> --mode create\n\n"
+        "  생성 후 출력된 값을 datasets.yaml에 입력하세요."
+    )
 
 
 def query_kb(client, kb_id, query, num_results=5, category_filter=None):
