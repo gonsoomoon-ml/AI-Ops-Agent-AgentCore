@@ -14,6 +14,7 @@
     /quit    - 종료
 """
 
+import argparse
 import os
 
 from ops_agent.agent import OpsAgent
@@ -170,9 +171,27 @@ def chat() -> None:
             print()
 
 
+def parse_args() -> argparse.Namespace:
+    """CLI 인수 파싱."""
+    parser = argparse.ArgumentParser(description="OpsAgent CLI")
+    parser.add_argument("--prompt", type=str, help="단일 프롬프트 실행 (비대화 모드)")
+    return parser.parse_args()
+
+
 def main() -> None:
     """메인 엔트리 포인트."""
-    chat()
+    args = parse_args()
+
+    if args.prompt:
+        print_banner()
+        print_settings()
+        agent = OpsAgent()
+        response = agent.invoke(args.prompt)
+        print(f"\n{Colors.CYAN}{'─' * 60}{Colors.END}")
+        print(response)
+        print(f"{Colors.CYAN}{'─' * 60}{Colors.END}\n")
+    else:
+        chat()
 
 
 if __name__ == "__main__":
