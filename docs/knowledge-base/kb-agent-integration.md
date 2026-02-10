@@ -26,7 +26,7 @@ Strands Agent가 Bedrock Knowledge Base를 실시간으로 검색하여 기술 �
 - **검색 방식**: HYBRID (벡터 + BM25 키워드) 검색
 - **임베딩 모델**: `amazon.titan-embed-text-v2:0`
 - **도구 패턴**: CloudWatch와 동일한 Factory 패턴 (mock/mcp 모드 전환)
-- **지원 KB**: Bridge (TSS/CMS/SMF/OMC/PAI), Refrigerator
+- **지원 KB**: Refrigerator (9 categories, 107 entries)
 
 ## 2. 아키텍처
 
@@ -40,7 +40,7 @@ Strands Agent가 Bedrock Knowledge Base를 실시간으로 검색하여 기술 �
 │  tools: [cloudwatch, kb_retrieve]           │
 │                                             │
 │  1. 질문 분석 → kb_retrieve 도구 선택       │
-│  2. category 결정 (예: "tss")               │
+│  2. category 결정 (예: "diagnostics")        │
 │  3. kb_retrieve(query, category) 호출       │
 │  4. 검색 결과 기반 답변 생성                │
 └──────────────────┬──────────────────────────┘
@@ -57,7 +57,7 @@ Strands Agent가 Bedrock Knowledge Base를 실시간으로 검색하여 기술 �
                     ┌──────────────────────┐
                     │ Bedrock KB (HYBRID)  │
                     │ OpenSearch Serverless│
-                    │ cohere.embed-v3      │
+                    │ titan-embed-v2       │
                     └──────────────────────┘
 ```
 
@@ -122,7 +122,7 @@ agent = Agent(tools=get_kb_tools())  # mock이든 mcp이든 동일
 
 ```bash
 # Knowledge Base
-BEDROCK_KNOWLEDGE_BASE_ID=G5GG6ZV8GX  # Bridge KB
+BEDROCK_KNOWLEDGE_BASE_ID=XANPGITYE3  # Refrigerator KB
 # KB_MODE=mock                          # 로컬 YAML (테스트용)
 KB_MODE=mcp                            # Bedrock API (운영)
 ```
@@ -131,10 +131,7 @@ KB_MODE=mcp                            # Bedrock API (운영)
 
 | Dataset | KB ID | DS ID | S3 Bucket | Entries |
 |---------|-------|-------|-----------|---------|
-| Bridge | `G5GG6ZV8GX` | `ZQUUKFZVSU` | `ops-bridge-kb-fc4e` | 157 |
 | Refrigerator | `XANPGITYE3` | `C0IFPMQ3SP` | `ops-fridge-kb-v2-3432` | 107 |
-
-KB 전환 시 `.env`의 `BEDROCK_KNOWLEDGE_BASE_ID` 값만 변경하면 됩니다.
 
 ## 5. KB Tool 상세
 
@@ -162,15 +159,15 @@ def kb_retrieve(
 {
   "status": "success",
   "mode": "bedrock",
-  "kb_id": "G5GG6ZV8GX",
-  "query": "TSS Activation이 뭐야?",
+  "kb_id": "XANPGITYE3",
+  "query": "냉장고 에러 코드 확인 방법",
   "result_count": 5,
   "results": [
     {
-      "doc_id": "tss-001",
+      "doc_id": "diagnostics-001",
       "score": 0.6885,
-      "category": "tss",
-      "content": "# TSS Activation에 대한 설명\n..."
+      "category": "diagnostics",
+      "content": "# 냉장고 문제 발생 시 에러 코드 확인 방법\n..."
     }
   ]
 }
@@ -181,7 +178,7 @@ def kb_retrieve(
 에이전트가 KB 도구를 올바르게 사용하도록 시스템 프롬프트에 다음을 포함:
 
 - **도구 설명**: `kb_retrieve` 파라미터 및 사용법
-- **카테고리 목록**: Bridge/Refrigerator 전체 카테고리 나열
+- **카테고리 목록**: Refrigerator 전체 카테고리 나열
 - **사용 가이드**:
   - 기술 용어, 에러 코드, 포털 사용법 질문 → `kb_retrieve` 사용
   - 카테고리 불명 시 `glossary`로 먼저 검색
@@ -213,7 +210,7 @@ cd agentcore && ./deploy_infra.sh
 uv run python scripts/deploy.py --auto-update
 
 # 3. 테스트
-uv run python scripts/invoke.py --prompt "TSS Activation이 뭐야?"
+uv run python scripts/invoke.py --prompt "냉장고 에러 코드 확인 방법"
 ```
 
 `deploy.py`가 `.env`에서 `KB_MODE`와 `BEDROCK_KNOWLEDGE_BASE_ID`를 읽어 AgentCore 환경 변수로 전달합니다.
@@ -230,7 +227,7 @@ uv run python tests/test_manual.py --test 8
 uv run python -c "
 from ops_agent.agent import OpsAgent
 agent = OpsAgent(enable_evaluation=False)
-agent.invoke('TSS Activation이 뭐야?')
+agent.invoke('냉장고 에러 코드 확인 방법')
 "
 ```
 
@@ -240,9 +237,9 @@ agent.invoke('TSS Activation이 뭐야?')
 cd agentcore
 
 # 단일 질문
-uv run python scripts/invoke.py --prompt "TSS Activation이 뭐야?"
-uv run python scripts/invoke.py --prompt "CMS 포털에서 Role 권한 받는 방법"
-uv run python scripts/invoke.py --prompt "P4 업로드 에러 4000 해결 방법"
+uv run python scripts/invoke.py --prompt "냉장고 에러 코드 확인 방법"
+uv run python scripts/invoke.py --prompt "OTA 펌웨어 업데이트 방법"
+uv run python scripts/invoke.py --prompt "SmartThings 앱에서 냉장고 등록하는 방법"
 
 # 대화형
 uv run python scripts/invoke.py --interactive
@@ -252,27 +249,13 @@ uv run python scripts/invoke.py --interactive
 
 ```bash
 # Retrieve 검색 정확도
-uv run python rag_pipeline/evaluate_retrieval.py --dataset bridge
+uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator
 
 # RetrieveAndGenerate (LLM 답변 포함)
-uv run python rag_pipeline/evaluate_retrieval.py --dataset bridge --rag
+uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator --rag
 ```
 
 ## 9. 카테고리 목록
-
-### Bridge (9 categories, 157 entries)
-
-| Category | 설명 |
-|----------|------|
-| `tss` | TSS Activation, TSS 2.0/2.1 |
-| `cms_portal` | CMS Portal 사용법, P4 업로드 |
-| `pai_portal` | PAI Portal 앱 설치, CTS 에러 |
-| `app_delivery` | App Delivery 제공 방식 |
-| `omc_update` | OMC Customization |
-| `grasse_portal` | Grasse Portal 접속 |
-| `smf` | SIM Mobility Framework |
-| `client` | 단말 로그 확보 |
-| `glossary` | 용어 정의 (TSS, Bridge 등) |
 
 ### Refrigerator (9 categories, 107 entries)
 
