@@ -166,6 +166,7 @@ class EvalVerdict(Enum):
 Async generator로 스트리밍 이벤트를 전달합니다. 마지막에 `_final=True` 마커가 포함된 dict를 yield합니다.
 
 ```python
+# src/ops_agent/graph/nodes.py
 async def analyze_node(task=None, **kwargs):
     state = get_current_workflow_state()
 
@@ -206,6 +207,7 @@ async def analyze_node(task=None, **kwargs):
 ### 3.3 EVALUATE Node
 
 ```python
+# src/ops_agent/graph/nodes.py
 def evaluate_node(task=None, **kwargs) -> dict[str, Any]:
     state = get_current_workflow_state()
 
@@ -224,6 +226,7 @@ def evaluate_node(task=None, **kwargs) -> dict[str, Any]:
 ### 3.4 DECIDE Node
 
 ```python
+# src/ops_agent/graph/nodes.py
 def decide_node(task=None, **kwargs) -> dict[str, Any]:
     state = get_current_workflow_state()
     score = state.eval_result.overall_score
@@ -243,6 +246,7 @@ def decide_node(task=None, **kwargs) -> dict[str, Any]:
 ### 3.5 REGENERATE Node
 
 ```python
+# src/ops_agent/graph/nodes.py
 def regenerate_node(task=None, **kwargs) -> dict[str, Any]:
     state = get_current_workflow_state()
 
@@ -262,6 +266,7 @@ def regenerate_node(task=None, **kwargs) -> dict[str, Any]:
 ### 3.6 FINALIZE Node
 
 ```python
+# src/ops_agent/graph/nodes.py
 def finalize_node(task=None, **kwargs) -> dict[str, Any]:
     state = get_current_workflow_state()
 
@@ -289,7 +294,7 @@ def finalize_node(task=None, **kwargs) -> dict[str, Any]:
 조건 함수는 Strands `graph_state`를 인자로 받지만, 실제로는 전역 레지스트리의 `OpsWorkflowState`를 사용합니다.
 
 ```python
-# graph/conditions.py
+# src/ops_agent/graph/conditions.py
 
 def should_finalize(graph_state) -> bool:
     """FINALIZE로 진행할지 결정"""
@@ -307,7 +312,7 @@ def should_regenerate(graph_state) -> bool:
 라우팅은 `_get_next_node()` 같은 함수가 아니라, `GraphBuilder`의 선언적 엣지 정의로 구현됩니다.
 
 ```python
-# graph/runner.py - build_ops_graph()
+# src/ops_agent/graph/runner.py
 
 def build_ops_graph(max_node_executions: int = 15) -> "Graph":
     builder = GraphBuilder()
@@ -356,7 +361,7 @@ def build_ops_graph(max_node_executions: int = 15) -> "Graph":
 Strands `GraphBuilder`가 빌드한 `Graph` 객체를 호출하여 실행합니다. 직접 while 루프를 돌리지 않습니다.
 
 ```python
-# graph/runner.py - OpsAgentGraph
+# src/ops_agent/graph/runner.py
 
 def run(self, prompt: str) -> OpsWorkflowState:
     workflow_id = str(uuid.uuid4())
