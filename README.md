@@ -160,6 +160,7 @@ AI-Ops-Agent-AgentCore/
 │   └── scripts/
 │       ├── deploy.py             # 배포 스크립트
 │       ├── invoke.py             # CLI 클라이언트
+│       ├── cleanup.py            # 리소스 정리 (--all: 전체 삭제)
 │       └── util.py               # 유틸리티
 │
 ├── src/ops_agent/                # 메인 소스코드
@@ -321,6 +322,30 @@ uv run python scripts/invoke.py --test simple
 # 대화형 모드
 uv run python scripts/invoke.py --interactive
 ```
+
+### 리소스 정리 (Cleanup)
+
+```bash
+cd agentcore
+
+# 기본 정리 (AgentCore 런타임, SSM 파라미터, ECR 리포지토리)
+uv run python scripts/cleanup.py
+
+# 옵션: ECR 또는 SSM 유지
+uv run python scripts/cleanup.py --keep-ecr
+uv run python scripts/cleanup.py --keep-ssm
+
+# 모든 리소스 삭제 (런타임 + KB + CodeBuild + CloudFormation + 로그 그룹)
+uv run python scripts/cleanup.py --all
+
+# 확인 프롬프트 생략
+uv run python scripts/cleanup.py --all -f
+```
+
+| 모드 | 삭제 대상 |
+|------|-----------|
+| 기본 | AgentCore 런타임, SSM (runtime_arn/id), ECR, 로컬 메타데이터 |
+| `--all` | 위 항목 + Knowledge Base (OpenSearch, S3), CodeBuild (프로젝트, IAM, S3), CloudWatch 로그 그룹, CloudFormation 스택, 로컬 파일 |
 
 
 ## 문서
