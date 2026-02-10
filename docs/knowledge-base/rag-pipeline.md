@@ -13,20 +13,21 @@
 4. [datasets.yaml 설정](#4-datasetsyaml-설정)
 5. [Step 1: Markdown → YAML 변환](#5-step-1-markdown--yaml-변환)
 6. [Step 2: LLM Enrichment](#6-step-2-llm-enrichment)
-7. [Step 3: Bedrock KB 준비 및 동기화](#7-step-3-bedrock-kb-준비-및-동기화)
-8. [Step 4: 검색 정확도 평가](#8-step-4-검색-정확도-평가)
-9. [Enrichment 프롬프트 설계](#9-enrichment-프롬프트-설계)
-10. [성능 결과](#10-성능-결과)
-11. [새 데이터셋 추가 방법](#11-새-데이터셋-추가-방법)
+7. [Step 3: Bedrock KB 생성](#7-step-3-bedrock-kb-생성)
+8. [Step 4: Bedrock KB 준비 및 동기화](#8-step-4-bedrock-kb-준비-및-동기화)
+9. [Step 5: 검색 정확도 평가](#9-step-5-검색-정확도-평가)
+10. [Enrichment 프롬프트 설계](#10-enrichment-프롬프트-설계)
+11. [성능 결과](#11-성능-결과)
+12. [새 데이터셋 추가 방법](#12-새-데이터셋-추가-방법)
 
 ---
 
 ## 1. 개요
 
-Raw markdown Q&A 데이터를 Bedrock Knowledge Base에 최적화된 형태로 변환하는 4단계 파이프라인.
+Raw markdown Q&A 데이터를 Bedrock Knowledge Base에 최적화된 형태로 변환하는 5단계 파이프라인.
 
 ```
-Raw MD → YAML → LLM Enrichment → Bedrock KB (S3 + 동기화) → 정확도 평가
+Raw MD → YAML → LLM Enrichment → Bedrock KB 생성 → 준비/동기화 → 정확도 평가
 ```
 
 핵심 설계 원칙:
@@ -43,8 +44,9 @@ AI-Ops-Agent-AgentCore/
 │   ├── datasets.yaml                      # 데이터셋 레지스트리
 │   ├── convert_md_to_yaml.py              # Step 1: Raw MD → YAML
 │   ├── llm_enrich.py                      # Step 2: LLM enrichment
-│   ├── prepare_and_sync.py                # Step 3: YAML → Bedrock KB
-│   └── evaluate_retrieval.py              # Step 4: 정확도 평가
+│   ├── create_kb.py                       # Step 3: Bedrock KB 생성 (첫 회)
+│   ├── prepare_and_sync.py                # Step 4: YAML → Bedrock KB 준비/동기화
+│   └── evaluate_retrieval.py              # Step 5: 정확도 평가
 │
 ├── data/RAG/
 │   ├── refrigerator/                      # Raw MD (9 카테고리)
@@ -53,11 +55,14 @@ AI-Ops-Agent-AgentCore/
 │   │   ├── diagnostics.yaml               # 카테고리별 YAML
 │   │   ├── glossary.yaml
 │   │   ├── ...
-│   │   └── enriched/                      # LLM enrichment 캐시 (JSON)
-│   │       ├── glossary-001.json
-│   │       ├── glossary-002.json
+│   │   ├── enriched/                      # LLM enrichment 캐시 (JSON)
+│   │   │   ├── glossary-001.json
+│   │   │   ├── glossary-002.json
+│   │   │   └── ...
+│   │   └── bedrock_upload/                # 빌드 산출물 (.md + .metadata.json)
+│   │       ├── diagnostics-001.md
+│   │       ├── diagnostics-001.md.metadata.json
 │   │       └── ...
-│   └── <dataset>_yaml/bedrock_upload/     # 빌드 산출물 (생성됨, 커밋 안 함)
 │
 └── src/ops_agent/prompts/
     └── kb_enrichment.md                   # LLM enrichment 프롬프트 템플릿 (v3)
@@ -66,17 +71,17 @@ AI-Ops-Agent-AgentCore/
 ## 3. 파이프라인 단계
 
 ```
-Step 1                Step 2              Step 3                Step 4
-┌──────────┐    ┌──────────────┐    ┌─────────────────┐    ┌───────────────┐
-│ Raw .md  │───▶│  YAML 변환   │───▶│ LLM Enrichment  │───▶│ Bedrock 준비  │───▶ 정확도 평가
-│ (수동)   │    │ (regex 기반) │    │ (Claude Sonnet)  │    │ (S3 + 동기화) │
-└──────────┘    └──────────────┘    └─────────────────┘    └───────────────┘
-                 keywords 추출          핵심 용어 추출         .md + .metadata.json
-                 에러 코드 추출         8개 질문 변형          S3 업로드
-                 질문 변형 생성         구별적 명사/키워드      KB 인덱싱
+Step 1                Step 2               Step 3              Step 4                Step 5
+┌──────────┐    ┌──────────────┐    ┌───────────────┐    ┌─────────────────┐    ┌───────────────┐
+│ Raw .md  │───▶│  YAML 변환   │───▶│LLM Enrichment │───▶│ Bedrock KB 생성 │───▶│ 준비 + 동기화 │───▶ 정확도 평가
+│ (수동)   │    │ (regex 기반) │    │(Claude Sonnet)│    │ (첫 회 1회)     │    │ (이후 반복)   │
+└──────────┘    └──────────────┘    └───────────────┘    └─────────────────┘    └───────────────┘
+                 keywords 추출         핵심 용어 추출        S3 + OpenSearch       .md + .metadata.json
+                 에러 코드 추출        8개 질문 변형          + KB + DataSource     S3 업로드 + 인덱싱
+                 질문 변형 생성        구별적 명사/키워드     (업로드+동기화 포함)
 ```
 
-전체 실행:
+전체 실행 (첫 회):
 
 ```bash
 # Step 1: Markdown → YAML
@@ -85,11 +90,25 @@ uv run python rag_pipeline/convert_md_to_yaml.py --dataset refrigerator
 # Step 2: LLM Enrichment (Claude API 호출 — 107 entries ≈ 2분)
 uv run python rag_pipeline/llm_enrich.py --dataset refrigerator
 
-# Step 3: Bedrock KB 변환 + S3 업로드 + 동기화
-uv run python rag_pipeline/prepare_and_sync.py --dataset refrigerator
+# Step 3a: Bedrock 업로드용 파일 생성
+uv run python rag_pipeline/prepare_and_sync.py --dataset refrigerator --mode prepare
+
+# Step 3b: Bedrock KB 생성 + S3 업로드 + 동기화 (첫 회 1회)
+uv run python rag_pipeline/create_kb.py --dataset refrigerator --mode create
 
 # Step 4: 검색 정확도 평가 (동기화 후 ~60초 대기 필요)
 uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator
+```
+
+이후 데이터 업데이트 시 (KB 이미 존재):
+
+```bash
+# 변환 + 업로드 + 동기화
+uv run python rag_pipeline/prepare_and_sync.py --dataset refrigerator
+
+# 또는 단계별로:
+uv run python rag_pipeline/prepare_and_sync.py --dataset refrigerator --mode prepare
+uv run python rag_pipeline/prepare_and_sync.py --dataset refrigerator --mode sync
 ```
 
 ## 4. datasets.yaml 설정
@@ -103,12 +122,12 @@ datasets:
     description: "삼성 냉장고 진단, 펌웨어, 용어, 서비스 포털 등 Q&A"
     raw_dir: "data/RAG/refrigerator"         # Raw MD 경로
     yaml_dir: "data/RAG/refrigerator_yaml"   # YAML 출력 경로
-    # Bedrock KB (production)
-    s3_bucket: "ops-fridge-kb-v2-3432"
-    kb_id: "XANPGITYE3"
-    ds_id: "C0IFPMQ3SP"
-    kb_name: "ops-fridge-kb-v2"
-    embedding_model: "cohere.embed-multilingual-v3"
+    # Bedrock KB — create_kb.py 실행 후 아래 값을 업데이트
+    s3_bucket: ""           # create_kb.py 출력값 입력
+    kb_id: ""               # create_kb.py 출력값 입력
+    ds_id: ""               # create_kb.py 출력값 입력
+    kb_name: "ops-fridge-kb"
+    embedding_model: "amazon.titan-embed-text-v2:0"
     # LLM enrichment
     stop_words: "냉장고, 삼성, 제품, 기능, 설정, ..."
     # 카테고리 표시명 (English → Korean)
@@ -124,7 +143,9 @@ datasets:
 |------|------|-------------|
 | `raw_dir` | Raw MD 파일 위치 | convert_md_to_yaml.py |
 | `yaml_dir` | YAML 출력 + enrichment 캐시 위치 | 전체 |
-| `s3_bucket`, `kb_id`, `ds_id` | Bedrock KB 리소스 | prepare_and_sync.py, evaluate_retrieval.py |
+| `kb_name` | Bedrock KB 이름 | create_kb.py |
+| `embedding_model` | 임베딩 모델 ID | create_kb.py |
+| `s3_bucket`, `kb_id`, `ds_id` | Bedrock KB 리소스 (create_kb.py 실행 후 설정) | prepare_and_sync.py, evaluate_retrieval.py |
 | `stop_words` | LLM enrichment 금지어 (고빈도 공통 단어) | llm_enrich.py |
 | `category_names` | 카테고리 한국어 표시명 | prepare_and_sync.py |
 
@@ -256,7 +277,63 @@ LLM v3 enrichment는 이 문제를 해결:
 - 107 엔트리 ≈ 2분, ~$0.15
 - 캐시 사용: 이미 처리된 엔트리는 `--force` 없이 스킵
 
-## 7. Step 3: Bedrock KB 준비 및 동기화
+## 7. Step 3: Bedrock KB 생성
+
+```bash
+# KB 생성 (S3 버킷 + OpenSearch 컬렉션 + Bedrock KB + 데이터 소스 + 업로드 + 동기화)
+uv run python rag_pipeline/create_kb.py --dataset refrigerator --mode create
+
+# KB 삭제
+uv run python rag_pipeline/create_kb.py --dataset refrigerator --mode delete
+```
+
+> **전제조건**: Step 3a(`prepare_and_sync.py --mode prepare`)로 `bedrock_upload/` 산출물이 먼저 생성되어 있어야 함.
+
+### 생성 과정
+
+`create_kb.py --mode create`는 다음을 한 번에 수행:
+
+1. **IAM 역할** 생성 (Bedrock KB 실행용)
+2. **S3 버킷** 생성 (데이터 소스 저장소)
+3. **OpenSearch Serverless 컬렉션** 생성 (벡터 스토어)
+4. **OpenSearch 인덱스** 생성 — `keyword` 서브필드 포함 (메타데이터 필터링용)
+5. **Bedrock KB** 생성 + **DataSource** 생성 (NONE 청킹)
+6. `bedrock_upload/` 디렉토리의 파일을 **S3에 업로드**
+7. **인덱싱 작업** 시작 (동기화)
+8. **SSM Parameter Store**에 KB ID 저장
+
+### OpenSearch 인덱스 매핑
+
+기본 `KnowledgeBasesForAmazonBedrock` 클래스를 확장하여 `keyword` 서브필드를 추가:
+
+```json
+{
+  "category": {
+    "type": "text",
+    "fields": {
+      "keyword": { "type": "keyword", "ignore_above": 256 }
+    }
+  }
+}
+```
+
+이 매핑이 없으면 Bedrock 메타데이터 필터(`category.keyword` 쿼리)가 아무 결과도 반환하지 않음.
+
+### 생성 후 필수 작업
+
+스크립트 실행 후 출력된 값을 `datasets.yaml`에 업데이트:
+
+```yaml
+s3_bucket: "ops-fridge-kb-xxxxx"   # 출력된 S3 버킷명
+kb_id: "XXXXXXXXXX"                 # 출력된 KB ID
+ds_id: "XXXXXXXXXX"                 # 출력된 DataSource ID
+```
+
+이 값이 설정되어야 `prepare_and_sync.py --mode sync`와 `evaluate_retrieval.py`가 작동함.
+
+## 8. Step 4: Bedrock KB 준비 및 동기화
+
+KB가 이미 존재하는 상태에서 데이터를 업데이트할 때 사용.
 
 ```bash
 # 전체 (변환 + 업로드 + 동기화)
@@ -334,21 +411,33 @@ uv run python rag_pipeline/prepare_and_sync.py --dataset refrigerator --mode syn
 
 > **중요**: 동기화 완료 후 OpenSearch에 데이터가 전파되기까지 **~60초 대기** 필요. 즉시 쿼리하면 부정확한 결과가 나올 수 있음.
 
-## 8. Step 4: 검색 정확도 평가
+## 9. Step 5: 검색 정확도 평가
 
 ```bash
-# 전체 테스트 (58 케이스)
+# Retrieve 검색 정확도 평가
 uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator
-
-# 카테고리 메타데이터 필터 적용
+uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator --verbose
 uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator --filter
-
-# 특정 카테고리만
 uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator --category glossary
 
-# 상세 출력 (top-3 결과 표시)
-uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator --verbose
+# RetrieveAndGenerate (RAG) — LLM 답변 포함 테스트
+uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator --rag
+uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator --rag --query "에러코드 22E가 뭐야?"
+uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator --rag --category diagnostics
+uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator --rag --limit 2
 ```
+
+### CLI 옵션
+
+| 옵션 | 설명 |
+|------|------|
+| `--dataset` | 데이터셋 이름 (기본값: refrigerator) |
+| `--verbose` | 상세 출력 (top-3 결과 표시) |
+| `--category` | 특정 카테고리만 테스트 |
+| `--filter` | 카테고리 메타데이터 필터 적용 |
+| `--rag` | RetrieveAndGenerate 모드 (LLM 답변 포함) |
+| `--query` | 단일 질문 (`--rag`와 함께 사용) |
+| `--limit` | 카테고리당 최대 테스트 수 (`--rag`와 함께 사용) |
 
 ### 테스트 케이스 구조
 
@@ -377,7 +466,15 @@ TEST_CASES = [
 
 카테고리별 Top-1 정확도와 실패 목록을 출력.
 
-## 9. Enrichment 프롬프트 설계
+### RetrieveAndGenerate (RAG) 모드
+
+`--rag` 모드는 Bedrock `RetrieveAndGenerate` API를 사용하여 검색 + LLM 답변 생성을 함께 테스트:
+
+- 커스텀 `promptTemplate` 적용 (상세 답변 유도, `$search_results$` 변수 필수)
+- 추론 프로필 ARN에 계정 ID 포함 필요 (`us.*` 프로필 사용, `global.*`은 불가)
+- `--query "질문"`으로 단일 질문 대화형 테스트 가능
+
+## 10. Enrichment 프롬프트 설계
 
 프롬프트 파일: `src/ops_agent/prompts/kb_enrichment.md`
 
@@ -410,7 +507,7 @@ TEST_CASES = [
 - LLM의 "자연스럽고 다양한" 출력은 BM25를 약화시킴
 - **해결**: LLM은 WHAT (정확한 핵심 용어)만 결정, HOW (반복 구조)는 고정 템플릿이 결정
 
-## 10. 성능 결과
+## 11. 성능 결과
 
 ### Refrigerator 데이터셋 (107 docs, 58 test cases)
 
@@ -431,7 +528,7 @@ TEST_CASES = [
 | 벡터 스토어 | OpenSearch Serverless |
 | 청킹 | NONE (1 엔트리 = 1 문서) |
 
-## 11. 새 데이터셋 추가 방법
+## 12. 새 데이터셋 추가 방법
 
 ### 1단계: datasets.yaml에 등록
 
@@ -441,9 +538,11 @@ datasets:
     name: "New Dataset Name"
     raw_dir: "data/RAG/new_dataset"
     yaml_dir: "data/RAG/new_dataset_yaml"
-    s3_bucket: ""       # TBD
-    kb_id: ""           # TBD
-    ds_id: ""           # TBD
+    s3_bucket: ""       # create_kb.py 실행 후 설정
+    kb_id: ""           # create_kb.py 실행 후 설정
+    ds_id: ""           # create_kb.py 실행 후 설정
+    kb_name: "ops-new-dataset-kb"
+    embedding_model: "amazon.titan-embed-text-v2:0"
     stop_words: ""      # 2단계 이후 설정
     category_names: {}  # 1단계 이후 설정
 ```
@@ -469,17 +568,21 @@ uv run python rag_pipeline/llm_enrich.py --dataset new_dataset --dry-run
 uv run python rag_pipeline/llm_enrich.py --dataset new_dataset
 ```
 
-### 4단계: Bedrock KB 생성 및 동기화
-
-1. AWS 콘솔 또는 API로 Bedrock KB 생성 (S3 + OpenSearch Serverless)
-2. `datasets.yaml`에 `s3_bucket`, `kb_id`, `ds_id` 설정
-3. 동기화 실행:
+### 4단계: Bedrock 업로드 파일 준비
 
 ```bash
-uv run python rag_pipeline/prepare_and_sync.py --dataset new_dataset
+uv run python rag_pipeline/prepare_and_sync.py --dataset new_dataset --mode prepare
 ```
 
-### 5단계: 테스트 케이스 작성 및 평가
+### 5단계: Bedrock KB 생성
+
+```bash
+uv run python rag_pipeline/create_kb.py --dataset new_dataset --mode create
+```
+
+완료 후 출력된 `s3_bucket`, `kb_id`, `ds_id` 값을 `datasets.yaml`에 반영.
+
+### 6단계: 테스트 케이스 작성 및 평가
 
 `evaluate_retrieval.py`에 데이터셋별 테스트 케이스 추가 후 평가:
 
