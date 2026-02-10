@@ -1,5 +1,12 @@
 # RAG Knowledge Base Design for Samsung Refrigerator Q&A
 
+> **Note:** 이 문서는 Phase 3 구현 **이전**에 작성된 설계 리서치 문서입니다. 코드 스니펫은 설계 제안이며 실제 구현과 다를 수 있습니다. 실제 구현 내용은 다음 문서를 참고하세요:
+> - [KB Agent Integration](kb-agent-integration.md) — 실제 도구 구현 및 설정
+> - [KB Evaluation](kb-evaluation.md) — KBChecker 평가 시스템
+> - [Data Guide](data-guide.md) — 데이터 구조 및 파이프라인
+>
+> 주요 변경점: 임베딩 모델은 Cohere v3 대신 `amazon.titan-embed-text-v2:0` 채택, 도구 디렉토리는 `tools/knowledge/` 대신 `tools/knowledge_base/` 사용.
+
 Phase 3 설계 문서: 삼성 냉장고 Q&A 지식베이스를 위한 RAG 시스템 설계 리서치 결과.
 
 ## 목차
