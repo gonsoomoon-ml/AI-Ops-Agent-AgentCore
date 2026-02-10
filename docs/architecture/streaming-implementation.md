@@ -20,7 +20,7 @@ OpsAgent의 실시간 스트리밍 구현 문서입니다.
 클라이언트(`invoke.py`)가 AgentCore Runtime을 호출하면, Server-Sent Events(SSE) 형식으로 응답을 받습니다.
 
 ```python
-# invoke.py
+# agentcore/scripts/invoke.py
 for event in response["response"]:
     chunk = event["chunk"]["bytes"].decode("utf-8")
     # SSE 형식: "data: {\"type\": \"delta\", \"content\": \"Hello\"}\n\n"
@@ -31,7 +31,7 @@ for event in response["response"]:
 Runtime(`entrypoint.py`)은 OpsAgent의 `stream_async()`를 호출하고, 텍스트를 추출하여 dict 형식으로 yield합니다.
 
 ```python
-# entrypoint.py
+# agentcore/runtime/entrypoint.py
 async for event in agent.stream_async(prompt):
     text, is_delta = StreamingEventExtractor.extract(event)
     if text:
@@ -43,7 +43,7 @@ async for event in agent.stream_async(prompt):
 OpsAgent는 Graph의 `stream_async()`를 호출합니다.
 
 ```python
-# ops_agent.py
+# src/ops_agent/agent/ops_agent.py
 async for event in self._graph.stream_async(prompt):
     yield event
 ```
@@ -53,7 +53,7 @@ async for event in self._graph.stream_async(prompt):
 Graph의 `analyze_node`에서 Strands Agent를 호출하여 Bedrock API로부터 토큰을 스트리밍합니다.
 
 ```python
-# nodes.py (analyze_node)
+# src/ops_agent/graph/nodes.py
 agent = _create_agent()
 async for event in agent.stream_async(current_prompt):
     yield event
@@ -130,11 +130,12 @@ data: {"type": "text", "content": "Full response..."}
 
 ## 핵심 클래스
 
-### StreamingEventExtractor (entrypoint.py)
+### StreamingEventExtractor
 
 Graph 이벤트에서 텍스트를 추출합니다.
 
 ```python
+# agentcore/runtime/entrypoint.py
 class StreamingEventExtractor:
     @staticmethod
     def extract(event: dict) -> tuple[str | None, bool]:
@@ -144,11 +145,12 @@ class StreamingEventExtractor:
         """
 ```
 
-### SSEParser (scripts/util.py)
+### SSEParser
 
 SSE 스트림을 파싱합니다.
 
 ```python
+# agentcore/scripts/util.py
 class SSEParser:
     def feed(self, chunk: str) -> Generator[str, None, None]:
         """청크를 파싱하여 텍스트 yield"""
@@ -157,11 +159,12 @@ class SSEParser:
         """남은 버퍼 처리"""
 ```
 
-### Metrics (scripts/util.py)
+### Metrics
 
 스트리밍 성능 메트릭을 추적합니다.
 
 ```python
+# agentcore/scripts/util.py
 @dataclass
 class Metrics:
     start: float          # 시작 시간
@@ -177,11 +180,12 @@ class Metrics:
         """Tokens per second"""
 ```
 
-### FunctionNode (function_node.py)
+### FunctionNode
 
 Python 함수를 Graph 노드로 래핑합니다.
 
 ```python
+# src/ops_agent/graph/function_node.py
 class FunctionNode(MultiAgentBase):
     async def stream_async(self, task=None, **kwargs):
         """
@@ -231,7 +235,7 @@ Metrics: TTFT: 11.44s | Total: 13.60s | Tokens: 62 | TPS: 4.6
 스트리밍 델타와 finalize 결과가 모두 전송되면 중복이 발생합니다. 이를 방지하기 위해:
 
 ```python
-# entrypoint.py
+# agentcore/runtime/entrypoint.py
 has_streamed = False
 
 async for event in agent.stream_async(prompt):

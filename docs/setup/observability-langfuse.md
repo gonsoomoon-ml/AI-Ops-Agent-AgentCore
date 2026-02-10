@@ -136,6 +136,7 @@ AGENTCORE_OBSERVABILITY_MODE=langfuse-selfhosted
 배포 코드 (`scripts/deploy.py`가 자동 처리):
 
 ```python
+# agentcore/scripts/deploy.py
 from ops_agent.telemetry import get_agentcore_observability_env_vars
 from bedrock_agentcore_starter_toolkit import Runtime
 
@@ -157,6 +158,7 @@ AGENTCORE_OBSERVABILITY_MODE=native
 ```
 
 ```python
+# agentcore/scripts/deploy.py
 from ops_agent.telemetry import get_agentcore_observability_env_vars
 
 runtime.configure(
@@ -342,7 +344,7 @@ CMD ["opentelemetry-instrument", "python", "-m", "entrypoint"]
 커스텀 OTEL 스팬에 input/output 속성이 설정되어 있는지 확인. OpsAgent는 이미 자동으로 처리합니다:
 
 ```python
-# ops_agent/agent/ops_agent.py에서 자동 처리
+# src/ops_agent/agent/ops_agent.py
 span.set_attribute("input", prompt)
 span.set_attribute("output", response)
 ```

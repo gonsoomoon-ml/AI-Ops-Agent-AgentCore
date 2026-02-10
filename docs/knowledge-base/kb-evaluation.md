@@ -120,6 +120,7 @@ TSS, Activation, TSS 2.0, 활성화, ...
 `graph/util.py`의 `infer_tool_type()`이 도구 결과 JSON 구조로 유형 추론:
 
 ```python
+# src/ops_agent/graph/util.py
 # kb_retrieve 반환 JSON에 "kb_id" 키 포함
 if any(key in output for key in ["kb_id", "documents", "sources", "chunks"]):
     return ToolType.KNOWLEDGE_BASE
@@ -175,6 +176,7 @@ EVALUATE → KBChecker score: 0.875 → PASS
 모든 검사기는 동일한 패턴을 따릅니다:
 
 ```python
+# src/ops_agent/evaluation/checkers/knowledge_base.py
 class KBChecker(BaseChecker):
     PASS_THRESHOLD = 0.7
 
@@ -192,7 +194,7 @@ class KBChecker(BaseChecker):
 ### Evaluator 등록
 
 ```python
-# evaluation/evaluator.py
+# src/ops_agent/evaluation/evaluator.py
 class OpsAgentEvaluator:
     def __init__(self):
         self.checkers: list[BaseChecker] = [

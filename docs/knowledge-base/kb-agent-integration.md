@@ -24,7 +24,7 @@
 Strands Agent가 Bedrock Knowledge Base를 실시간으로 검색하여 기술 문서 기반 답변을 제공합니다.
 
 - **검색 방식**: HYBRID (벡터 + BM25 키워드) 검색
-- **임베딩 모델**: `cohere.embed-multilingual-v3` (한국어 최적)
+- **임베딩 모델**: `amazon.titan-embed-text-v2:0`
 - **도구 패턴**: CloudWatch와 동일한 Factory 패턴 (mock/mcp 모드 전환)
 - **지원 KB**: Bridge (TSS/CMS/SMF/OMC/PAI), Refrigerator
 
@@ -93,7 +93,7 @@ get_kb_tools()
 - **단일 진입점** — 호출하는 쪽은 `get_kb_tools()`만 호출하면 되므로 조건 분기가 필요 없습니다:
 
 ```python
-# agent/ops_agent.py — 모드에 관계없이 동일한 코드
+# src/ops_agent/agent/ops_agent.py
 from ops_agent.tools.knowledge_base import get_kb_tools
 
 agent = Agent(tools=get_kb_tools())  # mock이든 mcp이든 동일
@@ -141,6 +141,7 @@ KB 전환 시 `.env`의 `BEDROCK_KNOWLEDGE_BASE_ID` 값만 변경하면 됩니�
 ### kb_retrieve
 
 ```python
+# src/ops_agent/tools/knowledge_base/kb_tools.py
 @tool
 def kb_retrieve(
     query: str,       # 검색 질문
@@ -193,6 +194,7 @@ def kb_retrieve(
 `infrastructure.yaml`에 추가된 권한:
 
 ```yaml
+# agentcore/cloudformation/infrastructure.yaml
 - Sid: BedrockKBRetrieve
   Effect: Allow
   Action:

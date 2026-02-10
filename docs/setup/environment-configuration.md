@@ -30,7 +30,7 @@ AWS_REGION=us-east-1
 | `BEDROCK_MODEL_ID` | Claude 모델 ID | `global.anthropic.claude-sonnet-4-5-20250929-v1:0` | O |
 | `BEDROCK_TEMPERATURE` | 응답 다양성 (0.0~1.0) | `0.0` | X |
 | `BEDROCK_MAX_TOKENS` | 최대 토큰 수 | `4096` | X |
-| `BEDROCK_KNOWLEDGE_BASE_ID` | Knowledge Base ID | - | X (Phase 2) |
+| `BEDROCK_KNOWLEDGE_BASE_ID` | Knowledge Base ID | - | X (KB 사용 시) |
 | `PROMPT_CACHE_ENABLED` | 프롬프트 캐싱 | `true` | X |
 
 ```bash
@@ -100,7 +100,7 @@ KB_MODE=mcp                   # Bedrock KB HYBRID 검색
 
 > **참고**: `KB_MODE=mcp` 사용 시 `BEDROCK_KNOWLEDGE_BASE_ID` 설정이 필요합니다.
 
-### AgentCore Memory 설정 (Phase 3)
+### AgentCore Memory 설정
 
 대화 컨텍스트를 유지하기 위한 메모리 설정입니다.
 
@@ -232,6 +232,13 @@ EC2 인스턴스나 ECS 태스크에 IAM 역할을 연결하면 자동으로 자
                 "logs:DescribeLogStreams"
             ],
             "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "bedrock:Retrieve"
+            ],
+            "Resource": "arn:aws:bedrock:*:*:knowledge-base/*"
         }
     ]
 }
