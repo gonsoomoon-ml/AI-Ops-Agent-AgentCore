@@ -71,7 +71,7 @@ mock_results = [{"tool_name": "cloudwatch_filter_log_events",
 response = agent.invoke_with_mock_history("분석해줘", mock_results)
 ```
 
-**Prompt Caching** — Bedrock's `cachePoint` in `SystemContentBlock` caches system prompts + tool definitions across turns for up to 90% cost reduction. Enabled via `PROMPT_CACHE_ENABLED=true`.
+**Prompt Caching** — Bedrock's `cachePoint` in `SystemContentBlock` caches system prompts + tool definitions across turns for up to 90% cost reduction. Always enabled.
 
 **Singleton Settings** — `config/settings.py` uses Pydantic `BaseSettings` with `@lru_cache` singleton. Reads `.env` file + environment variables with case-insensitive aliases.
 
@@ -113,7 +113,6 @@ Key environment variables (`.env`):
 - `AWS_REGION`, `BEDROCK_MODEL_ID`, `BEDROCK_TEMPERATURE` (0.0 for consistency), `BEDROCK_MAX_TOKENS`
 - `AGENT_LANGUAGE` (ko/en), `AGENT_LOG_LEVEL`
 - `CLOUDWATCH_MODE`, `DATADOG_MODE`, `KB_MODE` — mock/mcp toggle per tool
-- `PROMPT_CACHE_ENABLED` — Bedrock prompt caching
 
 ## Observability
 
