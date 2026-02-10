@@ -269,7 +269,7 @@ LLM v3 enrichment는 이 문제를 해결:
 
 ### 모델 및 비용
 
-- 모델: `claude-sonnet-4-5` (Bedrock cross-region inference)
+- 모델: `global.anthropic.claude-sonnet-4-5-20250929-v1:0` (Bedrock cross-region inference)
 - 1 엔트리 ≈ 1K input + 0.3K output tokens
 - 107 엔트리 ≈ 2분, ~$0.15
 - 캐시 사용: 이미 처리된 엔트리는 `--force` 없이 스킵
@@ -284,7 +284,7 @@ uv run python rag_pipeline/create_kb.py --dataset refrigerator --mode create
 uv run python rag_pipeline/create_kb.py --dataset refrigerator --mode delete
 ```
 
-> **전제조건**: Step 3a(`prepare_and_sync.py --mode prepare`)로 `bedrock_upload/` 산출물이 먼저 생성되어 있어야 함.
+> **전제조건**: `bedrock_upload/` 디렉토리에 변환된 아티팩트가 있어야 함 (`prepare_and_sync.py --mode prepare`로 생성).
 
 ### 생성 과정
 
