@@ -53,6 +53,8 @@ mock_results = [{"tool_name": "cloudwatch_filter_log_events",
                  "tool_input": {"log_group_name": "/aws/lambda/payment"},
                  "tool_result": '{"events": [...]}'}]
 response = agent.invoke_with_mock_history("분석해줘", mock_results)
+
+# 테스트: uv run python tests/backup/test_manual.py --test 2
 ```
 
 ### Observability
