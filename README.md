@@ -260,18 +260,18 @@ vi .env
 
 ```bash
 # 1. Markdown → YAML 변환
-uv run python rag_pipeline/convert_md_to_yaml.py --dataset bridge
+uv run python rag_pipeline/convert_md_to_yaml.py --dataset refrigerator
 
 # 2. LLM 키워드 보강 (BM25 검색 최적화)
-uv run python rag_pipeline/llm_enrich.py --dataset bridge
+uv run python rag_pipeline/llm_enrich.py --dataset refrigerator
 
 # 3. Bedrock KB 업로드 아티팩트 생성 + S3 동기화
-uv run python rag_pipeline/prepare_and_sync.py --dataset bridge --mode prepare
-uv run python rag_pipeline/prepare_and_sync.py --dataset bridge --mode sync
+uv run python rag_pipeline/prepare_and_sync.py --dataset refrigerator --mode prepare
+uv run python rag_pipeline/prepare_and_sync.py --dataset refrigerator --mode sync
 
 # 4. 검색 품질 평가
-uv run python rag_pipeline/evaluate_retrieval.py --dataset bridge
-uv run python rag_pipeline/evaluate_retrieval.py --dataset bridge --rag  # RetrieveAndGenerate
+uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator
+uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator --rag  # RetrieveAndGenerate
 ```
 
 ### 실행 및 테스트 (로컬)
