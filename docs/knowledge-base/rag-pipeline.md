@@ -42,11 +42,11 @@ Raw MD → YAML → LLM Enrichment → Bedrock KB 생성 → 준비/동기화 �
 AI-Ops-Agent-AgentCore/
 ├── rag_pipeline/                          # 파이프라인 스크립트
 │   ├── datasets.yaml                      # 데이터셋 레지스트리
-│   ├── convert_md_to_yaml.py              # Step 1: Raw MD → YAML
-│   ├── llm_enrich.py                      # Step 2: LLM enrichment
-│   ├── create_kb.py                       # Step 3: Bedrock KB 생성 (첫 회)
-│   ├── prepare_and_sync.py                # Step 4: YAML → Bedrock KB 준비/동기화
-│   └── evaluate_retrieval.py              # Step 5: 정확도 평가
+│   ├── convert_md_to_yaml.py              # Markdown → YAML 변환
+│   ├── llm_enrich.py                      # LLM 키워드 보강 (BM25 최적화)
+│   ├── create_kb.py                       # Bedrock KB 생성 (첫 회)
+│   ├── prepare_and_sync.py                # 업로드 아티팩트 생성 + S3 동기화
+│   └── evaluate_retrieval.py              # 검색 품질 평가
 │
 ├── data/RAG/
 │   ├── refrigerator/                      # Raw MD (9 카테고리)
