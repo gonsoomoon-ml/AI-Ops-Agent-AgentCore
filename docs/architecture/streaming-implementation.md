@@ -199,6 +199,8 @@ class FunctionNode(MultiAgentBase):
 ### 기본 테스트
 
 ```bash
+cd agentcore
+
 # 단일 프롬프트
 uv run python scripts/invoke.py --prompt "안녕하세요"
 
@@ -274,6 +276,7 @@ AWS AgentCore는 네트워크 레벨에서 여러 토큰을 배치하여 전송�
 ### 원시 이벤트 확인
 
 ```bash
+cd agentcore
 uv run python scripts/invoke.py --test simple --raw
 ```
 
