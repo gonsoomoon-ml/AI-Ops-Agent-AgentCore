@@ -77,6 +77,9 @@ class OpsWorkflowState:
 
     # ===== Error =====
     error: str | None              # 오류 메시지
+
+    # ===== Metadata =====
+    metadata: dict[str, Any] = field(default_factory=dict)  # 추가 메타데이터
 ```
 
 ### 2.2 State Lifecycle
@@ -160,45 +163,69 @@ class EvalVerdict(Enum):
 
 ### 3.2 ANALYZE Node
 
-```python
-def analyze_node(state: OpsWorkflowState) -> dict[str, Any]:
-    # 재시도 시 피드백 포함
-    if state.attempt > 0 and state.feedback:
-        prompt = f"{state.prompt}\n\n피드백: {state.feedback}"
-    else:
-        prompt = state.prompt
+Async generator로 스트리밍 이벤트를 전달합니다. 마지막에 `_final=True` 마커가 포함된 dict를 yield합니다.
 
-    # Strands Agent 실행
+```python
+async def analyze_node(task=None, **kwargs):
+    state = get_current_workflow_state()
+
+    # 재시도 시 피드백 포함 프롬프트
+    if state.attempt > 0 and state.feedback:
+        current_prompt = build_retry_prompt(state.prompt, state.feedback)
+    else:
+        current_prompt = state.prompt
+
+    # Strands Agent 스트리밍 실행
     agent = _create_agent()
-    result = agent(prompt)
+    async for event in agent.stream_async(current_prompt):
+        yield event
+
+    # 응답 추출 (마지막 assistant 메시지)
+    response = ""
+    if hasattr(agent, "messages") and agent.messages:
+        for msg in reversed(agent.messages):
+            if msg.get("role") == "assistant":
+                for content in msg.get("content", []):
+                    if isinstance(content, dict) and "text" in content:
+                        response = content["text"]
+                        break
+                if response:
+                    break
+
+    # 도구 결과 추출
+    tool_results = ToolResultExtractor.from_messages(agent.messages)
 
     # 상태 업데이트
-    state.response = result.message["content"][0]["text"]
-    state.tool_results = _capture_tool_results(result)
+    state.response = response
+    state.tool_results = tool_results
 
-    return {"response": state.response, "tool_results_count": len(state.tool_results)}
+    # 최종 결과 (_final 마커)
+    yield {"text": response, "tool_results_count": len(tool_results), "_final": True}
 ```
 
 ### 3.3 EVALUATE Node
 
 ```python
-def evaluate_node(state: OpsWorkflowState) -> dict[str, Any]:
+def evaluate_node(task=None, **kwargs) -> dict[str, Any]:
+    state = get_current_workflow_state()
+
     evaluator = OpsAgentEvaluator()
     eval_result = evaluator.evaluate(
-        response=state.response,
+        response=state.response or "",
         tool_results=state.tool_results,
     )
 
     state.eval_result = eval_result
     state.check_results = eval_result.check_results
 
-    return {"overall_score": eval_result.overall_score}
+    return {"text": f"Score: {eval_result.overall_score:.2f}", ...}
 ```
 
 ### 3.4 DECIDE Node
 
 ```python
-def decide_node(state: OpsWorkflowState) -> dict[str, Any]:
+def decide_node(task=None, **kwargs) -> dict[str, Any]:
+    state = get_current_workflow_state()
     score = state.eval_result.overall_score
 
     if score >= 0.7:
@@ -210,38 +237,47 @@ def decide_node(state: OpsWorkflowState) -> dict[str, Any]:
     else:
         state.verdict = EvalVerdict.REGENERATE
 
-    return {"verdict": state.verdict.value, "score": score}
+    return {"text": f"{state.verdict.value.upper()} (score={score:.2f})", ...}
 ```
 
 ### 3.5 REGENERATE Node
 
 ```python
-def regenerate_node(state: OpsWorkflowState) -> dict[str, Any]:
+def regenerate_node(task=None, **kwargs) -> dict[str, Any]:
+    state = get_current_workflow_state()
+
     # 피드백 설정
-    state.feedback = state.eval_result.feedback
+    if state.eval_result and state.eval_result.feedback:
+        state.feedback = state.eval_result.feedback
+    else:
+        state.feedback = "이전 응답의 품질이 부족합니다. 도구 결과를 더 정확하게 인용해주세요."
 
-    # 시도 횟수 증가
+    # 시도 횟수 증가 및 상태 초기화
     state.attempt += 1
-
-    # 재시도를 위한 상태 초기화
     state.reset_for_retry()  # response, tool_results, eval_result, verdict 초기화
 
-    return {"attempt": state.attempt}
+    return {"text": f"Regenerating (attempt {state.attempt + 1})", ...}
 ```
 
 ### 3.6 FINALIZE Node
 
 ```python
-def finalize_node(state: OpsWorkflowState) -> dict[str, Any]:
+def finalize_node(task=None, **kwargs) -> dict[str, Any]:
+    state = get_current_workflow_state()
+
     if state.verdict == EvalVerdict.PASS:
         state.final_response = state.response
         state.final_status = WorkflowStatus.PUBLISHED
 
     elif state.verdict == EvalVerdict.BLOCK:
-        state.final_response = f"⚠️ 품질 검증 주의\n\n{state.response}"
+        state.final_response = f"⚠️ 응답 품질 검증 주의\n\n{state.response}"
         state.final_status = WorkflowStatus.REJECTED
 
-    return {"final_status": state.final_status.value}
+    else:
+        state.final_response = state.response
+        state.final_status = WorkflowStatus.PUBLISHED
+
+    return {"text": state.final_response or "", "final_status": state.final_status.value, ...}
 ```
 
 ## 4. Conditions
@@ -250,43 +286,58 @@ def finalize_node(state: OpsWorkflowState) -> dict[str, Any]:
 
 ### 4.1 Condition Functions
 
+조건 함수는 Strands `graph_state`를 인자로 받지만, 실제로는 전역 레지스트리의 `OpsWorkflowState`를 사용합니다.
+
 ```python
 # graph/conditions.py
 
-def should_finalize(state: OpsWorkflowState) -> bool:
+def should_finalize(graph_state) -> bool:
     """FINALIZE로 진행할지 결정"""
+    state = get_current_workflow_state()
     return state.verdict in (EvalVerdict.PASS, EvalVerdict.BLOCK)
 
-def should_regenerate(state: OpsWorkflowState) -> bool:
+def should_regenerate(graph_state) -> bool:
     """REGENERATE로 진행할지 결정"""
+    state = get_current_workflow_state()
     return state.verdict == EvalVerdict.REGENERATE
 ```
 
-### 4.2 Routing Logic
+### 4.2 Routing Logic (GraphBuilder Edge Definitions)
+
+라우팅은 `_get_next_node()` 같은 함수가 아니라, `GraphBuilder`의 선언적 엣지 정의로 구현됩니다.
 
 ```python
-# graph/runner.py - _get_next_node()
+# graph/runner.py - build_ops_graph()
 
-def _get_next_node(current_node: NodeName, state: OpsWorkflowState) -> NodeName:
-    if current_node == NodeName.ANALYZE:
-        return NodeName.EVALUATE
+def build_ops_graph(max_node_executions: int = 15) -> "Graph":
+    builder = GraphBuilder()
 
-    elif current_node == NodeName.EVALUATE:
-        return NodeName.DECIDE
+    # FunctionNode 래퍼 생성 (일반 함수 → MultiAgentBase)
+    analyze = FunctionNode(func=analyze_node, name="analyze")
+    evaluate = FunctionNode(func=evaluate_node, name="evaluate")
+    decide = FunctionNode(func=decide_node, name="decide")
+    regenerate = FunctionNode(func=regenerate_node, name="regenerate")
+    finalize = FunctionNode(func=finalize_node, name="finalize")
 
-    elif current_node == NodeName.DECIDE:
-        if should_finalize(state):      # PASS or BLOCK
-            return NodeName.FINALIZE
-        elif should_regenerate(state):  # REGENERATE
-            return NodeName.REGENERATE
-        else:
-            return NodeName.FINALIZE    # Default
+    # 노드 등록
+    builder.add_node(analyze, "analyze")
+    builder.add_node(evaluate, "evaluate")
+    builder.add_node(decide, "decide")
+    builder.add_node(regenerate, "regenerate")
+    builder.add_node(finalize, "finalize")
 
-    elif current_node == NodeName.REGENERATE:
-        return NodeName.ANALYZE         # Loop back
+    # 진입점
+    builder.set_entry_point("analyze")
 
-    elif current_node == NodeName.FINALIZE:
-        return NodeName.END
+    # 엣지 정의
+    builder.add_edge("analyze", "evaluate")
+    builder.add_edge("evaluate", "decide")
+    builder.add_edge("decide", "finalize", condition=should_finalize)
+    builder.add_edge("decide", "regenerate", condition=should_regenerate)
+    builder.add_edge("regenerate", "analyze")  # Loop back
+
+    builder.set_max_node_executions(max_node_executions)
+    return builder.build()
 ```
 
 ### 4.3 Decision Matrix
@@ -300,35 +351,41 @@ def _get_next_node(current_node: NodeName, state: OpsWorkflowState) -> NodeName:
 
 ## 5. Execution Flow
 
-### 5.1 Runner Loop
+### 5.1 Runner
+
+Strands `GraphBuilder`가 빌드한 `Graph` 객체를 호출하여 실행합니다. 직접 while 루프를 돌리지 않습니다.
 
 ```python
-# graph/runner.py
+# graph/runner.py - OpsAgentGraph
 
 def run(self, prompt: str) -> OpsWorkflowState:
-    # 1. 상태 생성
-    state = create_workflow_state(workflow_id, prompt, max_attempts)
+    workflow_id = str(uuid.uuid4())
 
-    # 2. 그래프 실행 루프
-    current_node = NodeName.ANALYZE
-    node_count = 0
+    # 1. 상태 생성 및 전역 레지스트리 등록
+    state = create_workflow_state(workflow_id, prompt, self.max_attempts)
+    set_current_workflow_id(workflow_id)
+    reset_step_counter()
 
-    while current_node != NodeName.END:
-        # 무한 루프 방지
-        node_count += 1
-        if node_count > self.max_node_executions:
-            state.error = "Maximum node executions exceeded"
-            break
+    try:
+        # 2. 그래프 실행 (Strands가 노드 순회/조건 평가를 처리)
+        result = self._graph(prompt)
 
-        # 노드 실행
-        result = self._execute_node(current_node, state)
+        # 3. 최종 상태 반환
+        final_state = get_current_workflow_state()
+        return final_state if final_state else state
 
-        # 다음 노드로 이동
-        current_node = result.next_node
+    except Exception as e:
+        state.final_status = WorkflowStatus.ERROR
+        state.error = str(e)
+        return state
 
-    # 3. 상태 정리 및 반환
-    delete_workflow_state(workflow_id)
-    return state
+    finally:
+        set_current_workflow_id(None)
+        delete_workflow_state(workflow_id)
+
+async def stream_async(self, prompt: str):
+    """AgentCore Runtime 스트리밍용 async generator."""
+    # ... (동일 패턴, self._graph.stream_async(prompt) 사용)
 ```
 
 ### 5.2 Example: PASS Flow (score ≥ 0.7)
@@ -403,7 +460,7 @@ EVALUATE ──► score=0.10
 DECIDE ──► verdict=BLOCK
     │
     ▼
-FINALIZE ──► final_response="⚠️ 품질 검증 주의\n\n에러가 없습니다"
+FINALIZE ──► final_response="⚠️ 응답 품질 검증 주의\n\n에러가 없습니다"
             final_status=REJECTED
     │
     ▼
@@ -414,11 +471,13 @@ END
 
 ```
 src/ops_agent/graph/
-├── __init__.py      # Module exports
-├── state.py         # OpsWorkflowState, WorkflowStatus
-├── nodes.py         # analyze_node, evaluate_node, decide_node, ...
-├── conditions.py    # should_finalize, should_regenerate
-└── runner.py        # OpsAgentGraph (main runner)
+├── __init__.py        # Module exports
+├── state.py           # OpsWorkflowState, WorkflowStatus, 전역 레지스트리
+├── nodes.py           # analyze_node, evaluate_node, decide_node, ...
+├── conditions.py      # should_finalize, should_regenerate, ...
+├── function_node.py   # FunctionNode (Python 함수 → MultiAgentBase 래퍼)
+├── runner.py          # build_ops_graph(), OpsAgentGraph (main runner)
+└── util.py            # Colors, StepPrinter, ToolResultExtractor
 ```
 
 ## 7. Usage
