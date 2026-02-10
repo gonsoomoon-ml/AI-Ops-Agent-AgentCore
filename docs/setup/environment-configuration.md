@@ -31,13 +31,11 @@ AWS_REGION=us-east-1
 | `BEDROCK_TEMPERATURE` | 응답 다양성 (0.0~1.0) | `0.0` | X |
 | `BEDROCK_MAX_TOKENS` | 최대 토큰 수 | `4096` | X |
 | `BEDROCK_KNOWLEDGE_BASE_ID` | Knowledge Base ID | - | X (KB 사용 시) |
-| `PROMPT_CACHE_ENABLED` | 프롬프트 캐싱 | `true` | X |
 
 ```bash
 BEDROCK_MODEL_ID=global.anthropic.claude-sonnet-4-5-20250929-v1:0
 BEDROCK_TEMPERATURE=0.0
 BEDROCK_MAX_TOKENS=4096
-PROMPT_CACHE_ENABLED=true
 ```
 
 **사용 가능한 모델:**
@@ -48,8 +46,8 @@ PROMPT_CACHE_ENABLED=true
 | `global.anthropic.claude-opus-4-5-20251101-v1:0` | 고성능, 복잡한 분석 |
 
 **프롬프트 캐싱:**
-- `PROMPT_CACHE_ENABLED=true` 설정 시 최대 90% 비용 절감
-- 시스템 프롬프트와 도구 정의를 캐싱하여 재사용
+- 시스템 프롬프트와 도구 정의에 `cachePoint`를 설정하여 최대 90% 비용 절감
+- 항상 활성화 (별도 설정 불필요)
 
 ### Datadog 설정 (Phase 2)
 
@@ -172,7 +170,6 @@ AWS_REGION=us-east-1
 # Bedrock
 BEDROCK_MODEL_ID=global.anthropic.claude-sonnet-4-5-20250929-v1:0
 BEDROCK_TEMPERATURE=0.0
-PROMPT_CACHE_ENABLED=true
 BEDROCK_KNOWLEDGE_BASE_ID=your-kb-id     # create_kb.py 실행 후 입력
 
 # Agent
