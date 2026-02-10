@@ -104,6 +104,7 @@ secrets.yaml
 
 # AgentCore deployment artifacts
 agentcore/runtime/ops_agent/
+agentcore/runtime/.bedrock_agentcore.yaml
 agentcore/scripts/.deployment_metadata.json
 
 # RAG pipeline — bridge dataset (confidential)
