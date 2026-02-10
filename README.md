@@ -272,6 +272,8 @@ uv run python rag_pipeline/create_kb.py --dataset refrigerator --mode create
 #      s3_bucket: "ops-fridge-kb-xxxx"
 #      kb_id: "XXXXXXXXXX"
 #      ds_id: "XXXXXXXXXX"
+#    → .env에 KB ID 설정 (에이전트가 KB 검색을 사용하려면 필수):
+#      BEDROCK_KNOWLEDGE_BASE_ID=XXXXXXXXXX
 
 # 4. 검색 품질 평가
 uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator
