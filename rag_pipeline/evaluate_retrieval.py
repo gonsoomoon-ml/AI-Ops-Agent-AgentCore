@@ -46,7 +46,7 @@ def load_dataset_config(dataset_name):
 # Each test: (query, expected_doc_id, category, description)
 # expected_doc_id can be a string or list of acceptable IDs
 
-TEST_CASES = [
+REFRIGERATOR_TEST_CASES = [
     # ── Diagnostics: Error Codes ──────────────────────────────────────────
     ("에러 코드 22E가 뭐야?",
      ["diagnostics-002", "diagnostics-001"], "diagnostics",
@@ -290,6 +290,91 @@ TEST_CASES = [
      "Wi-Fi 문제 (여러 원인 가능)"),
 ]
 
+BRIDGE_TEST_CASES = [
+    # ── TSS (2) ─────────────────────────────────────────────────────────────
+    ("TSS Activation이 뭐야?",
+     ["tss-001", "glossary-001"], "tss",
+     "TSS Activation 개념"),
+
+    ("TSS 2.1 Late TA가 뭐야?",
+     ["tss-005"], "tss",
+     "Late TA Feature"),
+
+    # ── CMS Portal (2) ──────────────────────────────────────────────────────
+    ("CMS 포털에서 Role 권한 받는 방법",
+     ["cms_portal-001"], "cms_portal",
+     "Role 권한 획득"),
+
+    ("P4 업로드 에러 4000 해결 방법",
+     ["cms_portal-021", "cms_portal-018"], "cms_portal",
+     "P4 Upload Error 4000"),
+
+    # ── PAI Portal (2) ──────────────────────────────────────────────────────
+    ("PAI 포털에서 앱 설치 방법",
+     ["pai_portal-001"], "pai_portal",
+     "App 설치 방법"),
+
+    ("1006 오류 해결 방법",
+     ["pai_portal-010"], "pai_portal",
+     "Google CTS 1006 에러"),
+
+    # ── App Delivery (1) ────────────────────────────────────────────────────
+    ("앱 딜리버리 제공 방식 알려줘",
+     ["app_delivery-001"], "app_delivery",
+     "App Delivery 제공 방식"),
+
+    # ── OMC Update (1) ──────────────────────────────────────────────────────
+    ("OMC Customization이 뭐야?",
+     ["omc_update-001"], "omc_update",
+     "OMC Customization 개념"),
+
+    # ── Grasse Portal (1) ───────────────────────────────────────────────────
+    ("Grasse 포털 접속 방법 알려줘",
+     ["grasse_portal-001"], "grasse_portal",
+     "Grasse Portal 접속"),
+
+    # ── SMF (1) ─────────────────────────────────────────────────────────────
+    ("SIM Mobility Framework가 뭐야?",
+     ["smf-001"], "smf",
+     "SMF 개념"),
+
+    # ── Client (1) ──────────────────────────────────────────────────────────
+    ("단말 문제 발생 시 로그 확보 방법",
+     ["client-001"], "client",
+     "단말 로그 확보"),
+
+    # ── Glossary (2) ────────────────────────────────────────────────────────
+    ("TSS가 뭐야?",
+     ["glossary-001"], "glossary",
+     "TSS 정의"),
+
+    ("Samsung Bridge가 뭐야?",
+     ["glossary-010"], "glossary",
+     "Samsung Bridge 정의"),
+
+    # ── Cross-category (2) ──────────────────────────────────────────────────
+    ("OMC 관련 에러 코드 알려줘",
+     ["omc_update-009", "cms_portal-021"], "cross",
+     "OMC 에러 코드 (여러 카테고리)"),
+
+    ("앱이 단말에 설치가 안돼요",
+     ["pai_portal-001", "app_delivery-001", "pai_portal-010"], "cross",
+     "앱 설치 문제 (모호한 질문)"),
+]
+
+DATASET_TEST_CASES = {
+    "refrigerator": REFRIGERATOR_TEST_CASES,
+    "bridge": BRIDGE_TEST_CASES,
+}
+
+
+def get_test_cases(dataset_name):
+    """데이터셋별 테스트 케이스 반환."""
+    if dataset_name not in DATASET_TEST_CASES:
+        available = ", ".join(DATASET_TEST_CASES.keys())
+        raise ValueError(f"No test cases for dataset: {dataset_name}. Available: {available}")
+    return DATASET_TEST_CASES[dataset_name]
+
 
 def get_kb_id(ds_config):
     """datasets.yaml 또는 SSM에서 KB ID 조회."""
@@ -379,7 +464,8 @@ def _get_rag_model_arn():
     return arn, rag_model_id, region
 
 
-RAG_PROMPT_TEMPLATE = """\
+RAG_PROMPT_TEMPLATES = {
+    "refrigerator": """\
 You are a Samsung refrigerator technical support assistant.
 Answer the user's question based on the search results below.
 
@@ -391,11 +477,33 @@ Instructions:
 - Answer in Korean.
 
 $search_results$
-"""
+
+$output_format_instructions$
+""",
+    "bridge": """\
+You are a Samsung Bridge (TSS/CMS/SMF/OMC) technical support assistant.
+Answer the user's question based on the search results below.
+
+Instructions:
+- Answer ONLY what the user asked. Do not include information from search results that is not directly relevant to the question.
+- If search results contain different versions or variants (e.g. TSS 1.0 vs TSS 2.0), only include the version the user asked about.
+- Use numbered lists for step-by-step procedures.
+- Include specific values (error codes, portal URLs, configuration names, OS versions).
+- If multiple methods exist, explain each one completely.
+- Answer in Korean.
+
+$search_results$
+
+$output_format_instructions$
+""",
+}
+
+# Default fallback
+RAG_PROMPT_TEMPLATE = RAG_PROMPT_TEMPLATES["refrigerator"]
 
 
 def query_kb_rag(client, kb_id, query, model_arn, num_results=5,
-                 category_filter=None):
+                 category_filter=None, dataset_name="refrigerator"):
     """RetrieveAndGenerate — KB 검색 + LLM 답변 생성."""
     vector_config = {
         "numberOfResults": num_results,
@@ -415,7 +523,8 @@ def query_kb_rag(client, kb_id, query, model_arn, num_results=5,
                 "modelArn": model_arn,
                 "generationConfiguration": {
                     "promptTemplate": {
-                        "textPromptTemplate": RAG_PROMPT_TEMPLATE,
+                        "textPromptTemplate": RAG_PROMPT_TEMPLATES.get(
+                            dataset_name, RAG_PROMPT_TEMPLATE),
                     },
                     "inferenceConfig": {
                         "textInferenceConfig": {
@@ -464,7 +573,8 @@ def run_rag_mode(args, ds_config, kb_id):
         print("─" * 70)
         cat_filter = args.category if args.category and args.category != "cross" else None
         result = query_kb_rag(client, kb_id, args.query, model_arn,
-                              category_filter=cat_filter)
+                              category_filter=cat_filter,
+                              dataset_name=args.dataset)
         print(f"\n답변:\n{result['answer']}")
         if result["citations"]:
             print(f"\n참조 문서 ({len(result['citations'])}개):")
@@ -476,7 +586,7 @@ def run_rag_mode(args, ds_config, kb_id):
         return
 
     # Batch mode: run test cases
-    cases = TEST_CASES
+    cases = get_test_cases(args.dataset)
     if args.category:
         cases = [c for c in cases if c[2] == args.category]
         print(f"카테고리 필터: {args.category} ({len(cases)}개)")
@@ -511,7 +621,8 @@ def run_rag_mode(args, ds_config, kb_id):
         try:
             cat_filter = category if args.filter and category != "cross" else None
             result = query_kb_rag(client, kb_id, query, model_arn,
-                                  category_filter=cat_filter)
+                                  category_filter=cat_filter,
+                                  dataset_name=args.dataset)
         except Exception as e:
             print(f"  ERROR: {e}")
             continue
@@ -558,11 +669,12 @@ def main():
     filter_label = " + Category Filter" if args.filter else ""
     print(f"Bedrock KB 검색 정확도 평가 [{args.dataset}] (HYBRID Search{filter_label})")
     print(f"KB ID: {kb_id}")
-    print(f"테스트 케이스: {len(TEST_CASES)}개")
+    all_cases = get_test_cases(args.dataset)
+    print(f"테스트 케이스: {len(all_cases)}개")
     print("=" * 70)
 
     # Filter by category if specified
-    cases = TEST_CASES
+    cases = all_cases
     if args.category:
         cases = [c for c in cases if c[2] == args.category]
         print(f"카테고리 필터: {args.category} ({len(cases)}개)")

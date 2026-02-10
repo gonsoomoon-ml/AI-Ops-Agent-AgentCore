@@ -121,6 +121,16 @@ Resources:
                   - !Sub 'arn:aws:bedrock:${AWS::Region}:${AWS::AccountId}:inference-profile/*'
 
               # ----------------------------------------------------------
+              # Bedrock Knowledge Base Retrieve (KB Tool)
+              # ----------------------------------------------------------
+              - Sid: BedrockKBRetrieve
+                Effect: Allow
+                Action:
+                  - bedrock:Retrieve
+                Resource:
+                  - 'arn:aws:bedrock:*:*:knowledge-base/*'
+
+              # ----------------------------------------------------------
               # AgentCore Workload Identity
               # ----------------------------------------------------------
               - Sid: GetAgentAccessToken

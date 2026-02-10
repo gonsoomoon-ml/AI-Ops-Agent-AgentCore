@@ -35,13 +35,26 @@ datasets:
     description: "삼성 TSS, CMS Portal, SMF, OMC 업데이트, 앱 배포 등 Q&A"
     raw_dir: "data/RAG/bridge"
     yaml_dir: "data/RAG/bridge_yaml"
-    # Bedrock KB (TBD — will be created after data validation)
-    s3_bucket: ""
-    kb_id: ""
-    ds_id: ""
-    kb_name: ""
+    # Bedrock KB (production)
+    s3_bucket: "ops-bridge-kb-fc4e"
+    kb_id: "G5GG6ZV8GX"
+    ds_id: "ZQUUKFZVSU"
+    kb_name: "ops-bridge-kb"
     embedding_model: "cohere.embed-multilingual-v3"
-    # LLM enrichment config (TBD — analyze data first, then set)
-    stop_words: ""
-    # Category display names (TBD — will be populated after convert_md_to_yaml.py run)
-    category_names: {}
+    # LLM enrichment config
+    stop_words: >-
+      모델, 설정, 버전, 확인, 선택, 진행, 필요, 제공, 등록, 변경,
+      사용, 요청, 지원, 관리, 정보, 경우, 방법, 시스템, 파일, 서비스,
+      단말, 업데이트, 리스트, 클릭, 접속, 포털, 권한, 빌드, 배포,
+      완료, 추가, 삭제, 수정, 입력, 저장, 적용, 문제, 해당
+    # Category display names (English → Korean)
+    category_names:
+      App Delivery: "앱 배포"
+      CMS Portal: "CMS 포털"
+      Client: "단말 정보"
+      Glossary: "용어 설명"
+      Grasse Portal: "Grasse 포털"
+      OMC Update: "OMC 업데이트"
+      PAI Portal: "PAI 포털"
+      SMF: "SIM 관리"
+      TSS: "TSS 활성화"

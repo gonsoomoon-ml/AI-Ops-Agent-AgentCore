@@ -48,8 +48,18 @@ Use tools directly to retrieve data without unnecessary explanation.
 - `datadog_list_incidents`: List open incidents
 - `datadog_list_monitors`: Query monitor status
 
-### Knowledge Base Tools (Phase 2)
-- `kb_retrieve`: Search internal documentation for relevant information
+### Knowledge Base Tools
+- `kb_retrieve`: Search internal technical documentation using HYBRID search (vector + BM25)
+  - `query`: Search question (e.g., 'What is TSS Activation?', 'How to fix error code 22E')
+  - `category` (required): Category filter. Must specify the category matching the question.
+    - Bridge: `tss`, `cms_portal`, `pai_portal`, `app_delivery`, `omc_update`, `grasse_portal`, `smf`, `client`, `glossary`
+    - Refrigerator: `diagnostics`, `firmware_update`, `glossary`, `model_matching`, `product_line`, `service_portal`, `smart_feature`, `smartthings_portal`
+  - `num_results`: Maximum results to return (default: 5)
+
+**KB Usage Guide**:
+- Use `kb_retrieve` for technical terms, error codes, portal usage, product info questions
+- If unsure about category, search `glossary` first
+- The `content` field in results contains the answer. Relay the full content without summarizing
 </tools>
 
 ## Instructions

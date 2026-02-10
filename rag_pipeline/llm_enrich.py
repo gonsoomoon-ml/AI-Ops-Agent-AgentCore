@@ -20,6 +20,7 @@ regex 대신 Claude를 사용하여 한국어 핵심 용어, 질문 변형, 키�
 import argparse
 import json
 import os
+import re
 import sys
 import time
 
@@ -95,6 +96,29 @@ def parse_llm_response(text):
         lines = [l for l in lines if not l.strip().startswith("```")]
         text = "\n".join(lines)
 
+    # Fix unescaped backslashes BEFORE JSON parsing
+    # (e.g. Windows paths like Phone\Download\log)
+    text = re.sub(r'\\(?!["\\/bfnrtu])', r'\\\\', text)
+
+    # Fix trailing commas in arrays/objects (e.g. ["a", "b",] → ["a", "b"])
+    text = re.sub(r',\s*([}\]])', r'\1', text)
+
+    # Extract first complete JSON object using raw_decode (ignores trailing text)
+    # If parsing fails due to bad escapes, fix them iteratively at the reported position
+    start = text.find("{")
+    if start != -1:
+        for _ in range(10):  # max 10 escape fixes
+            try:
+                decoder = json.JSONDecoder()
+                result, _ = decoder.raw_decode(text, start)
+                return result
+            except json.JSONDecodeError as e:
+                if "bad escape" in str(e) and e.pos is not None:
+                    # Double the backslash at the exact failing position
+                    text = text[: e.pos] + "\\" + text[e.pos :]
+                else:
+                    break
+
     return json.loads(text)
 
 
@@ -108,7 +132,7 @@ def enrich_entry(entry, client, stop_words, siblings=None, total_docs=107, dry_r
     prompt = _template.render(
         title=entry["title"],
         category=entry["category_name"],
-        answer=entry["answer"][:1500],
+        answer=entry["answer"][:1500].replace("\\", "\\\\"),
         keywords=", ".join(entry.get("keywords", [])),
         error_codes=", ".join(entry.get("error_codes", [])) or "없음",
         siblings=sibling_str,

@@ -28,6 +28,14 @@ uv run pytest tests/test_evaluation.py -k "cloudwatch" -v   # By keyword
 uv run ruff check src/ tests/ --fix    # Lint + auto-fix
 uv run mypy src/ops_agent              # Type check (strict mode)
 
+# RAG pipeline (per-dataset: refrigerator, bridge)
+uv run python rag_pipeline/convert_md_to_yaml.py --dataset bridge    # Markdown → YAML
+uv run python rag_pipeline/llm_enrich.py --dataset bridge            # LLM keyword enrichment
+uv run python rag_pipeline/prepare_and_sync.py --dataset bridge --mode prepare  # Build artifacts
+uv run python rag_pipeline/prepare_and_sync.py --dataset bridge --mode sync     # S3 upload + KB sync
+uv run python rag_pipeline/evaluate_retrieval.py --dataset bridge               # Retrieval evaluation
+uv run python rag_pipeline/evaluate_retrieval.py --dataset bridge --rag         # RetrieveAndGenerate
+
 # AgentCore deployment
 cd agentcore
 ./deploy_infra.sh                           # CloudFormation setup (IAM, SSM)
@@ -75,9 +83,10 @@ response = agent.invoke_with_mock_history("분석해줘", mock_results)
 | Graph Nodes | `src/ops_agent/graph/nodes.py` | ANALYZE, EVALUATE, DECIDE, FINALIZE, REGENERATE |
 | Graph State | `src/ops_agent/graph/state.py` | OpsWorkflowState + thread-safe global registry |
 | Evaluator | `src/ops_agent/evaluation/evaluator.py` | Orchestrates checkers, determines verdict |
-| Checkers | `src/ops_agent/evaluation/checkers/` | BaseChecker interface + CloudWatchChecker |
+| Checkers | `src/ops_agent/evaluation/checkers/` | BaseChecker interface + CloudWatchChecker, KBChecker |
 | Eval Models | `src/ops_agent/evaluation/models.py` | ToolResult, CheckResult, EvalResult, EvalVerdict |
-| Tools | `src/ops_agent/tools/cloudwatch/` | Factory: mock_tools.py or mcp_tools.py |
+| Tools (CW) | `src/ops_agent/tools/cloudwatch/` | Factory: mock_tools.py or mcp_tools.py |
+| Tools (KB) | `src/ops_agent/tools/knowledge_base/` | Factory: mock_tools.py or kb_tools.py |
 | Telemetry | `src/ops_agent/telemetry/setup.py` | Langfuse/OTEL observability setup |
 | Settings | `src/ops_agent/config/settings.py` | Pydantic BaseSettings, `.env` loading |
 | Prompts | `src/ops_agent/prompts/` | System prompts (Korean/English) via templates |
@@ -110,7 +119,7 @@ Key environment variables (`.env`):
 - **Local (Strands)**: `STRANDS_OBSERVABILITY_MODE` = disabled | langfuse-public | langfuse-selfhosted
 - **Production (AgentCore)**: `AGENTCORE_OBSERVABILITY_MODE` = disabled | langfuse-public | langfuse-selfhosted | native
 
-See [docs/observability-langfuse.md](docs/observability-langfuse.md) for Langfuse API keys and setup.
+See [docs/setup/observability-langfuse.md](docs/setup/observability-langfuse.md) for Langfuse API keys and setup.
 
 ## Dependencies
 
@@ -137,4 +146,7 @@ uv sync --extra datadog    # Include Datadog client
 - **Phase 1** ✅: CloudWatch + evaluation system + graph workflow
 - **Phase 1.5** ✅: Langfuse observability integration
 - **Phase 2** (Planned): Datadog integration — add tools in `tools/datadog/`, checker in `evaluation/checkers/`
-- **Phase 3** (In Progress): Knowledge Base — Bedrock KB + OpenSearch Serverless for refrigerator Q&A data
+- **Phase 3** ✅: Knowledge Base — Bedrock KB + OpenSearch Serverless for Q&A data
+  - Refrigerator KB: `ops-fridge-kb-v2` (107 entries, 9 categories)
+  - Bridge KB: `ops-bridge-kb` (157 entries, 9 categories — TSS/CMS/SMF/OMC/PAI)
+  - RAG pipeline: `rag_pipeline/` — convert → enrich → prepare → sync → evaluate

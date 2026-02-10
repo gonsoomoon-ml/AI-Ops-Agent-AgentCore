@@ -1,83 +1,141 @@
-# OpsAgent - Self-Correcting Operations AI Agent
+# OpsAgent - AI Operations Agent
 
-운영 자동화를 위한 AI 에이전트입니다. **3단계 평가 시스템**으로 응답 품질을 검증하고, 피드백 기반으로 자체 개선하며, 운영자의 의사결정을 지원합니다.
+[Strands Agents SDK](https://strandsagents.com/) 기반 운영 자동화 AI 에이전트입니다. RAG 파이프라인으로 운영 지식을 구축하고, 자체 교정 평가 시스템으로 응답 품질을 보장하며, AWS Bedrock AgentCore로 프로덕션 배포를 지원합니다.
 
-## 해결하고자 하는 문제
-
-운영 환경에서 AI 에이전트를 사용할 때 다음과 같은 문제가 발생합니다:
-
-| 문제 | 설명 |
-|------|------|
-| **품질 일관성 부재** | LLM 응답 품질이 일정하지 않아 신뢰성 저하 |
-| **환각(Hallucination)** | 도구 결과와 무관한 허위 정보 생성 |
-| **검증 부재** | 응답이 도구 결과를 정확히 인용하는지 확인 불가 |
-| **감사 추적 어려움** | 비결정적 LLM 출력으로 감사 대응 곤란 |
-| **자동 개선 미흡** | 피드백 기반 자체 개선 메커니즘 부재 |
-
-## 솔루션 아키텍처
-
-**5단계 파이프라인**으로 품질을 보장합니다:
-
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                     OpsAgent Evaluation Graph                            │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│   START                                                                  │
-│     │                                                                    │
-│     ▼                                                                    │
-│   ┌──────────┐                                                           │
-│   │ ANALYZE  │  LLM 에이전트 실행, CloudWatch/Datadog 도구 호출           │
-│   └────┬─────┘                                                           │
-│        │                                                                 │
-│        ▼                                                                 │
-│   ┌──────────┐                                                           │
-│   │ EVALUATE │  응답 품질 평가 (도구 결과 인용, 정확성, 완전성)             │
-│   └────┬─────┘                                                           │
-│        │                                                                 │
-│        ▼                                                                 │
-│   ┌──────────┐                                                           │
-│   │  DECIDE  │  SOP 기반 판정 (PASS / REGENERATE / BLOCK)                │
-│   └────┬─────┘                                                           │
-│        │                                                                 │
-│        ├── PASS/BLOCK ──────▶ ┌──────────┐                               │
-│        │                      │ FINALIZE │ ──▶ 최종 응답 출력              │
-│        │                      └──────────┘                               │
-│        │                                                                 │
-│        └── REGENERATE ──────▶ ┌────────────┐                             │
-│                               │ REGENERATE │ ──▶ 피드백과 함께 ANALYZE 재실행│
-│                               └────────────┘                             │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
-```
-
-## 핵심 기술
+## 주요 기능
 
 | 기능 | 설명 |
 |------|------|
-| **Graph 기반 워크플로우** | Strands GraphBuilder로 선언적 워크플로우 정의 |
-| **자체 교정 루프** | 평가 피드백을 반영하여 응답 자동 재생성 |
-| **도구 결과 검증** | 응답이 실제 도구 결과를 정확히 인용하는지 검증 |
-| **설명 가능한 평가** | 점수와 함께 평가 근거 제공 |
+| **RAG 파이프라인** | Bedrock KB + OpenSearch HYBRID 검색 + 메타데이터 카테고리 필터링 |
+| **LLM 키워드 보강** | LLM 기반 BM25 키워드 최적화로 한국어 검색 정확도 향상 |
+| **자체 교정 평가** | Graph 기반 5단계 파이프라인 (ANALYZE → EVALUATE → DECIDE → FINALIZE/REGENERATE) |
+| **도구 연동** | CloudWatch 로그 분석, Knowledge Base Q&A (mock/mcp 전환) |
 | **실시간 스트리밍** | 토큰 단위 실시간 응답 스트리밍 |
-| **AgentCore 배포** | AWS Bedrock AgentCore Runtime 배포 지원 |
+| **AgentCore 배포** | AWS Bedrock AgentCore Runtime 프로덕션 배포 |
 
-## 평가 시스템
+## 개발 프로세스: Strands SDK → AgentCore
 
-### 점수 기반 판정
+```
+1. Strands Agent 개발        로컬 CLI (uv run ops-agent)
+       │
+2. 도구 연동 (Mock 개발)      CLOUDWATCH_MODE=mock, KB_MODE=mock (.env)
+       │                      → Message Injection으로 실제 API 없이 테스트
+       │
+3. RAG 파이프라인 구축         데이터 변환 → LLM 보강 → S3 동기화 → 검색 평가
+       │
+4. 자체 교정 평가 시스템       Graph 워크플로우 (평가 → 재생성 루프)
+       │
+5. Observability 연동         Langfuse (로컬) / ADOT (AgentCore) 트레이싱
+       │
+6. AgentCore 배포             AWS Bedrock AgentCore Runtime (스트리밍)
+```
 
-| 점수 | 판정 | 동작 |
-|------|------|------|
-| **≥ 0.7** | PASS | 즉시 게시 |
-| **0.3 ~ 0.7** | REGENERATE | 피드백과 함께 재생성 (최대 2회) |
-| **< 0.3** | BLOCK | 품질 경고와 함께 게시 |
+### Mock 개발 & Message Injection
 
-### 평가 항목
+초기 개발 단계에서 실제 AWS API 없이 에이전트를 개발·테스트할 수 있습니다.
 
-- **도구 결과 인용**: 응답이 도구 결과의 데이터를 정확히 인용하는가
-- **정확성**: 숫자, 날짜, 서비스명 등이 정확한가
-- **완전성**: 사용자 질문에 충분히 답변했는가
-- **일관성**: 응답 내 모순이 없는가
+**도구 모드 전환** — `.env`에서 `mock` ↔ `mcp` 전환으로 테스트/운영 환경을 분리합니다.
+
+```bash
+# .env — 테스트 환경 (실제 API 호출 없음)
+CLOUDWATCH_MODE=mock          # 모의 CloudWatch 데이터
+KB_MODE=mock                  # 로컬 YAML 기반 KB 검색
+
+# .env — 운영 환경 (실제 API 호출)
+CLOUDWATCH_MODE=mcp           # MCP 서버 → CloudWatch API
+KB_MODE=mcp                   # Bedrock KB HYBRID 검색
+```
+
+**Message Injection** — 실제 도구 호출 없이 사전 정의된 도구 결과를 주입하여 평가 시스템을 테스트합니다.
+
+```python
+mock_results = [{"tool_name": "cloudwatch_filter_log_events",
+                 "tool_input": {"log_group_name": "/aws/lambda/payment"},
+                 "tool_result": '{"events": [...]}'}]
+response = agent.invoke_with_mock_history("분석해줘", mock_results)
+```
+
+### Observability
+
+로컬 개발과 프로덕션 배포 모두에서 트레이싱을 지원합니다. 자세한 설정은 [Observability & Langfuse](docs/setup/observability-langfuse.md)를 참고하세요.
+
+| 환경 | 모드 | 백엔드 |
+|------|------|--------|
+| Strands (로컬) | `langfuse-public` | Langfuse Cloud |
+| Strands (로컬) | `langfuse-selfhosted` | Self-hosted Langfuse |
+| AgentCore (프로덕션) | `langfuse-public` / `langfuse-selfhosted` | Langfuse |
+| AgentCore (프로덕션) | `native` | AWS ADOT → CloudWatch/X-Ray |
+
+```bash
+# .env — 로컬 개발
+STRANDS_OBSERVABILITY_MODE=langfuse-public    # disabled | langfuse-public | langfuse-selfhosted
+
+# .env — AgentCore 배포
+AGENTCORE_OBSERVABILITY_MODE=native           # disabled | langfuse-public | langfuse-selfhosted | native
+```
+
+## 데이터
+
+RAG 파이프라인에 사용되는 Q&A 데이터입니다. Synthesis data로 생성된 냉장고 기술 지원 데이터가 포함되어 있습니다.
+
+```
+data/RAG/refrigerator/              # 원본 Markdown (카테고리별 Q&A)
+  ├── Diagnostics.md                #   진단/에러코드 (5E, 22E 등)
+  ├── Firmware Update.md            #   펌웨어 업데이트
+  ├── Glossary.md                   #   용어 사전
+  └── ...                           #   총 9개 카테고리
+
+data/RAG/refrigerator_yaml/         # 파이프라인 처리 결과
+  ├── diagnostics.yaml              #   YAML 변환 결과
+  ├── enriched/                     #   LLM 키워드 보강 캐시
+  └── bedrock_upload/               #   S3 업로드 아티팩트 (.md + .metadata.json)
+```
+
+각 Q&A 항목은 `title`, `contents`, `category` 필드로 구성되며, 파이프라인을 통해 키워드 보강 → 메타데이터 생성 → Bedrock KB 동기화됩니다.
+
+## RAG 파이프라인
+
+운영 Q&A 데이터를 Bedrock KB에 적재하고, HYBRID 검색 + 메타데이터 필터링으로 정확한 답변을 제공합니다.
+
+### 파이프라인 흐름
+
+```
+Markdown (Q&A) → YAML 변환 → LLM 키워드 보강 → S3 업로드 → Bedrock KB 동기화 → 검색 평가
+```
+
+| 단계 | 스크립트 | 설명 |
+|------|----------|------|
+| 변환 | `convert_md_to_yaml.py` | Markdown Q&A → 구조화된 YAML |
+| 보강 | `llm_enrich.py` | LLM이 핵심 키워드를 추출하여 BM25 검색 최적화 |
+| 적재 | `prepare_and_sync.py` | 메타데이터 생성 + S3 업로드 + KB 동기화 |
+| 평가 | `evaluate_retrieval.py` | Retrieve / RetrieveAndGenerate 검색 품질 측정 |
+
+### 메타데이터 필터링
+
+각 문서에 `category` 메타데이터를 부여하고, 검색 시 카테고리 필터를 적용하여 정확도를 높입니다.
+
+```python
+# 검색 시 카테고리 필터 적용
+vector_config["filter"] = {"equals": {"key": "category", "value": "tss"}}
+```
+
+### 데이터셋
+
+| 데이터셋 | 문서 수 | 카테고리 | 설명 |
+|----------|---------|----------|------|
+| **Bridge** | 157 | 9 (TSS, CMS Portal, SMF, OMC, PAI 등) | 통신 장비 운영 Q&A |
+| **Refrigerator** | 107 | 9 (진단, 펌웨어, 용어, 서비스 포털 등) | 냉장고 기술 지원 Q&A (Synthesis data) |
+
+### 자체 교정 평가 시스템
+
+Graph 기반 워크플로우로 응답 품질을 자동 검증합니다.
+
+```
+User Query → ANALYZE (LLM + 도구 호출)
+           → EVALUATE (0.0~1.0 품질 평가)
+           → DECIDE (≥0.7: PASS, 0.3~0.7: REGENERATE, <0.3: BLOCK)
+           → FINALIZE or REGENERATE (피드백 기반 재생성, 최대 2회)
+```
 
 ## 기술 스택
 
@@ -86,6 +144,8 @@
 | Language | Python 3.11+ |
 | LLM | AWS Bedrock Claude Sonnet 4 |
 | Agent Framework | Strands Agents SDK |
+| Knowledge Base | AWS Bedrock KB + OpenSearch Serverless (HYBRID 검색) |
+| Embedding | Cohere Embed Multilingual v3 |
 | Deployment | AWS Bedrock AgentCore Runtime |
 | Observability | Langfuse, CloudWatch, X-Ray |
 
@@ -113,19 +173,36 @@ AI-Ops-Agent-AgentCore/
 │   │   └── util.py               # 공통 유틸리티
 │   ├── evaluation/               # 평가 시스템
 │   │   ├── evaluator.py          # 평가기
-│   │   └── models.py             # 평가 모델
+│   │   ├── models.py             # 평가 모델
+│   │   └── checkers/             # 검사기 (CloudWatch, KB)
 │   ├── tools/                    # 도구
-│   │   └── cloudwatch/           # CloudWatch 도구
+│   │   ├── cloudwatch/           # CloudWatch 도구
+│   │   └── knowledge_base/       # Knowledge Base 도구 (Bedrock KB)
 │   ├── telemetry/                # 관측성 (Langfuse/OTEL)
 │   │   ├── __init__.py
 │   │   └── setup.py              # 관측성 설정
 │   ├── prompts/                  # 시스템 프롬프트
 │   └── config/                   # 설정
 │
-├── docs/                         # 문서
-│   └── streaming-implementation.md
+├── rag_pipeline/                  # RAG 데이터 파이프라인
+│   ├── convert_md_to_yaml.py      # Markdown → YAML 변환
+│   ├── llm_enrich.py              # LLM 키워드 보강 (BM25 최적화)
+│   ├── prepare_and_sync.py        # 업로드 아티팩트 생성 + S3 동기화
+│   ├── evaluate_retrieval.py      # 검색 품질 평가
+│   ├── create_kb.py               # Bedrock KB 생성
+│   └── datasets.yaml              # 데이터셋 설정
 │
-└── tests/                        # 테스트
+├── data/RAG/                      # RAG 데이터 (Synthesis data)
+│   └── refrigerator/              # 냉장고 Q&A 원본 + 변환/보강 결과
+│
+├── docs/                          # 문서
+│   ├── architecture/              # 아키텍처 (Graph, 평가, 스트리밍)
+│   ├── knowledge-base/            # KB 설계, RAG 파이프라인, 연동, 평가
+│   ├── setup/                     # 환경 설정, Observability
+│   └── reference/                 # 연구 가이드
+│
+└── tests/                         # 테스트
+    └── test_manual.py             # 수동 테스트 (KB 검색, 평가 워크플로우)
 ```
 
 ## 빠른 시작
@@ -147,17 +224,83 @@ cd AI-Ops-Agent-AgentCore
 ./setup/create_env.sh
 
 # 환경 변수 파일 생성 및 설정
+## 설정
+
+`.env.example`을 복사하여 `.env` 파일을 생성합니다. 전체 환경 변수 상세는 [환경 설정 가이드](docs/setup/environment-configuration.md)를 참고하세요.
+
+```bash
 cp .env.example .env
-vi .env  # AWS 자격 증명 등 설정
+vi .env
+```
+
+### 주요 환경 변수
+
+| 변수 | 설명 | 기본값 |
+|------|------|--------|
+| `AWS_REGION` | AWS 리전 | `us-east-1` |
+| `BEDROCK_MODEL_ID` | Claude 모델 ID | `global.anthropic.claude-sonnet-4-5-20250929-v1:0` |
+| `BEDROCK_TEMPERATURE` | 응답 다양성 (0.0~1.0) | `0.0` |
+| `BEDROCK_MAX_TOKENS` | 최대 토큰 수 | `4096` |
+| `BEDROCK_KNOWLEDGE_BASE_ID` | Bedrock KB ID | - |
+| `AGENT_LANGUAGE` | 에이전트 언어 | `ko` |
+| `CLOUDWATCH_MODE` | CloudWatch 도구 모드 (mock/mcp) | `mock` |
+| `KB_MODE` | Knowledge Base 도구 모드 (mock/mcp) | `mock` |
+| `STRANDS_OBSERVABILITY_MODE` | 로컬 관측성 모드 | `disabled` |
+| `AGENTCORE_OBSERVABILITY_MODE` | AgentCore 관측성 모드 | `disabled` |
+
+
+### 인프라 설정
+
+```bash
+# IAM Role, SSM Parameters 배포
+./agentcore/deploy_infra.sh
+```
+
+### RAG 파이프라인
+
+```bash
+# 1. Markdown → YAML 변환
+uv run python rag_pipeline/convert_md_to_yaml.py --dataset bridge
+
+# 2. LLM 키워드 보강 (BM25 검색 최적화)
+uv run python rag_pipeline/llm_enrich.py --dataset bridge
+
+# 3. Bedrock KB 업로드 아티팩트 생성 + S3 동기화
+uv run python rag_pipeline/prepare_and_sync.py --dataset bridge --mode prepare
+uv run python rag_pipeline/prepare_and_sync.py --dataset bridge --mode sync
+
+# 4. 검색 품질 평가
+uv run python rag_pipeline/evaluate_retrieval.py --dataset bridge
+uv run python rag_pipeline/evaluate_retrieval.py --dataset bridge --rag  # RetrieveAndGenerate
+```
+
+### 실행 및 테스트 (로컬)
+
+**로컬 실행** — 대화형 CLI로 자유롭게 질문
+
+```bash
+uv run ops-agent                   # 대화형 CLI (CloudWatch, KB 등 모든 질문)
+uv run python -m ops_agent.main --prompt "TSS Activation이 뭐야?"  # 단일 프롬프트
+```
+
+```
+> payment-service에서 최근 1시간 동안 ERROR 로그 보여줘
+> TSS Activation이 뭐야?
+> CMS 포털에서 Role 권한 받는 방법
+```
+
+**수동 테스트** — 사전 정의된 시나리오로 기능 검증
+
+```bash
+uv run python tests/test_manual.py             # 테스트 목록 확인
+uv run python tests/test_manual.py --test 1    # KB 검색 (평가 없음)
+uv run python tests/test_manual.py --test 2    # KB + Graph 평가 워크플로우
 ```
 
 ### AgentCore 배포
 
 ```bash
 cd agentcore
-
-# 인프라 설정 (IAM Role, ECR 등)
-./deploy_infra.sh
 
 # 에이전트 배포
 uv run python scripts/deploy.py --auto-update
@@ -169,64 +312,26 @@ uv run python scripts/invoke.py --test simple
 uv run python scripts/invoke.py --interactive
 ```
 
-## 사용 예시
-
-### 한국어
-
-```
-> payment-service에서 최근 1시간 동안 ERROR 로그 보여줘
-> Lambda 함수 timeout 에러 분석해줘
-> order-service의 최근 30분간 500 에러 조회해줘
-```
-
-### English
-
-```
-> Show me ERROR logs from payment-service in the last hour
-> Analyze Lambda function timeout errors
-> Query 500 errors from order-service in the last 30 minutes
-```
-
-## 설정
-
-### 환경 변수
-
-| 변수 | 설명 | 기본값 |
-|------|------|--------|
-| `AWS_REGION` | AWS 리전 | `us-east-1` |
-| `BEDROCK_MODEL_ID` | Claude 모델 ID | `us.anthropic.claude-sonnet-4-20250514` |
-| `BEDROCK_TEMPERATURE` | 응답 다양성 | `0.3` |
-| `BEDROCK_MAX_TOKENS` | 최대 토큰 수 | `4096` |
-
-## CLI 사용법
-
-```bash
-# 단일 프롬프트
-uv run python scripts/invoke.py --prompt "payment-service 에러 보여줘"
-
-# 테스트 프롬프트 (simple, error, timeout, analysis)
-uv run python scripts/invoke.py --test simple
-
-# 토큰별 타이밍 출력
-uv run python scripts/invoke.py --test simple --verbose
-
-# 원시 이벤트 출력 (디버깅용)
-uv run python scripts/invoke.py --test simple --raw
-
-# 대화형 모드
-uv run python scripts/invoke.py --interactive
-```
 
 ## 문서
 
 | 문서 | 설명 |
 |------|------|
-| [환경 설정 가이드](docs/environment-configuration.md) | 환경 변수 및 .env 설정 |
-| [Observability & Langfuse](docs/observability-langfuse.md) | Langfuse 통합 및 관측성 설정 |
-| [스트리밍 구현](docs/streaming-implementation.md) | 실시간 스트리밍 아키텍처 |
-| [Graph 워크플로우](docs/graph-workflow.md) | 평가 그래프 설계 및 구현 |
-| [평가 시스템 설계](docs/evaluation-design.md) | 응답 품질 평가 시스템 |
-| [연구 가이드 결과](docs/research-guide-results.md) | Strands SDK 연구 및 패턴 |
+| **Architecture** | |
+| [Graph 워크플로우](docs/architecture/graph-workflow.md) | 평가 그래프 설계 및 구현 |
+| [평가 시스템 설계](docs/architecture/evaluation-design.md) | 응답 품질 평가 시스템 |
+| [스트리밍 구현](docs/architecture/streaming-implementation.md) | 실시간 스트리밍 아키텍처 |
+| **Knowledge Base** | |
+| [데이터 가이드](docs/knowledge-base/data-guide.md) | Q&A 데이터 구조 및 처리 과정 (Synthesis data) |
+| [RAG Knowledge Base 설계](docs/knowledge-base/rag-knowledge-base-design.md) | Bedrock KB + OpenSearch 설계 |
+| [RAG 파이프라인](docs/knowledge-base/rag-pipeline.md) | RAG 데이터 파이프라인 (enrich → sync → evaluate) |
+| [KB Agent 연동](docs/knowledge-base/kb-agent-integration.md) | Bedrock KB 도구 연동 (Bridge/Refrigerator) |
+| [KB 평가 시스템](docs/knowledge-base/kb-evaluation.md) | KBChecker 평가 설계 및 테스트 |
+| **Setup** | |
+| [환경 설정 가이드](docs/setup/environment-configuration.md) | 환경 변수 및 .env 설정 |
+| [Observability & Langfuse](docs/setup/observability-langfuse.md) | Langfuse 통합 및 관측성 설정 |
+| **Reference** | |
+| [연구 가이드 결과](docs/reference/research-guide-results.md) | Strands SDK 연구 및 패턴 |
 
 ## 참고 자료
 

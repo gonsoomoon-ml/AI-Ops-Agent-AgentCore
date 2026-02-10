@@ -77,27 +77,28 @@ AGENT_LANGUAGE=ko        # ko | en
 AGENT_LOG_LEVEL=INFO     # DEBUG | INFO | WARNING | ERROR
 ```
 
-### Mock 모드 설정
+### 도구 모드 설정
 
-개발 및 테스트 시 실제 API 호출 없이 모의 데이터를 사용할 수 있습니다.
+`.env`에서 `mock` ↔ `mcp`를 전환하여 테스트/운영 환경을 분리합니다.
 
 | 변수 | 설명 | 기본값 |
 |------|------|--------|
-| `CLOUDWATCH_MOCK_MODE` | CloudWatch 모의 모드 | `true` |
-| `DATADOG_MOCK_MODE` | Datadog 모의 모드 | `true` |
-| `KB_MOCK_MODE` | Knowledge Base 모의 모드 | `true` |
+| `CLOUDWATCH_MODE` | CloudWatch 도구 모드 | `mock` |
+| `DATADOG_MODE` | Datadog 도구 모드 (Phase 2) | `mock` |
+| `KB_MODE` | Knowledge Base 도구 모드 | `mock` |
 
 ```bash
-# 개발/테스트 환경 (기본값)
-CLOUDWATCH_MOCK_MODE=true
-DATADOG_MOCK_MODE=true
-KB_MOCK_MODE=true
+# 개발/테스트 환경 — 실제 API 호출 없음
+CLOUDWATCH_MODE=mock          # 모의 CloudWatch 데이터
+DATADOG_MODE=mock             # Phase 2
+KB_MODE=mock                  # 로컬 YAML 기반 KB 검색
 
-# 프로덕션 환경
-CLOUDWATCH_MOCK_MODE=false
-DATADOG_MOCK_MODE=false
-KB_MOCK_MODE=false
+# 운영 환경 — 실제 API 호출
+CLOUDWATCH_MODE=mcp           # MCP 서버 → CloudWatch API
+KB_MODE=mcp                   # Bedrock KB HYBRID 검색
 ```
+
+> **참고**: `KB_MODE=mcp` 사용 시 `BEDROCK_KNOWLEDGE_BASE_ID` 설정이 필요합니다.
 
 ### AgentCore Memory 설정 (Phase 3)
 
@@ -115,20 +116,27 @@ AGENTCORE_MEMORY_ENABLED=false
 AGENTCORE_SESSION_TTL=3600
 ```
 
-### OpenTelemetry 설정
+### Observability 설정
 
-분산 트레이싱을 위한 설정입니다.
+로컬 개발(Strands)과 프로덕션(AgentCore)에서 각각 별도의 관측성 모드를 설정합니다. 자세한 설정은 [Observability & Langfuse](observability-langfuse.md)를 참고하세요.
 
 | 변수 | 설명 | 기본값 |
 |------|------|--------|
-| `OTEL_ENABLED` | 트레이싱 활성화 | `false` |
+| `STRANDS_OBSERVABILITY_MODE` | 로컬 관측성 모드 | `disabled` |
+| `AGENTCORE_OBSERVABILITY_MODE` | AgentCore 관측성 모드 | `disabled` |
 | `OTEL_SERVICE_NAME` | 서비스 이름 | `ops-ai-agent` |
-| `OTEL_EXPORTER_OTLP_ENDPOINT` | OTLP 엔드포인트 | - |
+| `LANGFUSE_PUBLIC_KEY` | Langfuse Public Cloud API 키 | - |
+| `LANGFUSE_SECRET_KEY` | Langfuse Public Cloud Secret 키 | - |
+| `LANGFUSE_PUBLIC_ENDPOINT` | Langfuse Public Cloud 엔드포인트 | `https://us.cloud.langfuse.com` |
 
 ```bash
-OTEL_ENABLED=false
+# 로컬 개발 — Langfuse Cloud로 트레이싱
+STRANDS_OBSERVABILITY_MODE=langfuse-public    # disabled | langfuse-public | langfuse-selfhosted
+
+# AgentCore 배포 — AWS 네이티브 트레이싱
+AGENTCORE_OBSERVABILITY_MODE=native           # disabled | langfuse-public | langfuse-selfhosted | native
+
 OTEL_SERVICE_NAME=ops-ai-agent
-# OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
 ```
 
 ## 환경별 설정 예시
@@ -148,9 +156,11 @@ AGENT_LANGUAGE=ko
 AGENT_LOG_LEVEL=DEBUG
 
 # Mock 모드 (실제 API 호출 없음)
-CLOUDWATCH_MOCK_MODE=true
-DATADOG_MOCK_MODE=true
-KB_MOCK_MODE=true
+CLOUDWATCH_MODE=mock
+KB_MODE=mock
+
+# Observability (로컬)
+STRANDS_OBSERVABILITY_MODE=langfuse-public
 ```
 
 ### 프로덕션 환경
@@ -163,18 +173,18 @@ AWS_REGION=us-east-1
 BEDROCK_MODEL_ID=global.anthropic.claude-sonnet-4-5-20250929-v1:0
 BEDROCK_TEMPERATURE=0.0
 PROMPT_CACHE_ENABLED=true
+BEDROCK_KNOWLEDGE_BASE_ID=G5GG6ZV8GX    # Bridge KB
 
 # Agent
 AGENT_LANGUAGE=ko
 AGENT_LOG_LEVEL=INFO
 
 # 실제 API 사용
-CLOUDWATCH_MOCK_MODE=false
-DATADOG_MOCK_MODE=false
-KB_MOCK_MODE=false
+CLOUDWATCH_MODE=mcp
+KB_MODE=mcp
 
-# Observability
-OTEL_ENABLED=true
+# Observability (AgentCore)
+AGENTCORE_OBSERVABILITY_MODE=native
 OTEL_SERVICE_NAME=ops-ai-agent
 ```
 

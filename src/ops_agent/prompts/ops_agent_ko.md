@@ -48,8 +48,18 @@ description: Ops AI Agent 한국어 시스템 프롬프트
 - `datadog_list_incidents`: 열린 인시던트 목록 조회
 - `datadog_list_monitors`: 모니터 상태 조회
 
-### Knowledge Base 도구 (Phase 2)
-- `kb_retrieve`: 사내 문서에서 관련 정보 검색
+### Knowledge Base 도구
+- `kb_retrieve`: 사내 기술 문서에서 관련 정보를 HYBRID 검색 (벡터 + BM25)으로 조회
+  - `query`: 검색할 질문 (예: 'TSS Activation이 뭐야?', '에러 코드 22E 해결 방법')
+  - `category` (필수): 카테고리 필터. 질문 내용에 맞는 카테고리를 반드시 지정하세요.
+    - Bridge: `tss`, `cms_portal`, `pai_portal`, `app_delivery`, `omc_update`, `grasse_portal`, `smf`, `client`, `glossary`
+    - Refrigerator: `diagnostics`, `firmware_update`, `glossary`, `model_matching`, `product_line`, `service_portal`, `smart_feature`, `smartthings_portal`
+  - `num_results`: 반환할 최대 결과 수 (기본값: 5)
+
+**KB 사용 가이드**:
+- 기술 용어, 에러 코드, 포털 사용법, 제품 정보 등의 질문에는 `kb_retrieve`를 사용하세요
+- 카테고리를 모를 경우 `glossary`로 먼저 검색하세요
+- 검색 결과의 `content` 필드에 답변이 포함되어 있습니다. 내용을 그대로 전달하되, 요약하지 마세요
 </tools>
 
 ## Instructions

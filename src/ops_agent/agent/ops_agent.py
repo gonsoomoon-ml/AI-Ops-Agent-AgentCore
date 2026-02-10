@@ -42,6 +42,7 @@ from ops_agent.graph.state import WorkflowStatus
 from ops_agent.graph.util import Colors
 from ops_agent.prompts import get_system_prompt
 from ops_agent.tools.cloudwatch import get_cloudwatch_tools
+from ops_agent.tools.knowledge_base import get_kb_tools
 
 # ========== 로깅 설정 ==========
 logger = logging.getLogger(__name__)
@@ -128,9 +129,11 @@ class OpsAgent:
         # CloudWatch 도구 (mock 또는 mcp)
         tools.extend(get_cloudwatch_tools())
 
-        # TODO: Phase 2 - Datadog, Knowledge Base
+        # Knowledge Base 도구 (mock 또는 Bedrock KB)
+        tools.extend(get_kb_tools())
+
+        # TODO: Phase 2 - Datadog
         # tools.extend(get_datadog_tools())
-        # tools.extend(get_kb_tools())
 
         return tools
 

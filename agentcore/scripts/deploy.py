@@ -216,6 +216,13 @@ def deploy_agent(
         if env_vars:
             logger.info(f"Observability 환경 변수: {list(env_vars.keys())}")
 
+        # KB 환경 변수 추가
+        settings = get_settings()
+        env_vars["KB_MODE"] = settings.kb_mode
+        if settings.bedrock_knowledge_base_id:
+            env_vars["BEDROCK_KNOWLEDGE_BASE_ID"] = settings.bedrock_knowledge_base_id
+        logger.info(f"KB 환경 변수: KB_MODE={settings.kb_mode}, KB_ID={settings.bedrock_knowledge_base_id}")
+
         # 배포 설정 (authorizer 없음 = IAM SigV4 인증 사용)
         logger.info("에이전트 배포 설정 중...")
         # Langfuse 사용 시 AWS ADOT 비활성화 필요

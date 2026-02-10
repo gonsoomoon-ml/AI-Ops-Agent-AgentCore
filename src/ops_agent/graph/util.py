@@ -50,7 +50,7 @@ def infer_tool_type(output: dict) -> ToolType:
         return ToolType.CLOUDWATCH
     if any(key in output for key in ["metric", "incidents", "monitors"]):
         return ToolType.DATADOG
-    if any(key in output for key in ["documents", "sources", "chunks"]):
+    if any(key in output for key in ["kb_id", "documents", "sources", "chunks"]):
         return ToolType.KNOWLEDGE_BASE
     return ToolType.CLOUDWATCH
 

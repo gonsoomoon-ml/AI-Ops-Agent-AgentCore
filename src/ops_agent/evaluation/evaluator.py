@@ -19,6 +19,7 @@ import logging
 
 from ops_agent.evaluation.checkers.base import BaseChecker
 from ops_agent.evaluation.checkers.cloudwatch import CloudWatchChecker
+from ops_agent.evaluation.checkers.knowledge_base import KBChecker
 from ops_agent.evaluation.models import (
     CheckResult,
     EvalResult,
@@ -66,8 +67,8 @@ class OpsAgentEvaluator:
         # 검사기 등록
         self.checkers: list[BaseChecker] = [
             CloudWatchChecker(),
+            KBChecker(),
             # DatadogChecker(),       # Phase 2
-            # KnowledgeBaseChecker(), # Phase 3
         ]
 
         logger.debug(

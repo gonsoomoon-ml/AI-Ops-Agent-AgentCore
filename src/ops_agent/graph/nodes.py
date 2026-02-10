@@ -31,6 +31,7 @@ from ops_agent.graph.util import (
 from ops_agent.prompts import get_system_prompt
 from ops_agent.telemetry import get_trace_attributes
 from ops_agent.tools.cloudwatch import cloudwatch_filter_log_events
+from ops_agent.tools.knowledge_base import get_kb_tools
 
 logger = logging.getLogger(__name__)
 
@@ -65,9 +66,9 @@ def _create_agent() -> Agent:
 
     tools = [
         cloudwatch_filter_log_events,
+        *get_kb_tools(),
         # TODO: Phase 2
         # datadog_get_metrics,
-        # kb_retrieve,
     ]
 
     return Agent(

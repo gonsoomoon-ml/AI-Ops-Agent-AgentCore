@@ -5,8 +5,10 @@
 
 from ops_agent.evaluation.checkers.base import BaseChecker
 from ops_agent.evaluation.checkers.cloudwatch import CloudWatchChecker
+from ops_agent.evaluation.checkers.knowledge_base import KBChecker
 
 __all__ = [
     "BaseChecker",
     "CloudWatchChecker",
+    "KBChecker",
 ]

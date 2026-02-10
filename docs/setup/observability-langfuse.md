@@ -280,15 +280,15 @@ Langfuse에서 트레이스를 쉽게 구분할 수 있습니다:
 
 **Langfuse Public Cloud (AgentCore)**
 
-![Langfuse Public Cloud](img/public_langfuse.png)
+![Langfuse Public Cloud](../img/public_langfuse.png)
 
 **Langfuse Self-hosted (AgentCore)**
 
-![Langfuse Self-hosted](img/self-hostd-langfuse.png)
+![Langfuse Self-hosted](../img/self-hostd-langfuse.png)
 
 **AWS Native - GenAI Observability (AgentCore)**
 
-![AWS Native GenAI Observability](img/agentcore_obs.png)
+![AWS Native GenAI Observability](../img/agentcore_obs.png)
 
 - **Spans**: 4 (invoke_agent, execute_event_loop_cycle, chat)
 - **Tokens**: 599 (Input: 338, Output: 261)
