@@ -14,8 +14,8 @@
 5. [Step 1: Markdown → YAML 변환](#5-step-1-markdown--yaml-변환)
 6. [Step 2: LLM Enrichment](#6-step-2-llm-enrichment)
 7. [Step 3: Bedrock KB 생성](#7-step-3-bedrock-kb-생성)
-8. [Step 4: Bedrock KB 준비 및 동기화](#8-step-4-bedrock-kb-준비-및-동기화)
-9. [Step 5: 검색 정확도 평가](#9-step-5-검색-정확도-평가)
+8. [데이터 업데이트 (준비 및 동기화)](#8-데이터-업데이트-준비-및-동기화)
+9. [Step 4: 검색 정확도 평가](#9-step-4-검색-정확도-평가)
 10. [Enrichment 프롬프트 설계](#10-enrichment-프롬프트-설계)
 11. [성능 결과](#11-성능-결과)
 12. [새 데이터셋 추가 방법](#12-새-데이터셋-추가-방법)
@@ -24,10 +24,10 @@
 
 ## 1. 개요
 
-Raw markdown Q&A 데이터를 Bedrock Knowledge Base에 최적화된 형태로 변환하는 5단계 파이프라인.
+Raw markdown Q&A 데이터를 Bedrock Knowledge Base에 최적화된 형태로 변환하는 4단계 파이프라인.
 
 ```
-Raw MD → YAML → LLM Enrichment → Bedrock KB 생성 → 준비/동기화 → 정확도 평가
+Markdown (Q&A) → YAML 변환 → LLM 키워드 보강 → Bedrock KB 생성 (업로드+동기화 포함) → 검색 평가
 ```
 
 핵심 설계 원칙:
@@ -70,40 +70,37 @@ AI-Ops-Agent-AgentCore/
 
 ## 3. 파이프라인 단계
 
-```
-Step 1                Step 2               Step 3              Step 4                Step 5
-┌──────────┐    ┌──────────────┐    ┌───────────────┐    ┌─────────────────┐    ┌───────────────┐
-│ Raw .md  │───▶│  YAML 변환   │───▶│LLM Enrichment │───▶│ Bedrock KB 생성 │───▶│ 준비 + 동기화 │───▶ 정확도 평가
-│ (수동)   │    │ (regex 기반) │    │(Claude Sonnet)│    │ (첫 회 1회)     │    │ (이후 반복)   │
-└──────────┘    └──────────────┘    └───────────────┘    └─────────────────┘    └───────────────┘
-                 keywords 추출         핵심 용어 추출        S3 + OpenSearch       .md + .metadata.json
-                 에러 코드 추출        8개 질문 변형          + KB + DataSource     S3 업로드 + 인덱싱
-                 질문 변형 생성        구별적 명사/키워드     (업로드+동기화 포함)
-```
+| 단계 | 스크립트 | 설명 |
+|------|----------|------|
+| Step 1: 변환 | `convert_md_to_yaml.py` | Markdown Q&A → 구조화된 YAML (키워드, 에러코드, 질문변형 추출) |
+| Step 2: 보강 | `llm_enrich.py` | LLM이 핵심 키워드를 추출하여 BM25 검색 최적화 (8개 질문 변형) |
+| Step 3: KB 생성 | `create_kb.py` | Bedrock KB + OpenSearch + S3 인프라 생성 (업로드+동기화 포함) |
+| Step 4: 평가 | `evaluate_retrieval.py` | Retrieve / RetrieveAndGenerate 검색 품질 측정 |
 
-전체 실행 (첫 회):
+> `prepare_and_sync.py`는 데이터 수정 후 **재동기화** 시 사용 (아티팩트 생성 + S3 업로드 + KB 동기화).
+
+전체 실행:
 
 ```bash
-# Step 1: Markdown → YAML
+# 1. Markdown → YAML 변환
 uv run python rag_pipeline/convert_md_to_yaml.py --dataset refrigerator
 
-# Step 2: LLM Enrichment (Claude API 호출 — 107 entries ≈ 2분)
+# 2. LLM 키워드 보강 (Claude API 호출 — 107 entries ≈ 2분)
 uv run python rag_pipeline/llm_enrich.py --dataset refrigerator
 
-# Step 3a: Bedrock 업로드용 파일 생성
-uv run python rag_pipeline/prepare_and_sync.py --dataset refrigerator --mode prepare
-
-# Step 3b: Bedrock KB 생성 + S3 업로드 + 동기화 (첫 회 1회)
+# 3. Bedrock KB 생성 (S3 + OpenSearch + KB — 최초 1회, 업로드+동기화 포함)
 uv run python rag_pipeline/create_kb.py --dataset refrigerator --mode create
+#    → 스크립트 완료 후 출력된 값을 datasets.yaml에 수동 입력 (s3_bucket, kb_id, ds_id)
 
-# Step 4: 검색 정확도 평가 (동기화 후 ~60초 대기 필요)
+# 4. 검색 품질 평가 (동기화 후 ~60초 대기 필요)
 uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator
+uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator --rag  # RetrieveAndGenerate
 ```
 
-이후 데이터 업데이트 시 (KB 이미 존재):
+데이터 수정 후 재동기화 시:
 
 ```bash
-# 변환 + 업로드 + 동기화
+# 아티팩트 생성 + S3 업로드 + KB 동기화
 uv run python rag_pipeline/prepare_and_sync.py --dataset refrigerator
 
 # 또는 단계별로:
@@ -331,9 +328,9 @@ ds_id: "XXXXXXXXXX"                 # 출력된 DataSource ID
 
 이 값이 설정되어야 `prepare_and_sync.py --mode sync`와 `evaluate_retrieval.py`가 작동함.
 
-## 8. Step 4: Bedrock KB 준비 및 동기화
+## 8. 데이터 업데이트 (준비 및 동기화)
 
-KB가 이미 존재하는 상태에서 데이터를 업데이트할 때 사용.
+KB가 이미 존재하는 상태에서 데이터를 수정한 후 재동기화할 때 사용.
 
 ```bash
 # 전체 (변환 + 업로드 + 동기화)
@@ -411,7 +408,7 @@ uv run python rag_pipeline/prepare_and_sync.py --dataset refrigerator --mode syn
 
 > **중요**: 동기화 완료 후 OpenSearch에 데이터가 전파되기까지 **~60초 대기** 필요. 즉시 쿼리하면 부정확한 결과가 나올 수 있음.
 
-## 9. Step 5: 검색 정확도 평가
+## 9. Step 4: 검색 정확도 평가
 
 ```bash
 # Retrieve 검색 정확도 평가
