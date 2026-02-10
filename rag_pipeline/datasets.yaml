@@ -14,7 +14,7 @@ datasets:
     kb_id: ""           # create_kb.py 출력값 입력
     ds_id: ""           # create_kb.py 출력값 입력
     kb_name: "ops-fridge-kb"
-    embedding_model: "cohere.embed-multilingual-v3"
+    embedding_model: "amazon.titan-embed-text-v2:0"
     # LLM enrichment config
     stop_words: >-
       냉장고, 삼성, 제품, 기능, 설정, 서비스, 방법, 확인, 사용, 문제,
@@ -42,7 +42,7 @@ datasets:
     kb_id: ""           # create_kb.py 출력값 입력
     ds_id: ""           # create_kb.py 출력값 입력
     kb_name: "ops-bridge-kb"
-    embedding_model: "cohere.embed-multilingual-v3"
+    embedding_model: "amazon.titan-embed-text-v2:0"
     # LLM enrichment config
     stop_words: >-
       모델, 설정, 버전, 확인, 선택, 진행, 필요, 제공, 등록, 변경,
