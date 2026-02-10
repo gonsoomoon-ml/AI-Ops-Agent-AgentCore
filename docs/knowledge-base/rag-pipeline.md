@@ -520,7 +520,7 @@ TEST_CASES = [
 
 | 항목 | 값 |
 |------|-----|
-| 임베딩 모델 | Cohere Embed Multilingual v3 (1,024 dim) |
+| 임베딩 모델 | Amazon Titan Embed Text v2 (1,024 dim) |
 | 검색 방식 | HYBRID (벡터 + BM25) |
 | 벡터 스토어 | OpenSearch Serverless |
 | 청킹 | NONE (1 엔트리 = 1 문서) |
