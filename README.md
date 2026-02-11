@@ -228,14 +228,11 @@ cd AI-Ops-Agent-AgentCore
 ./setup/create_env.sh
 
 # 환경 변수 파일 생성 및 설정
-## 설정
-
-`.env.example`을 복사하여 `.env` 파일을 생성합니다. 전체 환경 변수 상세는 [환경 설정 가이드](docs/setup/environment-configuration.md)를 참고하세요.
-
-```bash
 cp .env.example .env
 vi .env
 ```
+
+`.env.example`을 복사하여 `.env` 파일을 생성합니다. 전체 환경 변수 상세는 [환경 설정 가이드](docs/setup/environment-configuration.md)를 참고하세요.
 
 ### 주요 환경 변수
 
