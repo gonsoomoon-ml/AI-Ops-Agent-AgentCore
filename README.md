@@ -295,6 +295,7 @@ uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator --rag  #
 ```bash
 uv run ops-agent                   # 대화형 CLI (CloudWatch, KB 등 모든 질문)
 uv run python -m ops_agent.main --prompt "냉매가 뭐야?"  # 단일 프롬프트
+uv run python -m ops_agent.main --prompt "핸드폰 동작 방법?"  # KB에 없는 질문 예시 (관련 없는 질문)
 ```
 
 ```
