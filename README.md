@@ -294,13 +294,13 @@ uv run python rag_pipeline/evaluate_retrieval.py --dataset refrigerator --rag  #
 
 ```bash
 uv run ops-agent                   # 대화형 CLI (CloudWatch, KB 등 모든 질문)
-uv run python -m ops_agent.main --prompt "TSS Activation이 뭐야?"  # 단일 프롬프트
+uv run python -m ops_agent.main --prompt "냉매가 뭐야?"  # 단일 프롬프트
 ```
 
 ```
 > payment-service에서 최근 1시간 동안 ERROR 로그 보여줘
-> TSS Activation이 뭐야?
-> CMS 포털에서 Role 권한 받는 방법
+> 냉매가 뭐야?
+> 에러 코드 확인 어떻게 해?
 ```
 
 **수동 테스트** — 사전 정의된 시나리오로 기능 검증
