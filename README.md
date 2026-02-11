@@ -126,7 +126,6 @@ vector_config["filter"] = {"equals": {"key": "category", "value": "tss"}}
 
 | 데이터셋 | 문서 수 | 카테고리 | 설명 |
 |----------|---------|----------|------|
-| **Bridge** | 157 | 9 (TSS, CMS Portal, SMF, OMC, PAI 등) | 통신 장비 운영 Q&A |
 | **Refrigerator** | 107 | 9 (진단, 펌웨어, 용어, 서비스 포털 등) | 냉장고 기술 지원 Q&A (Synthesis data) |
 
 ### 자체 교정 평가 시스템
@@ -363,7 +362,7 @@ uv run python scripts/cleanup.py --all -f
 | [데이터 가이드](docs/knowledge-base/data-guide.md) | Q&A 데이터 구조 및 처리 과정 (Synthesis data) |
 | [RAG Knowledge Base 설계](docs/knowledge-base/rag-knowledge-base-design.md) | Bedrock KB + OpenSearch 설계 |
 | [RAG 파이프라인](docs/knowledge-base/rag-pipeline.md) | RAG 데이터 파이프라인 (enrich → sync → evaluate) |
-| [KB Agent 연동](docs/knowledge-base/kb-agent-integration.md) | Bedrock KB 도구 연동 (Bridge/Refrigerator) |
+| [KB Agent 연동](docs/knowledge-base/kb-agent-integration.md) | Bedrock KB 도구 연동 (Refrigerator) |
 | [KB 평가 시스템](docs/knowledge-base/kb-evaluation.md) | KBChecker 평가 설계 및 테스트 |
 | **Setup** | |
 | [환경 설정 가이드](docs/setup/environment-configuration.md) | 환경 변수 및 .env 설정 |
