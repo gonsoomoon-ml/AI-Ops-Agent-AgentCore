@@ -219,6 +219,8 @@ AI-Ops-Agent-AgentCore/
 
 ### 설치
 
+> **[중요]** 이 워크샵은 **us-east-1** 리전에서 실행해 주세요.
+
 ```bash
 # 저장소 클론
 git clone <repository-url>
@@ -229,7 +231,7 @@ cd AI-Ops-Agent-AgentCore
 
 # 환경 변수 파일 생성 및 설정
 cp .env.example .env
-vi .env
+vi .env                   # AWS_REGION=us-east-1 확인 (현재 us-east-1 기준으로 테스트)
 ```
 
 `.env.example`을 복사하여 `.env` 파일을 생성합니다. 전체 환경 변수 상세는 [환경 설정 가이드](docs/setup/environment-configuration.md)를 참고하세요.
