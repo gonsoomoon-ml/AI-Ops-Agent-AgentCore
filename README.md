@@ -268,6 +268,7 @@ uv run python rag_pipeline/convert_md_to_yaml.py --dataset refrigerator
 
 # 2. LLM 키워드 보강 (BM25 검색 최적화)
 uv run python rag_pipeline/llm_enrich.py --dataset refrigerator
+uv run python rag_pipeline/llm_enrich.py --dataset refrigerator --force  # 캐시 무시하고 전체 재생성
 
 # 3. Bedrock KB 생성 (S3 + OpenSearch + KB — 최초 1회, 업로드+동기화 포함)
 uv run python rag_pipeline/create_kb.py --dataset refrigerator --mode create
