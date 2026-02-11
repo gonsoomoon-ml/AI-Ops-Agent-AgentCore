@@ -2,6 +2,54 @@
 
 [Strands Agents SDK](https://strandsagents.com/) 기반 운영 자동화 AI 에이전트입니다. RAG 파이프라인으로 운영 지식을 구축하고, 자체 교정 평가 시스템으로 응답 품질을 보장하며, AWS Bedrock AgentCore로 프로덕션 배포를 지원합니다.
 
+## 아키텍처
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                         User Query                              │
+│              (CLI / AgentCore Runtime)                           │
+└──────────────────────────┬──────────────────────────────────────┘
+                           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    OpsAgent (Strands SDK)                        │
+│  ┌────────────────────────────────────────────────────────────┐ │
+│  │              Graph Workflow (자체 교정)                      │ │
+│  │                                                            │ │
+│  │  ANALYZE ──→ EVALUATE ──→ DECIDE ──→ FINALIZE              │ │
+│  │  (LLM+도구)   (품질평가)    (판정)     (응답 전달)            │ │
+│  │                              │                             │ │
+│  │                              ▼                             │ │
+│  │                         REGENERATE                         │ │
+│  │                       (피드백 재생성)                        │ │
+│  └────────────────────────────────────────────────────────────┘ │
+│                           │                                     │
+│              ┌────────────┼────────────┐                        │
+│              ▼            ▼            ▼                        │
+│        ┌──────────┐ ┌──────────┐ ┌──────────┐                  │
+│        │CloudWatch│ │Bedrock KB│ │ Langfuse │                  │
+│        │  (로그)   │ │ (RAG Q&A)│ │(관측성)   │                  │
+│        └──────────┘ └────┬─────┘ └──────────┘                  │
+└──────────────────────────┼──────────────────────────────────────┘
+                           │
+              ┌────────────┼────────────┐
+              ▼            ▼            ▼
+       ┌───────────┐ ┌──────────┐ ┌──────────┐
+       │ OpenSearch │ │    S3    │ │  Titan   │
+       │Serverless │ │ (문서)    │ │Embed v2  │
+       │(HYBRID검색)│ │          │ │(임베딩)   │
+       └───────────┘ └──────────┘ └──────────┘
+
+                    배포 (Deployment)
+       ┌──────────────────────────────────────┐
+       │      Bedrock AgentCore Runtime       │
+       │  ┌──────────────────────────────┐    │
+       │  │  entrypoint.py               │    │
+       │  │  (BedrockAgentCoreApp 래핑)    │    │
+       │  │  실시간 토큰 스트리밍            │    │
+       │  └──────────────────────────────┘    │
+       └──────────────────────────────────────┘
+```
+
 ## 주요 기능
 
 | 기능 | 설명 |
@@ -147,7 +195,7 @@ User Query → ANALYZE (LLM + 도구 호출)
 | LLM | AWS Bedrock Claude Sonnet 4 |
 | Agent Framework | Strands Agents SDK |
 | Knowledge Base | AWS Bedrock KB + OpenSearch Serverless (HYBRID 검색) |
-| Embedding | Cohere Embed Multilingual v3 |
+| Embedding | Amazon Titan Embed Text v2 |
 | Deployment | AWS Bedrock AgentCore Runtime |
 | Observability | Langfuse, CloudWatch, X-Ray |
 
