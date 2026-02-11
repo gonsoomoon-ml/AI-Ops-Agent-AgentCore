@@ -307,8 +307,8 @@ uv run python -m ops_agent.main --prompt "냉매가 뭐야?"  # 단일 프롬프
 
 ```bash
 uv run python tests/test_manual.py             # 테스트 목록 확인
-uv run python tests/test_manual.py --test 1    # KB 검색 (평가 없음)
-uv run python tests/test_manual.py --test 2    # KB + Graph 평가 워크플로우
+uv run python tests/test_manual.py --test 1    # KB 검색: "냉매가 뭐야?" (평가 없음)
+uv run python tests/test_manual.py --test 2    # KB + Graph 평가: "냉매가 뭐야?"
 ```
 
 ### AgentCore 배포

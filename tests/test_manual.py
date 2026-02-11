@@ -27,7 +27,7 @@ def print_header(title: str) -> None:
 def test_1_kb_retrieve() -> None:
     """테스트 1: Knowledge Base 검색 테스트.
 
-    Bedrock KB (Bridge)에 HYBRID 검색으로 기술 문서를 조회합니다.
+    Bedrock KB (Refrigerator)에 HYBRID 검색으로 기술 문서를 조회합니다.
     KB_MODE=mcp 설정 시 실제 Bedrock API를 호출합니다.
 
     흐름:
@@ -39,7 +39,7 @@ def test_1_kb_retrieve() -> None:
     from ops_agent.agent import OpsAgent
     from ops_agent.tools.knowledge_base import get_kb_tools
 
-    print_header("테스트 1: Knowledge Base 검색 (Bridge KB)")
+    print_header("테스트 1: Knowledge Base 검색 (Refrigerator KB)")
 
     # [1] OpsAgent를 통한 KB 질의
     print("-" * 60)
@@ -47,7 +47,7 @@ def test_1_kb_retrieve() -> None:
     print("-" * 60)
 
     agent = OpsAgent(enable_evaluation=False)
-    query = "TSS Activation이 뭐야?"
+    query = "냉매가 뭐야?"
     print(f"  Q: {query}")
     print()
     agent.invoke(query)
@@ -60,7 +60,7 @@ def test_1_kb_retrieve() -> None:
 
     kb_tools = get_kb_tools()
     kb_fn = kb_tools[0]
-    result = json.loads(kb_fn(query=query, category="tss"))
+    result = json.loads(kb_fn(query=query, category="glossary"))
 
     if result["status"] == "success":
         print(f"  KB ID: {result['kb_id']}")
@@ -96,7 +96,7 @@ def test_2_kb_with_evaluation() -> None:
         verbose=True,
     )
 
-    query = "TSS Activation이 뭐야?"
+    query = "냉매가 뭐야?"
     print(f"  Q: {query}")
     print()
     agent.invoke(query)
